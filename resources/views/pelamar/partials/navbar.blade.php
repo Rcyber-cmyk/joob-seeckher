@@ -7,31 +7,29 @@
 
         {{-- Tampilan Desktop --}}
         <div class="collapse navbar-collapse d-none d-lg-flex" id="main-nav">
-            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+            {{-- PERUBAHAN: Menghapus 'mx-auto' dan menambahkan 'me-auto' untuk mendorong menu ke kiri --}}
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link {{ Request::routeIs('home') ? 'active fw-bold' : '' }}" href="{{ route('home') }}">Beranda</a>
                 </li>
                 <li class="nav-item">
-                    <a href="#beritaTerkiniLandingPage" class="nav-link">Berita Terkini</a>
+                    <a href="{{ route('berita.index') }}" class="nav-link {{ Request::routeIs('berita.index') ? 'active fw-bold' : '' }}">Berita Terkini</a>
                 </li>
                 
-                {{-- MODIFIKASI DIMULAI DISINI (UNTUK DESKTOP) --}}
                 @if(Auth::check() && Auth::user()->role === 'pelamar')
                 <li class="nav-item">
-                    {{-- Ganti '#' dengan route yang sesuai, misal: route('aktivitas.index') --}}
-                    <a href="#" class="nav-link {{ Request::is('karir') ? 'highlight-text' : '' }}"> 
+                    <a href="{{ route('pelamar.aktivitas.index') }}" class="nav-link {{ Request::routeIs('pelamar.aktivitas.index') ? 'active fw-bold' : '' }}"> 
                         Aktivitas
                     </a>
                 </li>
                 <li class="nav-item">
-                    {{-- Ganti '#' dengan route yang sesuai, misal: route('perusahaan.index') --}}
-                    <a class="nav-link {{ Request::is('perusahaan') ? 'highlight-text' : '' }}" href="#">Jelajahi Perusahaan</a>
+                    <a class="nav-link {{ Request::routeIs('perusahaan.index') ? 'active fw-bold' : '' }}" href="{{ route('lowongan.index') }}">Cari Lowongan</a>
                 </li>
                 @endif
-                {{-- MODIFIKASI SELESAI --}}
             </ul>
 
-            <div class="d-flex ms-auto">
+            {{-- Tombol di sebelah kanan --}}
+            <div class="d-flex">
                 @auth
                     {{-- JIKA PENGGUNA SUDAH LOGIN --}}
                     <div class="nav-item dropdown">
@@ -40,9 +38,8 @@
                             {{ Auth::user()->name }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
-                            <li><a class="dropdown-item" href="{{ Auth::user()->role === 'pelamar' ? route('pelamar.dashboard') : (Auth::user()->role === 'perusahaan' ? route('perusahaan.dashboard') : route('admin.dashboard')) }}"><i class="bi bi-layout-text-sidebar-reverse me-2"></i>Dashboard</a></li>
-                            <li><a class="dropdown-item" href="{{ Auth::user()->role === 'pelamar' ? route('pelamar.profile.edit') : (Auth::user()->role === 'perusahaan' ? route('perusahaan.profile.edit') : route('admin.profile.edit')) }}"><i class="bi bi-person-lines-fill me-2"></i>Lihat Profil</a></li>
-                            <li><a class="dropdown-item" href=""><i class="bi bi-gear-fill me-2"></i>Pengaturan</a></li>
+                            <li><a class="dropdown-item" href="{{ Auth::user()->role === 'pelamar' ? route('pelamar.profile.edit') : '#' }}"><i class="bi bi-person-lines-fill me-2"></i>Profil Saya</a></li>
+                            <li><a class="dropdown-item" href="{{ route('pelamar.settings.index') }}"><i class="bi bi-gear-fill me-2"></i>Pengaturan</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
@@ -72,34 +69,27 @@
                         <a class="nav-link {{ Request::routeIs('home') ? 'active fw-bold' : '' }}" href="{{ route('home') }}">Beranda</a>
                     </li>
                     <li class="nav-item">
-                        <a href="#beritaTerkiniLandingPage" class="nav-link">Berita Terkini</a>
+                        <a href="{{ route('berita.index') }}" class="nav-link {{ Request::routeIs('berita.index') ? 'active fw-bold' : '' }}">Berita Terkini</a>
                     </li>
 
-                    {{-- MODIFIKASI DIMULAI DISINI (UNTUK MOBILE) --}}
                     @if(Auth::check() && Auth::user()->role === 'pelamar')
                     <li class="nav-item">
-                         {{-- Ganti '#' dengan route yang sesuai, misal: route('aktivitas.index') --}}
-                        <a href="#" class="nav-link {{ Request::is('karir') ? 'highlight-text' : '' }}">
+                        <a href="{{ route('pelamar.aktivitas.index') }}" class="nav-link {{ Request::routeIs('pelamar.aktivitas.index') ? 'active fw-bold' : '' }}">
                             Aktivitas
                         </a>
                     </li>
                     <li class="nav-item">
-                        {{-- Ganti '#' dengan route yang sesuai, misal: route('perusahaan.index') --}}
-                        <a class="nav-link {{ Request::is('perusahaan') ? 'highlight-text' : '' }}" href="#">Jelajahi Perusahaan</a>
+                        <a class="nav-link {{ Request::routeIs('perusahaan.index') ? 'active fw-bold' : '' }}" href="{{ route('lowongan.index') }}">Cari Lowongan</a>
                     </li>
                     @endif
-                    {{-- MODIFIKASI SELESAI --}}
                 </ul>
                 
                 {{-- Tombol Dinamis untuk Offcanvas --}}
                 <div class="mt-auto">
                     @auth
-                        <div class="text-center mb-3">
-                            <i class="bi bi-person-circle me-2 fs-5"></i>
-                            <span>Halo, {{ Auth::user()->name }}</span>
-                        </div>
                         <div class="d-grid gap-2">
-                            <a href="{{ Auth::user()->role === 'pelamar' ? route('pelamar.dashboard') : (Auth::user()->role === 'perusahaan' ? route('perusahaan.dashboard') : route('admin.dashboard')) }}" class="btn btn-light">Dashboard</a>
+                            <a href="{{ Auth::user()->role === 'pelamar' ? route('pelamar.profile.edit') : '#' }}" class="btn btn-light">Profil Saya</a>
+                            <a href="{{ route('pelamar.settings.index') }}" class="btn btn-light">Pengaturan</a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="btn btn-danger w-100">Log Out</button>

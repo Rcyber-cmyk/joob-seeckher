@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\ActivityLog;
-use App\Models\Keahlian;
 use App\Models\ProfilePelamar;
-use App\Models\BidangKeahlian; // <-- Pastikan ini di-import
+use App\Models\ProfilePerusahaan; // Pastikan model ini di-import
+use App\Models\BidangKeahlian;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,29 +34,35 @@ class RegisteredUserController
      */
     public function store(Request $request): RedirectResponse
     {
-        // Validasi input dari form registrasi (tetap sama)
+        // Validasi input dari form
         $request->validate([
+            // Aturan Umum
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'in:pelamar,perusahaan'],
-            'nik' => ['required_if:role,pelamar', 'string', 'size:16', 'unique:profiles_pelamar,nik'],
-            'alamat' => ['required_if:role,pelamar', 'string'],
-            'tanggal_lahir' => ['required_if:role,pelamar', 'date'],
-            'domisili' => ['required_if:role,pelamar', 'string', 'max:255'],
-            'lulusan' => ['required_if:role,pelamar', 'string', 'max:255'],
-            'tahun_lulus' => ['required_if:role,pelamar', 'digits:4'],
-            'pengalaman_kerja' => ['required_if:role,pelamar', 'string', 'max:255'],
-            'gender' => ['required_if:role,pelamar', 'in:Laki-laki,Perempuan'],
-            'no_hp' => ['required_if:role,pelamar', 'string', 'max:20'],
+            
+            // Aturan Khusus Pelamar
+            'nik' => ['required_if:role,pelamar', 'nullable', 'string', 'size:16', 'unique:profiles_pelamar,nik'],
+            'alamat' => ['required_if:role,pelamar', 'nullable', 'string'],
+            'tanggal_lahir' => ['required_if:role,pelamar', 'nullable', 'date'],
+            'domisili' => ['required_if:role,pelamar', 'nullable', 'string', 'max:255'],
+            'lulusan' => ['required_if:role,pelamar', 'nullable', 'string', 'max:255'],
+            'tahun_lulus' => ['required_if:role,pelamar', 'nullable', 'digits:4'],
+            'pengalaman_kerja' => ['required_if:role,pelamar', 'nullable', 'string', 'max:255'],
+            'gender' => ['required_if:role,pelamar', 'nullable', 'in:Laki-laki,Perempuan'],
+            'no_hp' => ['required_if:role,pelamar', 'nullable', 'string', 'max:20'],
+
+            // Aturan Khusus Perusahaan
+            'alamat_jalan' => ['required_if:role,perusahaan', 'nullable', 'string'],
+            'alamat_kota' => ['required_if:role,perusahaan', 'nullable', 'string', 'max:255'],
+            'kode_pos' => ['required_if:role,perusahaan', 'nullable', 'string', 'max:10'],
+            'no_telp_perusahaan' => ['required_if:role,perusahaan', 'nullable', 'string', 'max:20'],
+            'npwp_perusahaan' => ['required_if:role,perusahaan', 'nullable', 'string', 'max:25'],
         ]);
 
-        // Variabel untuk menampung user dan profil yang baru dibuat
-        $createdUser = null;
-        $createdProfile = null;
-
-        // Transaksi database untuk memastikan semua data tersimpan atau tidak sama sekali
-        DB::transaction(function () use ($request, &$createdUser, &$createdProfile) {
+        // --- PENYIMPANAN DATA ---
+        $user = DB::transaction(function () use ($request) {
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -65,22 +71,11 @@ class RegisteredUserController
             ]);
 
             if ($request->role === 'pelamar') {
-                // Buat profil pelamar
-                $profile = $user->profilePelamar()->create([
-                    'nama_lengkap' => $request->name,
-                    'nik' => $request->nik,
-                    'alamat' => $request->alamat,
-                    'tanggal_lahir' => $request->tanggal_lahir,
-                    'domisili' => $request->domisili,
-                    'lulusan' => $request->lulusan,
-                    'tahun_lulus' => $request->tahun_lulus,
-                    'pengalaman_kerja' => $request->pengalaman_kerja,
-                    'gender' => $request->gender,
-                    'no_hp' => $request->no_hp,
-                ]);
-                $createdProfile = $profile; // Simpan profil yang baru dibuat
+                $user->profilePelamar()->create($request->only([
+                    'nik', 'alamat', 'tanggal_lahir', 'domisili', 'lulusan',
+                    'tahun_lulus', 'pengalaman_kerja', 'gender', 'no_hp'
+                ]) + ['nama_lengkap' => $request->name]);
 
-                // Catat aktivitas
                 ActivityLog::create([
                     'user_id' => $user->id,
                     'activity_type' => 'Pendaftaran Pelamar',
@@ -88,12 +83,17 @@ class RegisteredUserController
                 ]);
 
             } elseif ($request->role === 'perusahaan') {
-                // Buat profil perusahaan
+                // --- PERBAIKAN FINAL ---
+                // Menyimpan data ke kolom yang benar sesuai dengan database Anda
                 $user->profilePerusahaan()->create([
                     'nama_perusahaan' => $request->name,
+                    'alamat_jalan' => $request->alamat_jalan,
+                    'alamat_kota' => $request->alamat_kota,
+                    'kode_pos' => $request->kode_pos,
+                    'no_telp_perusahaan' => $request->no_telp_perusahaan,
+                    'npwp_perusahaan' => $request->npwp_perusahaan,
                 ]);
 
-                // Catat aktivitas
                 ActivityLog::create([
                     'user_id' => $user->id,
                     'activity_type' => 'Pendaftaran Perusahaan',
@@ -101,55 +101,39 @@ class RegisteredUserController
                 ]);
             }
             
-            $createdUser = $user; // Simpan user yang baru dibuat
+            return $user;
         });
 
-        // Jika user gagal dibuat, kembali dengan error
-        if (!$createdUser) {
-            return back()->withErrors(['msg' => 'Gagal membuat akun, silakan coba lagi.'])->withInput();
-        }
+        event(new Registered($user));
+        Auth::login($user);
 
-        // --- LOGIKA PENGALIHAN BARU ---
-
-        // Jika yang daftar PERUSAHAAN, langsung login dan redirect
-        if ($createdUser->role === 'perusahaan') {
-            event(new Registered($createdUser));
-            Auth::login($createdUser);
+        // --- PENGALIHAN ---
+        if ($user->role === 'perusahaan') {
             return redirect(route('perusahaan.dashboard'));
         }
         
-        // Jika PELAMAR, arahkan ke halaman pilih keahlian
-        if ($createdUser->role === 'pelamar' && $createdProfile) {
-            // Simpan ID PROFIL PELAMAR ke session untuk langkah berikutnya
-            $request->session()->put('new_pelamar_id', $createdProfile->id);
+        if ($user->role === 'pelamar') {
+            $request->session()->put('new_pelamar_id', $user->profilePelamar->id);
             return redirect()->route('register.keahlian.create');
         }
 
-        // Fallback jika terjadi kesalahan
-        return redirect(route('register'));
+        // Fallback
+        return redirect(route('login'));
     }
-
-    // ==================================================================
-    // == METODE BARU UNTUK PROSES PEMILIHAN KEAHLIAN ==
-    // ==================================================================
 
     /**
      * Menampilkan form untuk memilih keahlian.
      */
     public function createKeahlian(): View|RedirectResponse
     {
-        // Ambil ID profil pelamar dari session
         $pelamarId = session('new_pelamar_id');
 
-        // Jika tidak ada ID di session (misal user akses URL langsung), kembalikan ke awal
         if (!$pelamarId) {
             return redirect(route('register'));
         }
 
-        // Ambil semua bidang beserta relasi keahliannya (Eager Loading)
         $bidangKeahlians = BidangKeahlian::with('keahlian')->orderBy('nama_bidang')->get();
 
-        // Kirim data yang sudah dikelompokkan ke view
         return view('auth.register-keahlian', [
             'bidangKeahlians' => $bidangKeahlians,
             'pelamar_id' => $pelamarId
@@ -163,29 +147,24 @@ class RegisteredUserController
     {
         $request->validate([
             'pelamar_id' => ['required', 'exists:profiles_pelamar,id'],
-            'keahlian' => ['nullable', 'array'], // Boleh kosong, tapi harus array
-            'keahlian.*' => ['exists:keahlian,id'] // Setiap item harus ada di tabel 'keahlian'
+            'keahlian' => ['nullable', 'array'],
+            'keahlian.*' => ['exists:keahlian,id']
         ]);
 
         $profilePelamar = ProfilePelamar::find($request->pelamar_id);
 
-        // Jika profil tidak ditemukan, kembali ke awal
         if (!$profilePelamar) {
             return redirect(route('register'));
         }
         
-        // Simpan keahlian ke pivot table 'pelamar_keahlian' menggunakan relasi
         if ($request->has('keahlian')) {
             $profilePelamar->keahlian()->sync($request->keahlian);
         }
 
-        // Hapus session agar tidak bisa diakses lagi
         $request->session()->forget('new_pelamar_id');
 
-        // Ambil data user dari relasi untuk login
         $user = $profilePelamar->user;
 
-        // Trigger event, login, dan redirect ke dashboard
         event(new Registered($user));
         Auth::login($user);
 

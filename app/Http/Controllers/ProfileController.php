@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Illuminate\Validation\Rule;
 use App\Models\ProfilePelamar;
+use App\Models\ProfilePerusahaan;
 use App\Models\Keahlian;
 use App\Models\BidangKeahlian;
 
@@ -33,6 +34,11 @@ class ProfileController
             );
             $profile->load('keahlian');
             $bidangKeahlianGrouped = BidangKeahlian::with('keahlian')->orderBy('nama_bidang')->get();
+        } elseif ($role === 'perusahaan') {
+            $profile = ProfilePerusahaan::firstOrCreate(
+                ['user_id' => $user->id],
+                ['nama_perusahaan' => $user->name]
+            );
         } else {
             $profile = $user;
         }
@@ -55,57 +61,107 @@ class ProfileController
     public function update(Request $request): RedirectResponse
     {
         $user = $request->user();
-        $profile = ProfilePelamar::where('user_id', $user->id)->first();
+        $role = $user->role;
 
-        $validatedData = $request->validate([
-            'nama_depan' => ['required', 'string', 'max:125'],
-            'nama_belakang' => ['nullable', 'string', 'max:125'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
-            'nik' => ['nullable', 'string', 'size:16', Rule::unique('profiles_pelamar')->ignore($profile->id ?? null)],
-            'alamat' => ['required', 'string'],
-            'domisili' => ['required', 'string', 'max:255'],
-            'lulusan' => ['required', 'string', 'max:255'],
-            'no_hp' => ['required', 'string', 'max:20'],
-            'tanggal_lahir' => ['required', 'date'],
-            'gender' => ['required', 'in:Laki-laki,Perempuan'],
-            'tahun_lulus' => ['required', 'digits:4', 'integer', 'min:1980'],
-            'pengalaman_kerja' => ['nullable', 'string', 'max:255'],
-            'tentang_saya' => ['nullable', 'string'],
-            'file_cv' => ['nullable', 'file', 'mimes:pdf', 'max:2048'],
-            // Validasi untuk keahlian ditambahkan di sini
-            'keahlian' => ['nullable', 'array'],
-            'keahlian.*' => ['exists:keahlian,id'],
-        ]);
+        if ($role === 'pelamar') {
+            $profile = ProfilePelamar::where('user_id', $user->id)->first();
 
-        $nama_lengkap = trim($validatedData['nama_depan'] . ' ' . $validatedData['nama_belakang']);
+            // VALIDASI DISESUAIKAN: Menghapus validasi untuk field yang 'disabled' atau tidak ada di form
+            $validatedData = $request->validate([
+                'nama_depan' => ['required', 'string', 'max:125'],
+                'nama_belakang' => ['nullable', 'string', 'max:125'],
+                'alamat' => ['required', 'string'],
+                'domisili' => ['required', 'string', 'max:255'],
+                'lulusan' => ['required', 'string', 'max:255'],
+                'tanggal_lahir' => ['required', 'date'],
+                'gender' => ['required', 'in:Laki-laki,Perempuan'],
+                'tahun_lulus' => ['required', 'digits:4', 'integer', 'min:1980'],
+                'pengalaman_kerja' => ['nullable', 'string', 'max:255'],
+                'tentang_saya' => ['nullable', 'string'],
+                'foto_ktp' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:2048'],
+                'keahlian' => ['nullable', 'array'],
+                'keahlian.*' => ['exists:keahlian,id'],
+            ]);
 
-        $user->fill([
-            'name' => $nama_lengkap,
-            'email' => $validatedData['email'],
-        ]);
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-        $user->save();
+            $nama_lengkap = trim($validatedData['nama_depan'] . ' ' . $validatedData['nama_belakang']);
 
-        if ($profile) {
-            $profileData = $validatedData;
-            $profileData['nama_lengkap'] = $nama_lengkap;
-            $profile->fill($profileData);
-            if ($request->hasFile('file_cv')) {
-                if ($profile->file_cv) Storage::disk('public')->delete($profile->file_cv);
-                $profile->file_cv = $request->file('file_cv')->store('cv', 'public');
+            // Hapus pembaruan email karena tidak lagi divalidasi/dikirim dari form
+            $user->fill([
+                'name' => $nama_lengkap,
+            ]);
+            $user->save();
+
+            if ($profile) {
+                $profileData = $validatedData;
+                $profileData['nama_lengkap'] = $nama_lengkap;
+                $profile->fill($profileData);
+                
+                if ($request->hasFile('foto_ktp')) {
+                    if ($profile->foto_ktp) Storage::disk('public')->delete($profile->foto_ktp);
+                    $profile->foto_ktp = $request->file('foto_ktp')->store('ktp', 'public');
+                }
+
+                $profile->save();
+                $profile->keahlian()->sync($request->input('keahlian', []));
             }
-            $profile->save();
-
-            // PENYESUAIAN: Menyimpan keahlian saat tombol "Simpan Perubahan" utama ditekan
-            $profile->keahlian()->sync($request->input('keahlian', []));
+            
+            return Redirect::route('pelamar.profile.edit')->with('success', 'Profil berhasil diperbarui!');
         }
         
-        return Redirect::route('pelamar.profile.edit')->with('success', 'Profil berhasil diperbarui!');
+        if ($role === 'perusahaan') {
+            $profile = ProfilePerusahaan::where('user_id', $user->id)->first();
+            
+            $validatedData = $request->validate([
+                'name'              => ['required', 'string', 'max:255'],
+                'situs_web'         => ['nullable', 'string', 'max:255'],
+                'alamat_jalan'      => ['nullable', 'string', 'max:255'],
+                'alamat_kota'       => ['nullable', 'string', 'max:255'],
+                'kode_pos'          => ['nullable', 'string', 'max:10'],
+                'deskripsi'         => ['nullable', 'string'],
+            ]);
+
+            $user->fill([
+                'name' => $validatedData['name'],
+            ]);
+            $user->save();
+
+            if ($profile) {
+                $profile->fill($validatedData);
+                $profile->save();
+            }
+
+            return Redirect::route('perusahaan.profile.edit')->with('success', 'Profil perusahaan berhasil diperbarui!');
+        }
+
+        return Redirect::back()->with('error', 'Gagal memperbarui profil.');
     }
 
-    // PENYESUAIAN: Metode updateKeahlian dihapus karena tidak lagi digunakan
+    /**
+     * Mengunggah logo perusahaan.
+     */
+    public function uploadLogo(Request $request)
+    {
+        $request->validate([
+            'logo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $user = $request->user();
+        $profile = ProfilePerusahaan::where('user_id', $user->id)->firstOrFail();
+
+        if ($request->hasFile('logo')) {
+            if ($profile->logo_perusahaan && Storage::disk('public')->exists($profile->logo_perusahaan)) {
+                Storage::disk('public')->delete($profile->logo_perusahaan);
+            }
+
+            $path = $request->file('logo')->store('logos', 'public');
+            $profile->logo_perusahaan = $path;
+            $profile->save();
+
+            return back()->with('success', 'Logo perusahaan berhasil diupload!');
+        }
+
+        return back()->with('error', 'Gagal mengupload logo.');
+    }
 
     /**
      * Menghapus akun pengguna.
@@ -119,8 +175,8 @@ class ProfileController
         $user = $request->user();
         Auth::logout();
 
-        if ($user->pelamar && $user->pelamar->file_cv) {
-            Storage::disk('public')->delete($user->pelamar->file_cv);
+        if ($user->pelamar && $user->pelamar->foto_ktp) {
+            Storage::disk('public')->delete($user->pelamar->foto_ktp);
         }
         
         $user->delete();
@@ -130,23 +186,23 @@ class ProfileController
 
         return Redirect::to('/');
     }
-        public function deleteCv(Request $request): RedirectResponse
+    
+    /**
+     * Menghapus file foto KTP pelamar.
+     */
+    public function deleteFotoKtp(Request $request): RedirectResponse
     {
         $user = Auth::user();
         $profile = $user->pelamar;
 
-        if ($profile && $profile->file_cv) {
-            // Hapus file dari storage
-            Storage::disk('public')->delete($profile->file_cv);
-
-            // Update kolom di database menjadi null
-            $profile->file_cv = null;
+        if ($profile && $profile->foto_ktp) {
+            Storage::disk('public')->delete($profile->foto_ktp);
+            $profile->foto_ktp = null;
             $profile->save();
 
-            return Redirect::route('pelamar.profile.edit')->with('success', 'CV berhasil dihapus.');
+            return Redirect::route('pelamar.profile.edit')->with('success', 'Foto KTP berhasil dihapus.');
         }
 
-        return Redirect::route('pelamar.profile.edit')->with('error', 'CV tidak ditemukan atau sudah dihapus.');
+        return Redirect::route('pelamar.profile.edit')->with('error', 'Foto KTP tidak ditemukan atau sudah dihapus.');
     }
-
 }

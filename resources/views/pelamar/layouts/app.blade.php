@@ -14,9 +14,8 @@
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
-            /* Mengubah background body agar lebih netral, karena konten profil menggunakan kartu putih */
             background-color: #f0f2f5; 
-            color: #333; /* Mengubah warna teks default agar terbaca di background terang */
+            color: #333;
             overflow-x: hidden;
         }
 
@@ -58,80 +57,47 @@
             background-color: #ff8c1a;
             color: white;
         }
-        .btn-outline-light {
-            padding: 0.6rem 1.5rem;
-            border-color: white;
-            color: white;
-        }
-        .btn-outline-light:hover {
-            background-color: white;
-            color: #22374e;
-            border-color: white;
-        }
-
-        /* Offcanvas Navbar Styles */
-        .offcanvas-header {
-            background-color: #22374e;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .offcanvas-title {
-            color: white;
-            font-weight: bold;
-        }
-        .offcanvas-body {
-            background-color: #22374e;
-            color: white;
-            padding-top: 1rem;
-            display: flex;
-            flex-direction: column;
-        }
-        .offcanvas-body .navbar-nav {
-            width: 100%;
-            margin-left: 0;
-            flex-grow: 1;
-        }
-        .offcanvas-body .navbar-nav .nav-item {
-            width: 100%;
-            text-align: left;
-            margin-bottom: 0.5rem;
-        }
-        .offcanvas-body .navbar-nav .nav-link {
-            padding: 0.75rem 1rem;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            color: white;
-        }
-        .offcanvas-body .navbar-nav .nav-link:hover {
-            background-color: rgba(255,255,255,0.1);
-        }
-        .offcanvas-buttons {
-            margin-top: 1.5rem;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        .offcanvas-buttons .btn {
-            width: 100%;
-        }
         
-        @media (max-width: 991.98px) {
-            .navbar .ms-auto {
-                display: none !important;
-            }
+        /* Footer Styles */
+        footer.footer { 
+            background-color: #071b2f; 
+            color: white; 
+            width: 100%; 
+            padding: 4rem 0; 
+        }
+        footer.footer ul { 
+            list-style-type: none; 
+            padding-left: 0; 
+        }
+        footer.footer .text-white-50 { 
+            color: rgba(255, 255, 255, 0.5); 
+        }
+        footer.footer a { 
+            color: #ff7b00; 
+            text-decoration: none; 
+            transition: text-decoration 0.3s ease; 
+        }
+        footer.footer a:hover { 
+            text-decoration: underline; 
         }
     </style>
+
+    @stack('styles')
 </head>
 <body>
 
-    {{-- PERUBAHAN DI SINI: Menyesuaikan path ke navbar pelamar --}}
     @include('pelamar.partials.navbar')
 
-    <main class="py-4">
-        {{-- Di sinilah konten dari halaman profil Anda akan ditampilkan --}}
+    <main>
+        {{-- Konten dari halaman lain akan muncul di sini --}}
         @yield('content')
     </main>
+    
+    {{-- Memanggil footer partial --}}
+    @include('pelamar.partials.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
+    @stack('scripts')
 </body>
 </html>

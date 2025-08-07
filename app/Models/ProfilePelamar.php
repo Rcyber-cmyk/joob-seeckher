@@ -12,6 +12,7 @@ class ProfilePelamar extends Model
     
     protected $table = 'profiles_pelamar';
 
+    // PERBAIKAN: Mengganti 'file_cv' dengan 'foto_ktp' agar bisa disimpan
     protected $fillable = [
         'user_id', 
         'nama_lengkap', 
@@ -24,7 +25,7 @@ class ProfilePelamar extends Model
         'pengalaman_kerja',
         'gender', 
         'no_hp', 
-        'file_cv', 
+        'foto_ktp', 
         'tentang_saya'
     ];
 
@@ -45,11 +46,27 @@ class ProfilePelamar extends Model
     }
 
     /**
+     * Relasi ke lowongan pekerjaan yang disimpan oleh pelamar.
+     */
+    public function lowonganTersimpan()
+    {
+        return $this->belongsToMany(LowonganPekerjaan::class, 'lowongan_tersimpan', 'pelamar_id', 'lowongan_id')->withTimestamps();
+    }
+
+    /**
+     * Relasi ke model Lamaran.
+     */
+    public function lamaran()
+    {
+        return $this->hasMany(Lamaran::class, 'pelamar_id');
+    }
+
+    /**
      * Accessor untuk menghitung persentase kelengkapan profil secara dinamis.
      */
     public function getKelengkapanProfilAttribute(): int
     {
-        // Daftar semua field yang dianggap penting untuk kelengkapan profil
+        // PERBAIKAN: Menghitung persentase berdasarkan 'foto_ktp'
         $fields = [
             'nik',
             'alamat',
@@ -60,20 +77,18 @@ class ProfilePelamar extends Model
             'pengalaman_kerja',
             'gender',
             'no_hp',
-            'file_cv', // Anda bisa memasukkan file_cv jika dianggap wajib
+            'foto_ktp',
         ];
 
         $totalFields = count($fields);
         $filledFields = 0;
 
         foreach ($fields as $field) {
-            // Periksa apakah atribut tidak kosong atau null
             if (!empty($this->attributes[$field])) {
                 $filledFields++;
             }
         }
 
-        // Hitung persentase dan bulatkan
         return $totalFields > 0 ? round(($filledFields / $totalFields) * 100) : 0;
     }
 }

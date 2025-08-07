@@ -42,7 +42,7 @@
         @media (max-width: 767.98px) {
             .hero-section { min-height: 100vh; padding: 2rem 1rem; display: flex; flex-direction: column; justify-content: center; align-items: center; }
             .hero-section .container { display: flex; flex-direction: column; width: 100%; align-items: center; }
-            .hero-section .row { width: 100%; display: flex; flex-direction: row !important; flex-wrap: nowrap !important; overflow-x: auto; justify-content: flex-start !important; align-items: center !important; }
+            .hero-section .row { width: 100%; display: flex; flex-direction: row !important; flex-wrap: nowrap !important; justify-content: flex-start !important; align-items: center !important; }
             .hero-section .col-md-6 { flex: 0 0 50% !important; max-width: 50% !important; margin-bottom: 0 !important; }
             .hero-section .col-md-6:first-child { text-align: left !important; display: flex; flex-direction: column; align-items: flex-start !important; justify-content: center; }
             .hero-section .col-md-6.text-center { margin-top: 0 !important; text-align: center !important; display: flex; flex-direction: column; align-items: center !important; justify-content: center; }
@@ -145,7 +145,6 @@
             <div class="row">
                 <div class="col-md-6 mb-4 mb-md-0">
                     <h1>TEMPAT SOLUSI <br> ANDA CARI KERJA <br> DISINI</h1>
-                    <p>Daftar Kerja Disini !!</p>
                     <div class="mt-3">
                         @auth
                             <a href="{{ Auth::user()->role === 'pelamar' ? route('pelamar.dashboard') : (Auth::user()->role === 'perusahaan' ? route('perusahaan.dashboard') : route('admin.dashboard')) }}" class="btn btn-orange">Buka Dashboard</a>
@@ -170,9 +169,9 @@
                     <h2>Prospek Pekerjaan GOJEK<br>Beserta Gajinya</h2>
                     <p>Temukan peluang karir menarik di ekosistem Gojek yang dinamis, mulai dari teknologi hingga operasional.</p>
                     @auth
-                        <a href="#" class="btn-berita-landing">Cari Tau Selengkapnya</a>
+                        <a href="{{ route('berita.index') }}" class="btn-berita-landing">Cari Tau Selengkapnya</a>
                     @else
-                        <a href="#" class="btn-berita-landing" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Cari Tau Selengkapnya</a>
+                        <a href="{{ route('berita.index') }}" class="btn-berita-landing" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Cari Tau Selengkapnya</a>
                     @endauth
                 </div>
             </div>
@@ -182,9 +181,9 @@
                     <h2>Mari Bekerja <br>Dapatkan Sebuah Keseruan dengan para pengusaha</h2>
                     <p>Jelajahi berbagai event dan pameran karir untuk bertemu langsung dengan calon atasan Anda.</p>
                     @auth
-                        <a href="#" class="btn-berita-landing">Cari Tahu Selengkapnya</a>
+                        <a href="{{ route('berita.index') }}" class="btn-berita-landing">Cari Tahu Selengkapnya</a>
                     @else
-                        <a href="#" class="btn-berita-landing" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Cari Tahu Selengkapnya</a>
+                        <a href="{{ route('berita.index') }}" class="btn-berita-landing" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Cari Tahu Selengkapnya</a>
                     @endauth
                 </div>
             </div>
@@ -194,9 +193,9 @@
                     <h2>Inovasi Digital <br>Membuka Peluang Karir Baru</h2>
                     <p>Ikuti webinar terbaru kami untuk menambah wawasan di dunia ekonomi digital dan temukan jalur karir yang inovatif.</p>
                     @auth
-                        <a href="#" class="btn-berita-landing">Baca Selengkapnya</a>
+                        <a href="{{ route('berita.index') }}" class="btn-berita-landing">Baca Selengkapnya</a>
                     @else
-                        <a href="#" class="btn-berita-landing" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Baca Selengkapnya</a>
+                        <a href="{{ route('berita.index') }}" class="btn-berita-landing" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Baca Selengkapnya</a>
                     @endauth
                 </div>
             </div>
@@ -244,9 +243,9 @@
             </div>
             <div class="text-end mt-4">
                 @auth
-                    <a href="#" class="text-dark fw-semibold text-decoration-none">LIHAT SELENGKAPNYA →</a>
+                    <a href="{{ route('lowongan.index') }}" class="text-dark fw-semibold text-decoration-none">LIHAT SELENGKAPNYA →</a>
                 @else
-                    <a href="#" class="text-dark fw-semibold text-decoration-none" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">LIHAT SELENGKAPNYA →</a>
+                    <a href="{{ route('lowongan.index') }}" class="text-dark fw-semibold text-decoration-none" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">LIHAT SELENGKAPNYA →</a>
                 @endauth
             </div>
 

@@ -12,7 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('keahlian', function (Blueprint $table) {
-            //
+            // Definisikan kolom dengan tipe data yang sama persis
+            $table->unsignedBigInteger('bidang_keahlian_id')->nullable()->after('id');
+
+            // Tambahkan foreign key constraint secara terpisah
+            $table->foreign('bidang_keahlian_id')
+                  ->references('id')
+                  ->on('bidang_keahlians')
+                  ->onDelete('set null');
         });
     }
 
@@ -22,7 +29,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('keahlian', function (Blueprint $table) {
-            //
+            // Hapus constraint terlebih dahulu
+            $table->dropForeign(['bidang_keahlian_id']);
+            // Hapus kolomnya
+            $table->dropColumn('bidang_keahlian_id');
         });
     }
 };

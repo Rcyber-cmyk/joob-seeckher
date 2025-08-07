@@ -11,7 +11,6 @@
             font-family: 'Segoe UI', sans-serif;
             background-color: #2d3e50;
             color: #ffffff;
-            overflow: hidden;
         }
         .login-container {
             min-height: 100vh;
@@ -122,12 +121,51 @@
         .bottom-link a:hover {
             text-decoration: underline;
         }
+        /* Style untuk toggle password */
+        .password-input-wrapper {
+            position: relative;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #a0aec0;
+            font-size: 1.2rem;
+        }
+        .password-toggle:hover {
+            color: white;
+        }
         @media (max-width: 991.98px) {
             .illustration-panel {
                 display: none;
             }
             .form-panel {
                 padding: 1.5rem;
+            }
+            .illustration-panel {
+                display: flex; /* Tampilkan kembali panel ilustrasi di mobile */
+                width: 100%; /* Lebar penuh di mobile */
+                padding: 1rem 0; /* Padding atas bawah */
+                order: -1; /* Pindahkan ke atas form */
+            }
+            .illustration-panel img {
+                max-width: 150px; /* Ukuran gambar lebih kecil di mobile */
+                margin-top: 2rem; /* Jarak dari atas */
+                margin-bottom: 1rem; /* Jarak dari form */
+            }
+            .form-panel {
+                width: 100%; /* Lebar penuh di mobile */
+                padding: 1.5rem; /* Padding yang lebih kecil */
+            }
+            .back-arrow {
+                top: 1rem;
+                left: 1rem;
+            }
+            .form-header h2 {
+                text-align: left; /* Pusatkan judul di mobile */
+                font-size: 2rem; /* Kecilkan ukuran font judul */
             }
         }
     </style>

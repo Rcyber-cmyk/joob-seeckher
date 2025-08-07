@@ -46,9 +46,18 @@ class AuthenticatedSessionController
      */
     public function destroy(Request $request): RedirectResponse
     {
+        // Simpan peran pengguna sebelum logout
+        $userRole = Auth::user()->role ?? null;
+
         Auth::guard('web')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect('/');
+
+        // Alihkan pengguna berdasarkan peran mereka
+        if ($userRole === 'perusahaan') {
+            return redirect()->route('perusahaan'); // Mengarahkan ke halaman publik perusahaan
+        }
+
+        return redirect()->route('home'); // Mengarahkan ke homepage default (pelamar)
     }
 }
