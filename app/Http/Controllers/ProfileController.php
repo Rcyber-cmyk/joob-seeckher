@@ -95,6 +95,16 @@ class ProfileController
                 $profileData = $validatedData;
                 $profileData['nama_lengkap'] = $nama_lengkap;
                 $profile->fill($profileData);
+
+                // <-- TAMBAHKAN LOGIKA UNGGAH FOTO PROFIL
+                if ($request->hasFile('foto_profil')) {
+                    // Hapus foto lama jika ada
+                    if ($profile->foto_profil && Storage::disk('public')->exists($profile->foto_profil)) {
+                        Storage::disk('public')->delete($profile->foto_profil);
+                    }
+                    // Simpan foto baru
+                    $profile->foto_profil = $request->file('foto_profil')->store('avatars', 'public');
+                }
                 
                 if ($request->hasFile('foto_ktp')) {
                     if ($profile->foto_ktp) Storage::disk('public')->delete($profile->foto_ktp);

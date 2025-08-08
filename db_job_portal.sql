@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 08, 2025 at 12:18 AM
+-- Generation Time: Aug 08, 2025 at 12:03 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.3.22
 
@@ -179,6 +179,14 @@ CREATE TABLE `cache` (
   `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `expiration` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `cache`
+--
+
+INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
+('maya@gmail.com|127.0.0.1', 'i:3;', 1754637757),
+('maya@gmail.com|127.0.0.1:timer', 'i:1754637757;', 1754637757);
 
 -- --------------------------------------------------------
 
@@ -446,7 +454,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (17, '2025_08_04_034549_add_logo_perusahaan_to_profiles_perusahaan_table', 7),
 (18, '2025_08_05_174912_add_kualifikasi_to_lowongan_pekerjaan_table', 8),
 (19, '2025_08_06_220032_create_jadwal_wawancara_table', 9),
-(20, '2025_08_07_213736_update_profiles_pelamar_for_ktp', 10);
+(20, '2025_08_07_213736_update_profiles_pelamar_for_ktp', 10),
+(21, '2025_08_08_073011_add_foto_profil_to_profiles_pelamar_table', 11);
 
 -- --------------------------------------------------------
 
@@ -527,6 +536,7 @@ CREATE TABLE `profiles_pelamar` (
   `id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
   `nama_lengkap` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `foto_profil` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `nik` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL,
   `alamat` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `domisili` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -546,42 +556,42 @@ CREATE TABLE `profiles_pelamar` (
 -- Dumping data for table `profiles_pelamar`
 --
 
-INSERT INTO `profiles_pelamar` (`id`, `user_id`, `nama_lengkap`, `nik`, `alamat`, `domisili`, `lulusan`, `no_hp`, `tanggal_lahir`, `gender`, `tahun_lulus`, `pengalaman_kerja`, `tentang_saya`, `foto_ktp`, `created_at`, `updated_at`) VALUES
-(4, 9, 'rizki', '2345671829384776', 'Mranggen', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2003-01-14', 'Laki-laki', 2022, '1-3 Tahun', NULL, NULL, '2025-07-26 04:28:37', '2025-07-26 04:28:37'),
-(5, 10, 'muna', '2345671829384789', 'demak', 'Semarang', 'SMP/Sederajat', '082328872084', '2025-07-18', 'Perempuan', 2023, '< 1 Tahun', NULL, NULL, '2025-07-29 12:48:26', '2025-07-29 12:48:26'),
-(6, 11, 'lia', '2345671829384790', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-18', 'Perempuan', 2021, 'Fresh Graduate', NULL, NULL, '2025-07-29 12:58:19', '2025-07-29 12:58:19'),
-(7, 12, 'branzz', '2345671829384780', 'lamongan', 'lamongan', 'S1', '082328872084', '2025-07-18', 'Laki-laki', 2016, '> 5 Tahun', NULL, NULL, '2025-07-29 13:33:24', '2025-07-29 13:33:24'),
-(8, 13, 'abdul', '2345671829384798', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-03', 'Laki-laki', 2022, '1-3 Tahun', NULL, NULL, '2025-07-29 13:49:23', '2025-07-29 13:49:23'),
-(9, 14, 'karim', '2345671829384707', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-16', 'Laki-laki', 2021, 'Fresh Graduate', NULL, NULL, '2025-07-29 13:51:56', '2025-07-29 13:51:56'),
-(10, 15, 'akmal', '2345671829384777', 'semarang', 'semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-24', 'Laki-laki', 2009, '< 1 Tahun', NULL, NULL, '2025-07-29 13:52:54', '2025-07-29 13:52:54'),
-(11, 16, 'tegar', '2345671829384708', 'semarang', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-17', 'Laki-laki', 1986, '3-5 Tahun', NULL, NULL, '2025-07-29 13:53:53', '2025-07-29 13:53:53'),
-(12, 17, 'abel', '2345671829363539', 'banyumanik', 'Semarang', 'D3', '082328872084', '2025-07-15', 'Laki-laki', 2011, 'Fresh Graduate', NULL, NULL, '2025-07-30 03:08:38', '2025-07-30 03:08:38'),
-(13, 18, 'merlin', '2345671829384705', 'lamongan', 'lamongan', 'S1', '082328872084', '2025-07-01', 'Perempuan', 2013, '< 1 Tahun', NULL, NULL, '2025-07-30 03:16:37', '2025-07-30 08:21:03'),
-(14, 19, 'bono', '2345671829384730', 'lamongan', 'lamongan', 'D2', '082328872084', '2025-07-09', 'Laki-laki', 2009, 'Fresh Graduate', NULL, NULL, '2025-07-30 03:20:44', '2025-07-30 03:20:44'),
-(15, 20, 'ikmil', '2345671829384722', 'semarang', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-15', 'Laki-laki', 2011, 'Fresh Graduate', NULL, NULL, '2025-07-30 03:38:40', '2025-07-30 03:38:40'),
-(16, 21, 'ikmil', '2345671829384723', 'semarang', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-15', 'Laki-laki', 2011, 'Fresh Graduate', NULL, NULL, '2025-07-30 03:42:15', '2025-07-30 03:42:15'),
-(17, 22, 'nafa', '2345671829384887', 'lamongan', 'Semarang', 'D2', '082328872084', '2025-07-24', 'Perempuan', 2008, '< 1 Tahun', NULL, NULL, '2025-07-30 03:55:17', '2025-07-30 03:55:17'),
-(18, 23, 'zaid', '2345671829384765', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', 2013, '> 5 Tahun', NULL, NULL, '2025-07-30 09:06:25', '2025-07-30 09:06:25'),
-(19, 24, 'zaid', '2345671829384754', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', 2013, '> 5 Tahun', NULL, NULL, '2025-07-30 09:13:20', '2025-07-30 09:13:20'),
-(20, 25, 'zaid', '2345671829384741', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', 2013, '> 5 Tahun', NULL, NULL, '2025-07-30 09:15:16', '2025-07-30 09:15:16'),
-(21, 26, 'zaid', '2345671829384778', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', 2013, '> 5 Tahun', NULL, NULL, '2025-07-30 09:20:29', '2025-07-30 09:20:29'),
-(22, 27, 'stel', '2345671829384742', 'semarang', 'lamongan', 'S2', '082328872084', '2025-07-04', 'Laki-laki', 2010, 'Fresh Graduate', NULL, NULL, '2025-07-30 09:21:30', '2025-07-30 09:21:30'),
-(23, 28, 'baba', '2345671829384782', 'lamongan', 'lamongan', 'D1', '082328872084', '2025-07-16', 'Laki-laki', 2015, '1-3 Tahun', NULL, NULL, '2025-07-30 09:24:09', '2025-07-30 09:24:09'),
-(24, 29, 'mama', '2345671829384743', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-09', 'Laki-laki', 2024, '1-3 Tahun', NULL, NULL, '2025-07-30 09:27:15', '2025-07-30 09:27:15'),
-(25, 30, 'mimi', '2345671829384721', 'lamongan', 'lamongan', 'SMA/SMK Sederajat', '082328872084', '2025-07-10', 'Laki-laki', 2011, '1-3 Tahun', NULL, NULL, '2025-07-30 09:33:50', '2025-07-30 09:33:50'),
-(26, 31, 'momo', '2345671829384542', 'banyumanik', 'semarang', 'S2', '082328872084', '2025-07-15', 'Laki-laki', 2011, 'Fresh Graduate', NULL, NULL, '2025-07-30 09:48:49', '2025-07-30 09:48:49'),
-(27, 32, 'mumu', '2345671829384745', 'gubug', 'semarang', 'D3', '082328872084', '2025-07-15', 'Perempuan', 2010, '1-3 Tahun', NULL, NULL, '2025-07-30 10:16:31', '2025-07-30 10:16:31'),
-(29, 34, 'dika', '2345671829384842', 'jl.rayon kusuman', 'Demak', 'SMA/SMK Sederajat', '082328872084', '2025-07-10', 'Laki-laki', 2019, '1-3 Tahun', NULL, NULL, '2025-07-31 08:26:19', '2025-07-31 08:26:19'),
-(30, 35, 'ini', '2345671829384452', 'ini', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-10', 'Laki-laki', 2023, '1-3 Tahun', NULL, NULL, '2025-07-31 08:39:27', '2025-07-31 08:39:27'),
-(31, 36, 'inu', '2345671829384641', 'semarang', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-09', 'Perempuan', 2022, '1-3 Tahun', NULL, NULL, '2025-07-31 09:17:11', '2025-07-31 09:17:11'),
-(32, 37, 'unu', '2345671829384761', 'kudus', 'kudus', 'SMP/Sederajat', '082328872084', '2025-08-08', 'Laki-laki', 2022, '3-5 Tahun', NULL, NULL, '2025-07-31 10:21:31', '2025-07-31 10:21:31'),
-(33, 38, 'ono', '2345671829384797', 's', 'Semarang', 'SMP/Sederajat', '082328872084', '2025-08-13', 'Laki-laki', 2022, '< 1 Tahun', NULL, NULL, '2025-07-31 10:54:27', '2025-07-31 10:54:27'),
-(34, 43, 'ine', '2345671829384123', 'semarang', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-08-08', 'Laki-laki', 2023, '3-5 Tahun', NULL, NULL, '2025-07-31 11:29:55', '2025-07-31 11:29:55'),
-(35, 45, 'stel2', '2345671829384321', 'kudus', 'kudus', 'SMA/SMK Sederajat', '082328872084', '2025-07-31', 'Perempuan', 2022, '1-3 Tahun', NULL, NULL, '2025-07-31 11:37:23', '2025-07-31 11:37:23'),
-(36, 46, 'Anda', '3321219873816256', 'BENGKAH', 'Kendal', 'SMA/SMK Sederajat', '084934283423', '2025-08-28', 'Laki-laki', 2022, '1-3 Tahun', NULL, NULL, '2025-08-01 02:56:12', '2025-08-01 02:56:12'),
-(37, 48, 'Maulana Aditia', '3321219873816023', 'Jl.kelinci', 'Demak', 'S1', '084934283423', '1998-10-22', 'Laki-laki', 2025, '1-3 Tahun', NULL, NULL, '2025-08-01 06:43:06', '2025-08-01 06:43:06'),
-(38, 51, 'Mayamaria jelek', '3321219873839211', 'Jl.Kretek', 'Kudus', 'S1', '084934283403', '2000-11-30', 'Perempuan', 2025, '3-5 Tahun', NULL, 'ktp/M2ixJ6S9TOOESQlZrqjdSPwPKv783pBlly1LsEUv.jpg', '2025-08-02 11:24:13', '2025-08-07 15:10:53'),
-(39, 54, 'Arrya Duta', '3374060504040001', 'Jalan Lanan 1465, Plamongansari', 'Semarang', 'SMA/SMK Sederajat', '089504447020', '2004-05-04', 'Laki-laki', 2022, 'Fresh Graduate', 'jago segala hal', 'ktp/PKcksFPtObrg0XpdbdRaCo7scF9dZOYOqkS8dPPo.png', '2025-08-07 13:41:27', '2025-08-07 15:22:25');
+INSERT INTO `profiles_pelamar` (`id`, `user_id`, `nama_lengkap`, `foto_profil`, `nik`, `alamat`, `domisili`, `lulusan`, `no_hp`, `tanggal_lahir`, `gender`, `tahun_lulus`, `pengalaman_kerja`, `tentang_saya`, `foto_ktp`, `created_at`, `updated_at`) VALUES
+(4, 9, 'rizki', NULL, '2345671829384776', 'Mranggen', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2003-01-14', 'Laki-laki', 2022, '1-3 Tahun', NULL, NULL, '2025-07-26 04:28:37', '2025-07-26 04:28:37'),
+(5, 10, 'muna', NULL, '2345671829384789', 'demak', 'Semarang', 'SMP/Sederajat', '082328872084', '2025-07-18', 'Perempuan', 2023, '< 1 Tahun', NULL, NULL, '2025-07-29 12:48:26', '2025-07-29 12:48:26'),
+(6, 11, 'lia', NULL, '2345671829384790', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-18', 'Perempuan', 2021, 'Fresh Graduate', NULL, NULL, '2025-07-29 12:58:19', '2025-07-29 12:58:19'),
+(7, 12, 'branzz', NULL, '2345671829384780', 'lamongan', 'lamongan', 'S1', '082328872084', '2025-07-18', 'Laki-laki', 2016, '> 5 Tahun', NULL, NULL, '2025-07-29 13:33:24', '2025-07-29 13:33:24'),
+(8, 13, 'abdul', NULL, '2345671829384798', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-03', 'Laki-laki', 2022, '1-3 Tahun', NULL, NULL, '2025-07-29 13:49:23', '2025-07-29 13:49:23'),
+(9, 14, 'karim', NULL, '2345671829384707', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-16', 'Laki-laki', 2021, 'Fresh Graduate', NULL, NULL, '2025-07-29 13:51:56', '2025-07-29 13:51:56'),
+(10, 15, 'akmal', NULL, '2345671829384777', 'semarang', 'semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-24', 'Laki-laki', 2009, '< 1 Tahun', NULL, NULL, '2025-07-29 13:52:54', '2025-07-29 13:52:54'),
+(11, 16, 'tegar', NULL, '2345671829384708', 'semarang', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-17', 'Laki-laki', 1986, '3-5 Tahun', NULL, NULL, '2025-07-29 13:53:53', '2025-07-29 13:53:53'),
+(12, 17, 'abel', NULL, '2345671829363539', 'banyumanik', 'Semarang', 'D3', '082328872084', '2025-07-15', 'Laki-laki', 2011, 'Fresh Graduate', NULL, NULL, '2025-07-30 03:08:38', '2025-07-30 03:08:38'),
+(13, 18, 'merlin', NULL, '2345671829384705', 'lamongan', 'lamongan', 'S1', '082328872084', '2025-07-01', 'Perempuan', 2013, '< 1 Tahun', NULL, NULL, '2025-07-30 03:16:37', '2025-07-30 08:21:03'),
+(14, 19, 'bono', NULL, '2345671829384730', 'lamongan', 'lamongan', 'D2', '082328872084', '2025-07-09', 'Laki-laki', 2009, 'Fresh Graduate', NULL, NULL, '2025-07-30 03:20:44', '2025-07-30 03:20:44'),
+(15, 20, 'ikmil', NULL, '2345671829384722', 'semarang', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-15', 'Laki-laki', 2011, 'Fresh Graduate', NULL, NULL, '2025-07-30 03:38:40', '2025-07-30 03:38:40'),
+(16, 21, 'ikmil', NULL, '2345671829384723', 'semarang', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-15', 'Laki-laki', 2011, 'Fresh Graduate', NULL, NULL, '2025-07-30 03:42:15', '2025-07-30 03:42:15'),
+(17, 22, 'nafa', NULL, '2345671829384887', 'lamongan', 'Semarang', 'D2', '082328872084', '2025-07-24', 'Perempuan', 2008, '< 1 Tahun', NULL, NULL, '2025-07-30 03:55:17', '2025-07-30 03:55:17'),
+(18, 23, 'zaid', NULL, '2345671829384765', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', 2013, '> 5 Tahun', NULL, NULL, '2025-07-30 09:06:25', '2025-07-30 09:06:25'),
+(19, 24, 'zaid', NULL, '2345671829384754', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', 2013, '> 5 Tahun', NULL, NULL, '2025-07-30 09:13:20', '2025-07-30 09:13:20'),
+(20, 25, 'zaid', NULL, '2345671829384741', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', 2013, '> 5 Tahun', NULL, NULL, '2025-07-30 09:15:16', '2025-07-30 09:15:16'),
+(21, 26, 'zaid', NULL, '2345671829384778', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', 2013, '> 5 Tahun', NULL, NULL, '2025-07-30 09:20:29', '2025-07-30 09:20:29'),
+(22, 27, 'stel', NULL, '2345671829384742', 'semarang', 'lamongan', 'S2', '082328872084', '2025-07-04', 'Laki-laki', 2010, 'Fresh Graduate', NULL, NULL, '2025-07-30 09:21:30', '2025-07-30 09:21:30'),
+(23, 28, 'baba', NULL, '2345671829384782', 'lamongan', 'lamongan', 'D1', '082328872084', '2025-07-16', 'Laki-laki', 2015, '1-3 Tahun', NULL, NULL, '2025-07-30 09:24:09', '2025-07-30 09:24:09'),
+(24, 29, 'mama', NULL, '2345671829384743', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-09', 'Laki-laki', 2024, '1-3 Tahun', NULL, NULL, '2025-07-30 09:27:15', '2025-07-30 09:27:15'),
+(25, 30, 'mimi', NULL, '2345671829384721', 'lamongan', 'lamongan', 'SMA/SMK Sederajat', '082328872084', '2025-07-10', 'Laki-laki', 2011, '1-3 Tahun', NULL, NULL, '2025-07-30 09:33:50', '2025-07-30 09:33:50'),
+(26, 31, 'momo', NULL, '2345671829384542', 'banyumanik', 'semarang', 'S2', '082328872084', '2025-07-15', 'Laki-laki', 2011, 'Fresh Graduate', NULL, NULL, '2025-07-30 09:48:49', '2025-07-30 09:48:49'),
+(27, 32, 'mumu', NULL, '2345671829384745', 'gubug', 'semarang', 'D3', '082328872084', '2025-07-15', 'Perempuan', 2010, '1-3 Tahun', NULL, NULL, '2025-07-30 10:16:31', '2025-07-30 10:16:31'),
+(29, 34, 'dika', NULL, '2345671829384842', 'jl.rayon kusuman', 'Demak', 'SMA/SMK Sederajat', '082328872084', '2025-07-10', 'Laki-laki', 2019, '1-3 Tahun', NULL, NULL, '2025-07-31 08:26:19', '2025-07-31 08:26:19'),
+(30, 35, 'ini', NULL, '2345671829384452', 'ini', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-10', 'Laki-laki', 2023, '1-3 Tahun', NULL, NULL, '2025-07-31 08:39:27', '2025-07-31 08:39:27'),
+(31, 36, 'inu', NULL, '2345671829384641', 'semarang', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-09', 'Perempuan', 2022, '1-3 Tahun', NULL, NULL, '2025-07-31 09:17:11', '2025-07-31 09:17:11'),
+(32, 37, 'unu', NULL, '2345671829384761', 'kudus', 'kudus', 'SMP/Sederajat', '082328872084', '2025-08-08', 'Laki-laki', 2022, '3-5 Tahun', NULL, NULL, '2025-07-31 10:21:31', '2025-07-31 10:21:31'),
+(33, 38, 'ono', NULL, '2345671829384797', 's', 'Semarang', 'SMP/Sederajat', '082328872084', '2025-08-13', 'Laki-laki', 2022, '< 1 Tahun', NULL, NULL, '2025-07-31 10:54:27', '2025-07-31 10:54:27'),
+(34, 43, 'ine', NULL, '2345671829384123', 'semarang', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-08-08', 'Laki-laki', 2023, '3-5 Tahun', NULL, NULL, '2025-07-31 11:29:55', '2025-07-31 11:29:55'),
+(35, 45, 'stel2', NULL, '2345671829384321', 'kudus', 'kudus', 'SMA/SMK Sederajat', '082328872084', '2025-07-31', 'Perempuan', 2022, '1-3 Tahun', NULL, NULL, '2025-07-31 11:37:23', '2025-07-31 11:37:23'),
+(36, 46, 'Anda', NULL, '3321219873816256', 'BENGKAH', 'Kendal', 'SMA/SMK Sederajat', '084934283423', '2025-08-28', 'Laki-laki', 2022, '1-3 Tahun', NULL, NULL, '2025-08-01 02:56:12', '2025-08-01 02:56:12'),
+(37, 48, 'Maulana Aditia', NULL, '3321219873816023', 'Jl.kelinci', 'Demak', 'S1', '084934283423', '1998-10-22', 'Laki-laki', 2025, '1-3 Tahun', NULL, NULL, '2025-08-01 06:43:06', '2025-08-01 06:43:06'),
+(38, 51, 'Mayamaria jelek', NULL, '3321219873839211', 'Jl.Kretek', 'Kudus', 'S1', '084934283403', '2000-11-30', 'Perempuan', 2025, '3-5 Tahun', NULL, 'ktp/M2ixJ6S9TOOESQlZrqjdSPwPKv783pBlly1LsEUv.jpg', '2025-08-02 11:24:13', '2025-08-07 15:10:53'),
+(39, 54, 'Arrya Duta', 'avatars/4OUYd1iNeyR93Xo71WEUFu6peEToR3MVKg6iNyrn.png', '3374060504040001', 'Jalan Lanan 1465, Plamongansari', 'Semarang', 'SMA/SMK Sederajat', '089504447020', '2004-05-04', 'Laki-laki', 2022, 'Fresh Graduate', 'jago segala hal', 'ktp/PKcksFPtObrg0XpdbdRaCo7scF9dZOYOqkS8dPPo.png', '2025-08-07 13:41:27', '2025-08-08 00:35:00');
 
 -- --------------------------------------------------------
 
@@ -639,7 +649,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('FwHkMyVKmTgZndfW51x3T0QWzTs0x9B9hvelNPAw', 50, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiTDRzc3hHaW9EM0tGMkZ3ZVRQVmNzM1daSFNRNG1kd0xZaGJqNmlxNiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9wZXJ1c2FoYWFuL2phZHdhbCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjUwO30=', 1754605686);
+('76AgWt4biaDSfTXXykykTCl0Z3fTT0tfBukHWGdE', 50, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoieWpQcUp1ZDdvbHh3UEU0MTRlSTVWM1dPRU5ST01YSTVhRVIxTUZJdiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9wZXJ1c2FoYWFuL2phZHdhbCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjUwO30=', 1754645757);
 
 -- --------------------------------------------------------
 
@@ -920,7 +930,7 @@ ALTER TABLE `lowongan_tersimpan`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `profiles_pelamar`

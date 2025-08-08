@@ -12,10 +12,10 @@ class ProfilePelamar extends Model
     
     protected $table = 'profiles_pelamar';
 
-    // PERBAIKAN: Mengganti 'file_cv' dengan 'foto_ktp' agar bisa disimpan
     protected $fillable = [
         'user_id', 
         'nama_lengkap', 
+        'foto_profil', // <-- TAMBAHKAN INI
         'nik', 
         'alamat', 
         'tanggal_lahir', 
@@ -25,7 +25,7 @@ class ProfilePelamar extends Model
         'pengalaman_kerja',
         'gender', 
         'no_hp', 
-        'foto_ktp', 
+        'foto_ktp',
         'tentang_saya'
     ];
 
