@@ -12,11 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('profiles_pelamar', function (Blueprint $table) {
-            // 1. Hapus kolom 'tempat_lahir'
-            $table->dropColumn('tempat_lahir');
+            // 1. Hapus kolom 'tempat_lahir' jika ada
+            if (Schema::hasColumn('profiles_pelamar', 'tempat_lahir')) {
+                $table->dropColumn('tempat_lahir');
+            }
 
-            // 2. Tambahkan kolom 'pengalaman_kerja' setelah 'tahun_lulus'
-            $table->string('pengalaman_kerja')->after('tahun_lulus')->nullable();
+            // 2. Tambahkan kolom 'pengalaman_kerja' jika belum ada
+            if (!Schema::hasColumn('profiles_pelamar', 'pengalaman_kerja')) {
+                $table->string('pengalaman_kerja')->after('tahun_lulus')->nullable();
+            }
         });
     }
 
@@ -26,9 +30,15 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('profiles_pelamar', function (Blueprint $table) {
-            // Mengembalikan kolom jika migrasi di-rollback
-            $table->string('tempat_lahir')->after('alamat')->nullable();
-            $table->dropColumn('pengalaman_kerja');
+            // Tambahkan kembali 'tempat_lahir' jika belum ada
+            if (!Schema::hasColumn('profiles_pelamar', 'tempat_lahir')) {
+                $table->string('tempat_lahir')->after('alamat')->nullable();
+            }
+
+            // Hapus 'pengalaman_kerja' jika ada
+            if (Schema::hasColumn('profiles_pelamar', 'pengalaman_kerja')) {
+                $table->dropColumn('pengalaman_kerja');
+            }
         });
     }
 };
