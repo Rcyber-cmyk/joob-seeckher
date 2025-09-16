@@ -25,6 +25,9 @@
                 <li class="nav-item">
                     <a class="nav-link {{ Request::routeIs('perusahaan.index') ? 'active fw-bold' : '' }}" href="{{ route('lowongan.index') }}">Cari Lowongan</a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('marketplace.index') }}" class="nav-link">MarketPlace</a>
+                </li>
                 @endif
             </ul>
 
@@ -52,7 +55,8 @@
                 @else
                     {{-- JIKA PENGGUNA ADALAH TAMU (BELUM LOGIN) --}}
                     <a href="{{ route('login') }}" class="btn btn-outline-light me-2">MASUK</a>
-                    <a href="{{ route('perusahaan') }}" class="btn btn-orange">Untuk Perusahaan</a>
+                    <a href="{{ route('perusahaan') }}" class="btn btn-orange me-2">Perusahaan</a>
+                    <a href="{{ route('toko-umkm.index') }}" class="btn btn-orange">UMKM</a>
                 @endauth
             </div>
         </div>
@@ -98,7 +102,8 @@
                     @else
                         <div class="d-grid gap-2">
                             <a href="{{ route('login') }}" class="btn btn-outline-light">MASUK</a>
-                            <a href="{{ route('perusahaan') }}" class="btn btn-orange">Untuk Perusahaan</a>
+                            <a href="{{ route('perusahaan') }}" class="btn btn-orange">Perusahaan</a>
+                            <a href="{{ route('toko-umkm.index') }}" class="btn btn-orange">UMKM</a>
                         </div>
                     @endauth
                 </div>

@@ -199,7 +199,8 @@
                     <canvas id="userChart" 
                         data-labels='@json($chartLabels)' 
                         data-pelamar='@json($pelamarChartData)' 
-                        data-perusahaan='@json($perusahaanChartData)'>
+                        data-perusahaan='@json($perusahaanChartData)'
+                        data-umkm='@json($umkmChartData)'> 
                     </canvas>
                 </div>
             </div>
@@ -223,6 +224,7 @@
         const chartLabels = JSON.parse(chartCanvas.dataset.labels);
         const pelamarData = JSON.parse(chartCanvas.dataset.pelamar);
         const perusahaanData = JSON.parse(chartCanvas.dataset.perusahaan);
+        const umkmData = JSON.parse(chartCanvas.dataset.umkm);
 
         new Chart(chartCanvas.getContext('2d'), {
             type: 'bar',
@@ -230,7 +232,8 @@
                 labels: chartLabels,
                 datasets: [
                     { label: 'Pelamar', data: pelamarData, backgroundColor: '#3b82f6' },
-                    { label: 'Perusahaan', data: perusahaanData, backgroundColor: '#10b981' }
+                    { label: 'Perusahaan', data: perusahaanData, backgroundColor: '#10b981' },
+                    { label: 'UMKM', data: umkmData, backgroundColor: '#f59e0b' } 
                 ]
             },
             options: {

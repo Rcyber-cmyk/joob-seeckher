@@ -20,11 +20,8 @@
             <a href="{{ route('perusahaan.notifikasi.index') }}" class="nav-link {{ Request::routeIs('perusahaan.notifikasi.index') ? 'active' : '' }}">
                 <i class="bi bi-bell"></i> Notifikasi
             </a>
-            <a href="#" class="nav-link">
+            <a href="{{ route('perusahaan.settings.edit') }}" class="nav-link {{ Request::routeIs('perusahaan.settings.edit') ? 'active' : '' }}">
                 <i class="bi bi-gear-fill"></i> Pengaturan
-            </a>
-            <a href="{{ route('perusahaan.bantuan.index') }}" class="nav-link {{ Request::routeIs('perusahaan.bantuan.index') ? 'active' : '' }}">
-                <i class="bi bi-question-circle-fill"></i> Bantuan
             </a>
         </div>
     </div>
@@ -78,9 +75,6 @@
             </a>
             <a href="#" class="nav-link text-white px-2 py-2 rounded hover-bg-dark">
                 <i class="bi bi-gear-fill me-2"></i> Pengaturan
-            </a>
-            <a href="{{ route('perusahaan.bantuan.index') }}" class="nav-link text-white px-2 py-2 rounded {{ Request::routeIs('perusahaan.bantuan.index') ? 'bg-primary' : 'hover-bg-dark' }}">
-                <i class="bi bi-question-circle-fill me-2"></i> Bantuan
             </a>
         </div>
 

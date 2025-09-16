@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Aug 08, 2025 at 12:03 PM
--- Server version: 8.0.30
--- PHP Version: 8.3.22
+-- Host: 127.0.0.1
+-- Generation Time: Aug 19, 2025 at 01:07 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `db_job_portal`
+-- Database: `db_job_portal_update`
 --
 
 -- --------------------------------------------------------
@@ -28,10 +28,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `activity_logs` (
-  `id` bigint UNSIGNED NOT NULL,
-  `user_id` bigint UNSIGNED DEFAULT NULL,
-  `activity_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `activity_type` varchar(255) NOT NULL,
+  `description` text NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -85,7 +85,23 @@ INSERT INTO `activity_logs` (`id`, `user_id`, `activity_type`, `description`, `c
 (42, 51, 'Pendaftaran Pelamar', 'Mayamaria mendaftar sebagai pelamar baru.', '2025-08-02 11:24:13', '2025-08-02 11:24:13'),
 (43, 52, 'Pendaftaran Perusahaan', 'BataRingan mendaftar sebagai perusahaan baru.', '2025-08-05 06:13:47', '2025-08-05 06:13:47'),
 (44, 53, 'Pendaftaran Perusahaan', 'PT.VictorRacket mendaftar sebagai perusahaan baru.', '2025-08-06 05:37:44', '2025-08-06 05:37:44'),
-(45, 54, 'Pendaftaran Pelamar', 'Arrya Duta mendaftar sebagai pelamar baru.', '2025-08-07 13:41:27', '2025-08-07 13:41:27');
+(45, NULL, 'Pendaftaran Pelamar', 'Arrya Duta mendaftar sebagai pelamar baru.', '2025-08-07 13:41:27', '2025-08-07 13:41:27'),
+(46, 55, 'Pendaftaran UMKM', 'cilok (pemilik: branzz) mendaftar sebagai UMKM baru.', '2025-08-13 02:32:15', '2025-08-13 02:32:15'),
+(47, 56, 'Pendaftaran Pelamar', 'uhuy mendaftar sebagai pelamar baru.', '2025-08-13 02:45:19', '2025-08-13 02:45:19'),
+(48, 57, 'Pendaftaran UMKM', 'bakso (pemilik: akmal) mendaftar sebagai UMKM baru.', '2025-08-13 10:50:33', '2025-08-13 10:50:33'),
+(49, 58, 'Pendaftaran UMKM', 'pukis (pemilik: kempung) mendaftar sebagai UMKM baru.', '2025-08-13 10:53:07', '2025-08-13 10:53:07'),
+(50, 59, 'Pendaftaran Pelamar', 'uhuy mendaftar sebagai pelamar baru.', '2025-08-13 11:04:03', '2025-08-13 11:04:03'),
+(51, 61, 'Pendaftaran Pelamar', 'ahah mendaftar sebagai pelamar baru.', '2025-08-13 12:28:17', '2025-08-13 12:28:17'),
+(52, 62, 'Pendaftaran Pelamar', 'mumu mendaftar sebagai pelamar baru.', '2025-08-13 12:32:12', '2025-08-13 12:32:12'),
+(53, 63, 'Pendaftaran Pelamar', 'mami mendaftar sebagai pelamar baru.', '2025-08-13 12:36:01', '2025-08-13 12:36:01'),
+(54, 64, 'Pendaftaran Perusahaan', 'branzzstudio mendaftar sebagai perusahaan baru.', '2025-08-13 12:36:53', '2025-08-13 12:36:53'),
+(55, 65, 'Pendaftaran UMKM', 'burjo mendaftar sebagai UMKM baru.', '2025-08-13 12:38:07', '2025-08-13 12:38:07'),
+(56, 66, 'Pendaftaran Pelamar', 'mimo mendaftar sebagai pelamar baru.', '2025-08-13 12:57:21', '2025-08-13 12:57:21'),
+(57, 67, 'Pendaftaran UMKM', 'angkringan mendaftar sebagai UMKM baru.', '2025-08-15 07:09:18', '2025-08-15 07:09:18'),
+(58, 68, 'Pendaftaran Pelamar', 'mumi mendaftar sebagai pelamar baru.', '2025-08-18 21:51:51', '2025-08-18 21:51:51'),
+(59, NULL, 'Pendaftaran Pelamar', 'cuci mendaftar sebagai pelamar baru.', '2025-08-19 03:28:20', '2025-08-19 03:28:20'),
+(60, 70, 'Pendaftaran Pelamar', 'merlina mendaftar sebagai pelamar baru.', '2025-08-19 03:54:54', '2025-08-19 03:54:54'),
+(61, 71, 'Pendaftaran Pelamar', 'dutaedan mendaftar sebagai pelamar baru.', '2025-08-19 03:59:57', '2025-08-19 03:59:57');
 
 -- --------------------------------------------------------
 
@@ -94,14 +110,14 @@ INSERT INTO `activity_logs` (`id`, `user_id`, `activity_type`, `description`, `c
 --
 
 CREATE TABLE `berita` (
-  `id` bigint UNSIGNED NOT NULL,
-  `kategori_id` bigint UNSIGNED NOT NULL,
-  `judul` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `gambar` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kutipan` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `isi_berita` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `is_featured` tinyint(1) NOT NULL DEFAULT '0',
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `kategori_id` bigint(20) UNSIGNED NOT NULL,
+  `judul` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `gambar` varchar(255) DEFAULT NULL,
+  `kutipan` text NOT NULL,
+  `isi_berita` longtext NOT NULL,
+  `is_featured` tinyint(1) NOT NULL DEFAULT 0,
   `published_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -125,8 +141,8 @@ INSERT INTO `berita` (`id`, `kategori_id`, `judul`, `slug`, `gambar`, `kutipan`,
 --
 
 CREATE TABLE `bidang_keahlians` (
-  `id` bigint UNSIGNED NOT NULL,
-  `nama_bidang` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `nama_bidang` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -150,9 +166,9 @@ INSERT INTO `bidang_keahlians` (`id`, `nama_bidang`, `created_at`, `updated_at`)
 --
 
 CREATE TABLE `bidang_pekerjaan` (
-  `id` bigint UNSIGNED NOT NULL,
-  `nama_bidang` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `nama_bidang` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -175,9 +191,9 @@ INSERT INTO `bidang_pekerjaan` (`id`, `nama_bidang`, `slug`, `created_at`, `upda
 --
 
 CREATE TABLE `cache` (
-  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expiration` int NOT NULL
+  `key` varchar(255) NOT NULL,
+  `value` mediumtext NOT NULL,
+  `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -185,6 +201,10 @@ CREATE TABLE `cache` (
 --
 
 INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
+('a72b20062ec2c47ab2ceb97ac1bee818f8b6c6cb', 'i:1;', 1755599672),
+('a72b20062ec2c47ab2ceb97ac1bee818f8b6c6cb:timer', 'i:1755599672;', 1755599672),
+('branzzgaming94@gmail.com|127.0.0.1', 'i:2;', 1755600802),
+('branzzgaming94@gmail.com|127.0.0.1:timer', 'i:1755600802;', 1755600802),
 ('maya@gmail.com|127.0.0.1', 'i:3;', 1754637757),
 ('maya@gmail.com|127.0.0.1:timer', 'i:1754637757;', 1754637757);
 
@@ -195,9 +215,9 @@ INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
 --
 
 CREATE TABLE `cache_locks` (
-  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expiration` int NOT NULL
+  `key` varchar(255) NOT NULL,
+  `owner` varchar(255) NOT NULL,
+  `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -207,16 +227,16 @@ CREATE TABLE `cache_locks` (
 --
 
 CREATE TABLE `jadwal_wawancara` (
-  `id` bigint UNSIGNED NOT NULL,
-  `lowongan_id` bigint UNSIGNED NOT NULL,
-  `pelamar_id` bigint UNSIGNED NOT NULL,
-  `metode_wawancara` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lokasi_interview` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `link_zoom` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `lowongan_id` bigint(20) UNSIGNED NOT NULL,
+  `pelamar_id` bigint(20) UNSIGNED NOT NULL,
+  `metode_wawancara` varchar(255) NOT NULL,
+  `lokasi_interview` varchar(255) DEFAULT NULL,
+  `link_zoom` varchar(255) DEFAULT NULL,
   `tanggal_interview` date NOT NULL,
   `waktu_interview` time NOT NULL,
-  `deskripsi` text COLLATE utf8mb4_unicode_ci,
-  `status` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'terjadwal',
+  `deskripsi` text DEFAULT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'terjadwal',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -226,8 +246,7 @@ CREATE TABLE `jadwal_wawancara` (
 --
 
 INSERT INTO `jadwal_wawancara` (`id`, `lowongan_id`, `pelamar_id`, `metode_wawancara`, `lokasi_interview`, `link_zoom`, `tanggal_interview`, `waktu_interview`, `deskripsi`, `status`, `created_at`, `updated_at`) VALUES
-(1, 5, 38, 'Walk In Interview', 'a', NULL, '2025-08-15', '03:56:00', 'gass', 'terjadwal', '2025-08-07 13:58:07', '2025-08-07 13:58:07'),
-(2, 7, 39, 'Walk In Interview', 'a', NULL, '2025-08-09', '06:25:00', NULL, 'terjadwal', '2025-08-07 15:26:20', '2025-08-07 15:26:20');
+(1, 5, 38, 'Walk In Interview', 'a', NULL, '2025-08-15', '03:56:00', 'gass', 'terjadwal', '2025-08-07 13:58:07', '2025-08-07 13:58:07');
 
 -- --------------------------------------------------------
 
@@ -236,9 +255,9 @@ INSERT INTO `jadwal_wawancara` (`id`, `lowongan_id`, `pelamar_id`, `metode_wawan
 --
 
 CREATE TABLE `kategori` (
-  `id` bigint UNSIGNED NOT NULL,
-  `nama_kategori` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `nama_kategori` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -258,9 +277,9 @@ INSERT INTO `kategori` (`id`, `nama_kategori`, `slug`, `created_at`, `updated_at
 --
 
 CREATE TABLE `keahlian` (
-  `id` bigint UNSIGNED NOT NULL,
-  `bidang_keahlian_id` bigint UNSIGNED DEFAULT NULL,
-  `nama_keahlian` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `bidang_keahlian_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `nama_keahlian` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -329,10 +348,10 @@ INSERT INTO `keahlian` (`id`, `bidang_keahlian_id`, `nama_keahlian`) VALUES
 --
 
 CREATE TABLE `lamaran` (
-  `id` bigint UNSIGNED NOT NULL,
-  `pelamar_id` bigint UNSIGNED NOT NULL,
-  `lowongan_id` bigint UNSIGNED NOT NULL,
-  `status` enum('pending','dilihat','diterima','ditolak') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'pending',
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `pelamar_id` bigint(20) UNSIGNED NOT NULL,
+  `lowongan_id` bigint(20) UNSIGNED NOT NULL,
+  `status` enum('pending','dilihat','diterima','ditolak') NOT NULL DEFAULT 'pending',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -342,9 +361,7 @@ CREATE TABLE `lamaran` (
 --
 
 INSERT INTO `lamaran` (`id`, `pelamar_id`, `lowongan_id`, `status`, `created_at`, `updated_at`) VALUES
-(1, 38, 5, 'pending', '2025-08-07 13:24:05', '2025-08-07 13:24:05'),
-(2, 39, 7, 'pending', '2025-08-07 15:23:16', '2025-08-07 15:23:16'),
-(3, 39, 6, 'pending', '2025-08-07 15:24:09', '2025-08-07 15:24:09');
+(1, 38, 5, 'pending', '2025-08-07 13:24:05', '2025-08-07 13:24:05');
 
 -- --------------------------------------------------------
 
@@ -353,8 +370,8 @@ INSERT INTO `lamaran` (`id`, `pelamar_id`, `lowongan_id`, `status`, `created_at`
 --
 
 CREATE TABLE `lowongan_keahlian_dibutuhkan` (
-  `lowongan_id` bigint UNSIGNED NOT NULL,
-  `keahlian_id` bigint UNSIGNED NOT NULL
+  `lowongan_id` bigint(20) UNSIGNED NOT NULL,
+  `keahlian_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -364,19 +381,19 @@ CREATE TABLE `lowongan_keahlian_dibutuhkan` (
 --
 
 CREATE TABLE `lowongan_pekerjaan` (
-  `id` bigint UNSIGNED NOT NULL,
-  `perusahaan_id` bigint UNSIGNED NOT NULL,
-  `judul_lowongan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `domisili` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `tipe_pekerjaan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `deskripsi_pekerjaan` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `gender` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `pendidikan_terakhir` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `usia` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `nilai_pendidikan_terakhir` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `pengalaman_kerja` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `keahlian_bidang_pekerjaan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `perusahaan_id` bigint(20) UNSIGNED NOT NULL,
+  `judul_lowongan` varchar(255) NOT NULL,
+  `domisili` varchar(255) DEFAULT NULL,
+  `tipe_pekerjaan` varchar(255) DEFAULT NULL,
+  `deskripsi_pekerjaan` text NOT NULL,
+  `gender` varchar(255) DEFAULT NULL,
+  `pendidikan_terakhir` varchar(255) DEFAULT NULL,
+  `usia` varchar(255) DEFAULT NULL,
+  `nilai_pendidikan_terakhir` varchar(255) DEFAULT NULL,
+  `pengalaman_kerja` varchar(255) DEFAULT NULL,
+  `keahlian_bidang_pekerjaan` varchar(255) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -397,9 +414,9 @@ INSERT INTO `lowongan_pekerjaan` (`id`, `perusahaan_id`, `judul_lowongan`, `domi
 --
 
 CREATE TABLE `lowongan_tersimpan` (
-  `id` bigint UNSIGNED NOT NULL,
-  `pelamar_id` bigint UNSIGNED NOT NULL,
-  `lowongan_id` bigint UNSIGNED NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `pelamar_id` bigint(20) UNSIGNED NOT NULL,
+  `lowongan_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -425,9 +442,9 @@ INSERT INTO `lowongan_tersimpan` (`id`, `pelamar_id`, `lowongan_id`, `created_at
 --
 
 CREATE TABLE `migrations` (
-  `id` int UNSIGNED NOT NULL,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `batch` int NOT NULL
+  `id` int(10) UNSIGNED NOT NULL,
+  `migration` varchar(255) NOT NULL,
+  `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -448,14 +465,19 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (11, '2025_07_26_105512_update_fields_in_profiles_pelamar_table', 3),
 (12, '2025_07_26_120921_create_lamaran_table', 4),
 (13, '2025_07_30_104518_create_bidang_keahlians_table', 5),
-(14, '2025_07_30_104825_add_bidang_to_keahlian_table', 5),
-(15, '2025_07_30_104453_add_bidang_to_keahlian_table', 5),
 (16, '2025_07_31_155100_adjust_profiles_perusahaan_for_registration', 6),
 (17, '2025_08_04_034549_add_logo_perusahaan_to_profiles_perusahaan_table', 7),
 (18, '2025_08_05_174912_add_kualifikasi_to_lowongan_pekerjaan_table', 8),
 (19, '2025_08_06_220032_create_jadwal_wawancara_table', 9),
 (20, '2025_08_07_213736_update_profiles_pelamar_for_ktp', 10),
-(21, '2025_08_08_073011_add_foto_profil_to_profiles_pelamar_table', 11);
+(21, '2025_08_08_073011_add_foto_profil_to_profiles_pelamar_table', 11),
+(23, '2025_08_08_172728_update_profiles_pelamar_table', 12),
+(24, '2025_07_30_104825_add_bidang_to_keahlian_table', 12),
+(25, '2025_07_30_104453_add_bidang_to_keahlian_table', 13),
+(26, '2025_08_13_084657_create_profiles_umkm_table', 13),
+(27, '2025_08_13_183100_rename_no_hp_in_profiles_umkm_table', 14),
+(28, '2025_08_13_195021_add_nilai_akhir_to_profiles_pelamar_table', 15),
+(29, '2025_08_19_103630_add_otp_to_users_table', 16);
 
 -- --------------------------------------------------------
 
@@ -464,8 +486,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 --
 
 CREATE TABLE `pelamar_keahlian` (
-  `pelamar_id` bigint UNSIGNED NOT NULL,
-  `keahlian_id` bigint UNSIGNED NOT NULL
+  `pelamar_id` bigint(20) UNSIGNED NOT NULL,
+  `keahlian_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -474,57 +496,64 @@ CREATE TABLE `pelamar_keahlian` (
 
 INSERT INTO `pelamar_keahlian` (`pelamar_id`, `keahlian_id`) VALUES
 (13, 1),
-(36, 1),
-(39, 1),
-(39, 4),
-(38, 11),
-(39, 13),
-(35, 14),
-(36, 14),
-(35, 15),
 (13, 24),
-(25, 24),
-(36, 24),
-(17, 26),
-(24, 26),
-(30, 26),
-(36, 26),
-(17, 27),
-(30, 27),
-(26, 28),
-(32, 28),
-(33, 28),
-(34, 28),
-(24, 29),
-(26, 29),
-(31, 29),
-(32, 29),
-(33, 29),
-(34, 29),
 (13, 31),
-(31, 34),
+(13, 48),
+(17, 26),
+(17, 27),
+(17, 48),
+(17, 53),
+(24, 26),
+(24, 29),
+(24, 44),
+(24, 45),
+(25, 24),
+(25, 48),
+(25, 52),
+(26, 28),
+(26, 29),
 (27, 39),
 (27, 41),
+(27, 48),
+(30, 26),
+(30, 27),
+(31, 29),
+(31, 34),
+(31, 44),
+(32, 28),
+(32, 29),
+(33, 28),
+(33, 29),
+(33, 45),
+(34, 28),
+(34, 29),
+(34, 50),
+(34, 51),
+(35, 14),
+(35, 15),
+(36, 1),
+(36, 14),
+(36, 24),
+(36, 26),
 (36, 42),
+(38, 11),
 (38, 42),
 (38, 43),
-(24, 44),
-(31, 44),
 (38, 44),
-(24, 45),
-(33, 45),
 (38, 45),
 (38, 46),
 (38, 47),
-(17, 48),
-(25, 48),
-(27, 48),
-(13, 49),
-(34, 50),
-(34, 51),
-(25, 52),
-(17, 53),
-(38, 53);
+(38, 53),
+(42, 48),
+(45, 31),
+(46, 28),
+(46, 30),
+(46, 33),
+(48, 29),
+(48, 33),
+(49, 19),
+(49, 33),
+(49, 34);
 
 -- --------------------------------------------------------
 
@@ -533,21 +562,22 @@ INSERT INTO `pelamar_keahlian` (`pelamar_id`, `keahlian_id`) VALUES
 --
 
 CREATE TABLE `profiles_pelamar` (
-  `id` bigint UNSIGNED NOT NULL,
-  `user_id` bigint UNSIGNED NOT NULL,
-  `nama_lengkap` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `foto_profil` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `nik` varchar(16) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `alamat` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `domisili` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `lulusan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `no_hp` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `nama_lengkap` varchar(255) NOT NULL,
+  `foto_profil` varchar(255) DEFAULT NULL,
+  `nik` varchar(16) NOT NULL,
+  `alamat` text NOT NULL,
+  `domisili` varchar(255) NOT NULL,
+  `lulusan` varchar(255) NOT NULL,
+  `no_hp` varchar(20) NOT NULL,
   `tanggal_lahir` date NOT NULL,
-  `gender` enum('Laki-laki','Perempuan') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tahun_lulus` year NOT NULL,
-  `pengalaman_kerja` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `tentang_saya` text COLLATE utf8mb4_unicode_ci,
-  `foto_ktp` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `gender` enum('Laki-laki','Perempuan') NOT NULL,
+  `tahun_lulus` year(4) NOT NULL,
+  `nilai_akhir` decimal(5,2) DEFAULT NULL,
+  `pengalaman_kerja` varchar(255) DEFAULT NULL,
+  `tentang_saya` text DEFAULT NULL,
+  `foto_ktp` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -556,42 +586,50 @@ CREATE TABLE `profiles_pelamar` (
 -- Dumping data for table `profiles_pelamar`
 --
 
-INSERT INTO `profiles_pelamar` (`id`, `user_id`, `nama_lengkap`, `foto_profil`, `nik`, `alamat`, `domisili`, `lulusan`, `no_hp`, `tanggal_lahir`, `gender`, `tahun_lulus`, `pengalaman_kerja`, `tentang_saya`, `foto_ktp`, `created_at`, `updated_at`) VALUES
-(4, 9, 'rizki', NULL, '2345671829384776', 'Mranggen', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2003-01-14', 'Laki-laki', 2022, '1-3 Tahun', NULL, NULL, '2025-07-26 04:28:37', '2025-07-26 04:28:37'),
-(5, 10, 'muna', NULL, '2345671829384789', 'demak', 'Semarang', 'SMP/Sederajat', '082328872084', '2025-07-18', 'Perempuan', 2023, '< 1 Tahun', NULL, NULL, '2025-07-29 12:48:26', '2025-07-29 12:48:26'),
-(6, 11, 'lia', NULL, '2345671829384790', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-18', 'Perempuan', 2021, 'Fresh Graduate', NULL, NULL, '2025-07-29 12:58:19', '2025-07-29 12:58:19'),
-(7, 12, 'branzz', NULL, '2345671829384780', 'lamongan', 'lamongan', 'S1', '082328872084', '2025-07-18', 'Laki-laki', 2016, '> 5 Tahun', NULL, NULL, '2025-07-29 13:33:24', '2025-07-29 13:33:24'),
-(8, 13, 'abdul', NULL, '2345671829384798', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-03', 'Laki-laki', 2022, '1-3 Tahun', NULL, NULL, '2025-07-29 13:49:23', '2025-07-29 13:49:23'),
-(9, 14, 'karim', NULL, '2345671829384707', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-16', 'Laki-laki', 2021, 'Fresh Graduate', NULL, NULL, '2025-07-29 13:51:56', '2025-07-29 13:51:56'),
-(10, 15, 'akmal', NULL, '2345671829384777', 'semarang', 'semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-24', 'Laki-laki', 2009, '< 1 Tahun', NULL, NULL, '2025-07-29 13:52:54', '2025-07-29 13:52:54'),
-(11, 16, 'tegar', NULL, '2345671829384708', 'semarang', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-17', 'Laki-laki', 1986, '3-5 Tahun', NULL, NULL, '2025-07-29 13:53:53', '2025-07-29 13:53:53'),
-(12, 17, 'abel', NULL, '2345671829363539', 'banyumanik', 'Semarang', 'D3', '082328872084', '2025-07-15', 'Laki-laki', 2011, 'Fresh Graduate', NULL, NULL, '2025-07-30 03:08:38', '2025-07-30 03:08:38'),
-(13, 18, 'merlin', NULL, '2345671829384705', 'lamongan', 'lamongan', 'S1', '082328872084', '2025-07-01', 'Perempuan', 2013, '< 1 Tahun', NULL, NULL, '2025-07-30 03:16:37', '2025-07-30 08:21:03'),
-(14, 19, 'bono', NULL, '2345671829384730', 'lamongan', 'lamongan', 'D2', '082328872084', '2025-07-09', 'Laki-laki', 2009, 'Fresh Graduate', NULL, NULL, '2025-07-30 03:20:44', '2025-07-30 03:20:44'),
-(15, 20, 'ikmil', NULL, '2345671829384722', 'semarang', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-15', 'Laki-laki', 2011, 'Fresh Graduate', NULL, NULL, '2025-07-30 03:38:40', '2025-07-30 03:38:40'),
-(16, 21, 'ikmil', NULL, '2345671829384723', 'semarang', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-15', 'Laki-laki', 2011, 'Fresh Graduate', NULL, NULL, '2025-07-30 03:42:15', '2025-07-30 03:42:15'),
-(17, 22, 'nafa', NULL, '2345671829384887', 'lamongan', 'Semarang', 'D2', '082328872084', '2025-07-24', 'Perempuan', 2008, '< 1 Tahun', NULL, NULL, '2025-07-30 03:55:17', '2025-07-30 03:55:17'),
-(18, 23, 'zaid', NULL, '2345671829384765', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', 2013, '> 5 Tahun', NULL, NULL, '2025-07-30 09:06:25', '2025-07-30 09:06:25'),
-(19, 24, 'zaid', NULL, '2345671829384754', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', 2013, '> 5 Tahun', NULL, NULL, '2025-07-30 09:13:20', '2025-07-30 09:13:20'),
-(20, 25, 'zaid', NULL, '2345671829384741', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', 2013, '> 5 Tahun', NULL, NULL, '2025-07-30 09:15:16', '2025-07-30 09:15:16'),
-(21, 26, 'zaid', NULL, '2345671829384778', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', 2013, '> 5 Tahun', NULL, NULL, '2025-07-30 09:20:29', '2025-07-30 09:20:29'),
-(22, 27, 'stel', NULL, '2345671829384742', 'semarang', 'lamongan', 'S2', '082328872084', '2025-07-04', 'Laki-laki', 2010, 'Fresh Graduate', NULL, NULL, '2025-07-30 09:21:30', '2025-07-30 09:21:30'),
-(23, 28, 'baba', NULL, '2345671829384782', 'lamongan', 'lamongan', 'D1', '082328872084', '2025-07-16', 'Laki-laki', 2015, '1-3 Tahun', NULL, NULL, '2025-07-30 09:24:09', '2025-07-30 09:24:09'),
-(24, 29, 'mama', NULL, '2345671829384743', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-09', 'Laki-laki', 2024, '1-3 Tahun', NULL, NULL, '2025-07-30 09:27:15', '2025-07-30 09:27:15'),
-(25, 30, 'mimi', NULL, '2345671829384721', 'lamongan', 'lamongan', 'SMA/SMK Sederajat', '082328872084', '2025-07-10', 'Laki-laki', 2011, '1-3 Tahun', NULL, NULL, '2025-07-30 09:33:50', '2025-07-30 09:33:50'),
-(26, 31, 'momo', NULL, '2345671829384542', 'banyumanik', 'semarang', 'S2', '082328872084', '2025-07-15', 'Laki-laki', 2011, 'Fresh Graduate', NULL, NULL, '2025-07-30 09:48:49', '2025-07-30 09:48:49'),
-(27, 32, 'mumu', NULL, '2345671829384745', 'gubug', 'semarang', 'D3', '082328872084', '2025-07-15', 'Perempuan', 2010, '1-3 Tahun', NULL, NULL, '2025-07-30 10:16:31', '2025-07-30 10:16:31'),
-(29, 34, 'dika', NULL, '2345671829384842', 'jl.rayon kusuman', 'Demak', 'SMA/SMK Sederajat', '082328872084', '2025-07-10', 'Laki-laki', 2019, '1-3 Tahun', NULL, NULL, '2025-07-31 08:26:19', '2025-07-31 08:26:19'),
-(30, 35, 'ini', NULL, '2345671829384452', 'ini', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-10', 'Laki-laki', 2023, '1-3 Tahun', NULL, NULL, '2025-07-31 08:39:27', '2025-07-31 08:39:27'),
-(31, 36, 'inu', NULL, '2345671829384641', 'semarang', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-09', 'Perempuan', 2022, '1-3 Tahun', NULL, NULL, '2025-07-31 09:17:11', '2025-07-31 09:17:11'),
-(32, 37, 'unu', NULL, '2345671829384761', 'kudus', 'kudus', 'SMP/Sederajat', '082328872084', '2025-08-08', 'Laki-laki', 2022, '3-5 Tahun', NULL, NULL, '2025-07-31 10:21:31', '2025-07-31 10:21:31'),
-(33, 38, 'ono', NULL, '2345671829384797', 's', 'Semarang', 'SMP/Sederajat', '082328872084', '2025-08-13', 'Laki-laki', 2022, '< 1 Tahun', NULL, NULL, '2025-07-31 10:54:27', '2025-07-31 10:54:27'),
-(34, 43, 'ine', NULL, '2345671829384123', 'semarang', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-08-08', 'Laki-laki', 2023, '3-5 Tahun', NULL, NULL, '2025-07-31 11:29:55', '2025-07-31 11:29:55'),
-(35, 45, 'stel2', NULL, '2345671829384321', 'kudus', 'kudus', 'SMA/SMK Sederajat', '082328872084', '2025-07-31', 'Perempuan', 2022, '1-3 Tahun', NULL, NULL, '2025-07-31 11:37:23', '2025-07-31 11:37:23'),
-(36, 46, 'Anda', NULL, '3321219873816256', 'BENGKAH', 'Kendal', 'SMA/SMK Sederajat', '084934283423', '2025-08-28', 'Laki-laki', 2022, '1-3 Tahun', NULL, NULL, '2025-08-01 02:56:12', '2025-08-01 02:56:12'),
-(37, 48, 'Maulana Aditia', NULL, '3321219873816023', 'Jl.kelinci', 'Demak', 'S1', '084934283423', '1998-10-22', 'Laki-laki', 2025, '1-3 Tahun', NULL, NULL, '2025-08-01 06:43:06', '2025-08-01 06:43:06'),
-(38, 51, 'Mayamaria jelek', NULL, '3321219873839211', 'Jl.Kretek', 'Kudus', 'S1', '084934283403', '2000-11-30', 'Perempuan', 2025, '3-5 Tahun', NULL, 'ktp/M2ixJ6S9TOOESQlZrqjdSPwPKv783pBlly1LsEUv.jpg', '2025-08-02 11:24:13', '2025-08-07 15:10:53'),
-(39, 54, 'Arrya Duta', 'avatars/4OUYd1iNeyR93Xo71WEUFu6peEToR3MVKg6iNyrn.png', '3374060504040001', 'Jalan Lanan 1465, Plamongansari', 'Semarang', 'SMA/SMK Sederajat', '089504447020', '2004-05-04', 'Laki-laki', 2022, 'Fresh Graduate', 'jago segala hal', 'ktp/PKcksFPtObrg0XpdbdRaCo7scF9dZOYOqkS8dPPo.png', '2025-08-07 13:41:27', '2025-08-08 00:35:00');
+INSERT INTO `profiles_pelamar` (`id`, `user_id`, `nama_lengkap`, `foto_profil`, `nik`, `alamat`, `domisili`, `lulusan`, `no_hp`, `tanggal_lahir`, `gender`, `tahun_lulus`, `nilai_akhir`, `pengalaman_kerja`, `tentang_saya`, `foto_ktp`, `created_at`, `updated_at`) VALUES
+(4, 9, 'rizki', NULL, '2345671829384776', 'Mranggen', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2003-01-14', 'Laki-laki', '2022', NULL, NULL, NULL, NULL, '2025-07-26 04:28:37', '2025-07-26 04:28:37'),
+(5, 10, 'muna', NULL, '2345671829384789', 'demak', 'Semarang', 'SMP/Sederajat', '082328872084', '2025-07-18', 'Perempuan', '2023', NULL, NULL, NULL, NULL, '2025-07-29 12:48:26', '2025-07-29 12:48:26'),
+(6, 11, 'lia', NULL, '2345671829384790', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-18', 'Perempuan', '2021', NULL, NULL, NULL, NULL, '2025-07-29 12:58:19', '2025-07-29 12:58:19'),
+(7, 12, 'branzz', NULL, '2345671829384780', 'lamongan', 'lamongan', 'S1', '082328872084', '2025-07-18', 'Laki-laki', '2016', NULL, NULL, NULL, NULL, '2025-07-29 13:33:24', '2025-07-29 13:33:24'),
+(8, 13, 'abdul', NULL, '2345671829384798', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-03', 'Laki-laki', '2022', NULL, NULL, NULL, NULL, '2025-07-29 13:49:23', '2025-07-29 13:49:23'),
+(9, 14, 'karim', NULL, '2345671829384707', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-16', 'Laki-laki', '2021', NULL, NULL, NULL, NULL, '2025-07-29 13:51:56', '2025-07-29 13:51:56'),
+(10, 15, 'akmal', NULL, '2345671829384777', 'semarang', 'semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-24', 'Laki-laki', '2009', NULL, NULL, NULL, NULL, '2025-07-29 13:52:54', '2025-07-29 13:52:54'),
+(11, 16, 'tegar', NULL, '2345671829384708', 'semarang', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-17', 'Laki-laki', '1986', NULL, NULL, NULL, NULL, '2025-07-29 13:53:53', '2025-07-29 13:53:53'),
+(12, 17, 'abel', NULL, '2345671829363539', 'banyumanik', 'Semarang', 'D3', '082328872084', '2025-07-15', 'Laki-laki', '2011', NULL, NULL, NULL, NULL, '2025-07-30 03:08:38', '2025-07-30 03:08:38'),
+(13, 18, 'merlin', NULL, '2345671829384705', 'lamongan', 'lamongan', 'S1', '082328872084', '2025-07-01', 'Perempuan', '2013', NULL, NULL, NULL, NULL, '2025-07-30 03:16:37', '2025-07-30 08:21:03'),
+(14, 19, 'bono', NULL, '2345671829384730', 'lamongan', 'lamongan', 'D2', '082328872084', '2025-07-09', 'Laki-laki', '2009', NULL, NULL, NULL, NULL, '2025-07-30 03:20:44', '2025-07-30 03:20:44'),
+(15, 20, 'ikmil', NULL, '2345671829384722', 'semarang', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-15', 'Laki-laki', '2011', NULL, NULL, NULL, NULL, '2025-07-30 03:38:40', '2025-07-30 03:38:40'),
+(16, 21, 'ikmil', NULL, '2345671829384723', 'semarang', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-15', 'Laki-laki', '2011', NULL, NULL, NULL, NULL, '2025-07-30 03:42:15', '2025-07-30 03:42:15'),
+(17, 22, 'nafa', NULL, '2345671829384887', 'lamongan', 'Semarang', 'D2', '082328872084', '2025-07-24', 'Perempuan', '2008', NULL, NULL, NULL, NULL, '2025-07-30 03:55:17', '2025-07-30 03:55:17'),
+(18, 23, 'zaid', NULL, '2345671829384765', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', '2013', NULL, NULL, NULL, NULL, '2025-07-30 09:06:25', '2025-07-30 09:06:25'),
+(19, 24, 'zaid', NULL, '2345671829384754', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', '2013', NULL, NULL, NULL, NULL, '2025-07-30 09:13:20', '2025-07-30 09:13:20'),
+(20, 25, 'zaid', NULL, '2345671829384741', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', '2013', NULL, NULL, NULL, NULL, '2025-07-30 09:15:16', '2025-07-30 09:15:16'),
+(21, 26, 'zaid', NULL, '2345671829384778', 'semarang', 'Semarang', 'S1', '082328872084', '2025-07-04', 'Laki-laki', '2013', NULL, NULL, NULL, NULL, '2025-07-30 09:20:29', '2025-07-30 09:20:29'),
+(22, 27, 'stel', NULL, '2345671829384742', 'semarang', 'lamongan', 'S2', '082328872084', '2025-07-04', 'Laki-laki', '2010', NULL, NULL, NULL, NULL, '2025-07-30 09:21:30', '2025-07-30 09:21:30'),
+(23, 28, 'baba', NULL, '2345671829384782', 'lamongan', 'lamongan', 'D1', '082328872084', '2025-07-16', 'Laki-laki', '2015', NULL, NULL, NULL, NULL, '2025-07-30 09:24:09', '2025-07-30 09:24:09'),
+(24, 29, 'mama', NULL, '2345671829384743', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-09', 'Laki-laki', '2024', NULL, NULL, NULL, NULL, '2025-07-30 09:27:15', '2025-07-30 09:27:15'),
+(25, 30, 'mimi', NULL, '2345671829384721', 'lamongan', 'lamongan', 'SMA/SMK Sederajat', '082328872084', '2025-07-10', 'Laki-laki', '2011', NULL, NULL, NULL, NULL, '2025-07-30 09:33:50', '2025-07-30 09:33:50'),
+(26, 31, 'momo', NULL, '2345671829384542', 'banyumanik', 'semarang', 'S2', '082328872084', '2025-07-15', 'Laki-laki', '2011', NULL, NULL, NULL, NULL, '2025-07-30 09:48:49', '2025-07-30 09:48:49'),
+(27, 32, 'mumu', NULL, '2345671829384745', 'gubug', 'semarang', 'D3', '082328872084', '2025-07-15', 'Perempuan', '2010', NULL, NULL, NULL, NULL, '2025-07-30 10:16:31', '2025-07-30 10:16:31'),
+(29, 34, 'dika', NULL, '2345671829384842', 'jl.rayon kusuman', 'Demak', 'SMA/SMK Sederajat', '082328872084', '2025-07-10', 'Laki-laki', '2019', NULL, NULL, NULL, NULL, '2025-07-31 08:26:19', '2025-07-31 08:26:19'),
+(30, 35, 'ini', NULL, '2345671829384452', 'ini', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-10', 'Laki-laki', '2023', NULL, NULL, NULL, NULL, '2025-07-31 08:39:27', '2025-07-31 08:39:27'),
+(31, 36, 'inu', NULL, '2345671829384641', 'semarang', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-09', 'Perempuan', '2022', NULL, NULL, NULL, NULL, '2025-07-31 09:17:11', '2025-07-31 09:17:11'),
+(32, 37, 'unu', NULL, '2345671829384761', 'kudus', 'kudus', 'SMP/Sederajat', '082328872084', '2025-08-08', 'Laki-laki', '2022', NULL, NULL, NULL, NULL, '2025-07-31 10:21:31', '2025-07-31 10:21:31'),
+(33, 38, 'ono', NULL, '2345671829384797', 's', 'Semarang', 'SMP/Sederajat', '082328872084', '2025-08-13', 'Laki-laki', '2022', NULL, NULL, NULL, NULL, '2025-07-31 10:54:27', '2025-07-31 10:54:27'),
+(34, 43, 'ine', NULL, '2345671829384123', 'semarang', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-08-08', 'Laki-laki', '2023', NULL, NULL, NULL, NULL, '2025-07-31 11:29:55', '2025-07-31 11:29:55'),
+(35, 45, 'stel2', NULL, '2345671829384321', 'kudus', 'kudus', 'SMA/SMK Sederajat', '082328872084', '2025-07-31', 'Perempuan', '2022', NULL, NULL, NULL, NULL, '2025-07-31 11:37:23', '2025-07-31 11:37:23'),
+(36, 46, 'Anda', NULL, '3321219873816256', 'BENGKAH', 'Kendal', 'SMA/SMK Sederajat', '084934283423', '2025-08-28', 'Laki-laki', '2022', NULL, NULL, NULL, NULL, '2025-08-01 02:56:12', '2025-08-01 02:56:12'),
+(37, 48, 'Maulana Aditia', NULL, '3321219873816023', 'Jl.kelinci', 'Demak', 'S1', '084934283423', '1998-10-22', 'Laki-laki', '2025', NULL, NULL, NULL, NULL, '2025-08-01 06:43:06', '2025-08-01 06:43:06'),
+(38, 51, 'Mayamaria jelek', NULL, '3321219873839211', 'Jl.Kretek', 'Kudus', 'S1', '084934283403', '2000-11-30', 'Perempuan', '2025', NULL, NULL, NULL, 'ktp/M2ixJ6S9TOOESQlZrqjdSPwPKv783pBlly1LsEUv.jpg', '2025-08-02 11:24:13', '2025-08-07 15:10:53'),
+(40, 56, 'uhuy', NULL, '2345671829384755', 'Girikusumo', 'Demak', 'SMA/SMK Sederajat', '082328872084', '2025-08-09', 'Laki-laki', '1988', NULL, '1-3 Tahun', NULL, NULL, '2025-08-13 02:45:19', '2025-08-13 02:45:19'),
+(41, 59, 'uhuy', NULL, '2345671829384766', 'Girikusumo', 'Demak', 'SMA/SMK Sederajat', '082328872084', '2025-08-19', 'Laki-laki', '1987', NULL, '1-3 Tahun', NULL, NULL, '2025-08-13 11:04:03', '2025-08-13 11:04:03'),
+(42, 61, 'ahah', NULL, '2345671829384734', 'Girikusumo', 'Demak', 'SMA/SMK Sederajat', '082328872084', '2025-08-15', 'Laki-laki', '1988', NULL, '1-3 Tahun', NULL, NULL, '2025-08-13 12:28:17', '2025-08-13 12:28:17'),
+(43, 62, 'mumu', NULL, '2345671829384744', 'Girikusumo', 'Demak', 'SMP/Sederajat', '082328872084', '2025-08-13', 'Perempuan', '1988', NULL, '< 1 Tahun', NULL, NULL, '2025-08-13 12:32:12', '2025-08-13 12:32:12'),
+(44, 63, 'mami', NULL, '2345671829384751', 'Girikusumo', 'Demak', 'SMA/SMK Sederajat', '082328872084', '2025-08-15', 'Perempuan', '1988', NULL, '3-5 Tahun', NULL, NULL, '2025-08-13 12:36:01', '2025-08-13 12:36:01'),
+(45, 66, 'mimo', NULL, '2345671829384433', 'Girikusumo', 'Demak', 'SMA/SMK Sederajat', '082328872084', '2025-08-07', 'Laki-laki', '1991', 85.50, '3-5 Tahun', NULL, NULL, '2025-08-13 12:57:21', '2025-08-13 12:57:21'),
+(46, 68, 'mumi', NULL, '2345671829384862', 'Girikusumo', 'Demak', 'SMA/SMK Sederajat', '082328872077', '2008-05-20', 'Laki-laki', '1991', 85.50, '1-3 Tahun', NULL, NULL, '2025-08-18 21:51:51', '2025-08-18 21:51:51'),
+(48, 70, 'merlina', NULL, '2345671829384444', 'Lamongan', 'Lamongan', 'S1', '082328872084', '2003-02-20', 'Perempuan', '2025', 3.78, '1-3 Tahun', NULL, NULL, '2025-08-19 03:54:54', '2025-08-19 03:54:54'),
+(49, 71, 'dutaedan', NULL, '2345671829384666', 'Girikusumo', 'Demak', 'SMA/SMK Sederajat', '082328872084', '2004-03-20', 'Laki-laki', '2023', 85.50, '1-3 Tahun', NULL, NULL, '2025-08-19 03:59:57', '2025-08-19 03:59:57');
 
 -- --------------------------------------------------------
 
@@ -600,17 +638,17 @@ INSERT INTO `profiles_pelamar` (`id`, `user_id`, `nama_lengkap`, `foto_profil`, 
 --
 
 CREATE TABLE `profiles_perusahaan` (
-  `id` bigint UNSIGNED NOT NULL,
-  `user_id` bigint UNSIGNED NOT NULL,
-  `nama_perusahaan` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `alamat_jalan` text COLLATE utf8mb4_unicode_ci,
-  `alamat_kota` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `kode_pos` varchar(10) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `no_telp_perusahaan` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `npwp_perusahaan` varchar(25) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `situs_web` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `deskripsi` text COLLATE utf8mb4_unicode_ci,
-  `logo_perusahaan` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `nama_perusahaan` varchar(255) NOT NULL,
+  `alamat_jalan` text DEFAULT NULL,
+  `alamat_kota` varchar(255) DEFAULT NULL,
+  `kode_pos` varchar(10) DEFAULT NULL,
+  `no_telp_perusahaan` varchar(20) DEFAULT NULL,
+  `npwp_perusahaan` varchar(25) DEFAULT NULL,
+  `situs_web` varchar(255) DEFAULT NULL,
+  `deskripsi` text DEFAULT NULL,
+  `logo_perusahaan` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -627,7 +665,41 @@ INSERT INTO `profiles_perusahaan` (`id`, `user_id`, `nama_perusahaan`, `alamat_j
 (6, 49, 'PT.ABADI', 'Jl.Bandungrejo', 'Demak', '20822', '084934283421', '11.345.678.9-012.333', NULL, NULL, NULL, '2025-08-01 07:53:30', '2025-08-01 07:53:30'),
 (7, 50, 'PT.RAMKOM', 'BENGKAH', 'Semarang', '20891', '084934283411', '11.345.678.9-012.225', NULL, 'Perusahaan bekerja dibidang IT', 'logos/1vmEyvB0qMWGpzwgVcfTT9B5QB2fdoIvqjjsgwTl.png', '2025-08-01 16:40:39', '2025-08-06 17:16:00'),
 (8, 52, 'BataRingan', 'Desa.karangayu', 'Kendal', '50198', '084934283821', '11.345.678.9-012.600', NULL, NULL, 'logos/e81zxnTA1VQtwnF2vH2YIKgZ0t3wYDuMPOzi09ka.jpg', '2025-08-05 06:13:47', '2025-08-05 06:35:04'),
-(9, 53, 'PT.VictorRacket', 'Jl.Pandansari IV', 'Semarang Utara', '50199', '088342648414', '11.345.678.8-012.102', NULL, NULL, 'logos/YjvDGNHHnmZHUYcRHNhybKCD22Ez1aAovGuQSMwN.jpg', '2025-08-06 05:37:44', '2025-08-06 05:39:00');
+(9, 53, 'PT.VictorRacket', 'Jl.Pandansari IV', 'Semarang Utara', '50199', '088342648414', '11.345.678.8-012.102', NULL, NULL, 'logos/YjvDGNHHnmZHUYcRHNhybKCD22Ez1aAovGuQSMwN.jpg', '2025-08-06 05:37:44', '2025-08-06 05:39:00'),
+(10, 64, 'branzzstudio', 'Girikusumo', 'Demak', '59567', '08123456789', '12345', NULL, NULL, NULL, '2025-08-13 12:36:53', '2025-08-13 12:36:53');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `profiles_umkm`
+--
+
+CREATE TABLE `profiles_umkm` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `nama_usaha` varchar(255) NOT NULL,
+  `nama_pemilik` varchar(255) NOT NULL,
+  `alamat_usaha` text NOT NULL,
+  `kota` varchar(255) NOT NULL,
+  `no_hp_umkm` varchar(255) NOT NULL,
+  `kategori_usaha` varchar(255) NOT NULL,
+  `deskripsi_usaha` text DEFAULT NULL,
+  `situs_web_atau_medsos` varchar(255) DEFAULT NULL,
+  `logo_usaha` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `profiles_umkm`
+--
+
+INSERT INTO `profiles_umkm` (`id`, `user_id`, `nama_usaha`, `nama_pemilik`, `alamat_usaha`, `kota`, `no_hp_umkm`, `kategori_usaha`, `deskripsi_usaha`, `situs_web_atau_medsos`, `logo_usaha`, `created_at`, `updated_at`) VALUES
+(1, 55, 'cilok', 'branzz', 'Girikusumo', 'Demak', '082328872084', 'kuliner', NULL, NULL, NULL, '2025-08-13 02:32:15', '2025-08-13 02:32:15'),
+(2, 57, 'bakso', 'akmal', 'Girikusumo', 'Demak', '082328872084', 'kuliner', NULL, NULL, NULL, '2025-08-13 10:50:33', '2025-08-13 10:50:33'),
+(3, 58, 'pukis', 'kempung', 'Girikusumo', 'Demak', '082328872084', 'kuliner', NULL, NULL, NULL, '2025-08-13 10:53:07', '2025-08-13 10:53:07'),
+(4, 65, 'burjo', 'branzz', 'Girikusumo', 'Demak', '0812345678', 'kuliner', NULL, NULL, NULL, '2025-08-13 12:38:06', '2025-08-13 12:38:06'),
+(5, 67, 'angkringan', 'prass', 'Girikusumo', 'Demak', '0812345678', 'kuliner', NULL, NULL, NULL, '2025-08-15 07:09:18', '2025-08-15 07:09:18');
 
 -- --------------------------------------------------------
 
@@ -636,12 +708,12 @@ INSERT INTO `profiles_perusahaan` (`id`, `user_id`, `nama_perusahaan`, `alamat_j
 --
 
 CREATE TABLE `sessions` (
-  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `user_id` bigint UNSIGNED DEFAULT NULL,
-  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `user_agent` text COLLATE utf8mb4_unicode_ci,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_activity` int NOT NULL
+  `id` varchar(255) NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `user_agent` text DEFAULT NULL,
+  `payload` longtext NOT NULL,
+  `last_activity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -649,7 +721,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('76AgWt4biaDSfTXXykykTCl0Z3fTT0tfBukHWGdE', 50, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoieWpQcUp1ZDdvbHh3UEU0MTRlSTVWM1dPRU5ST01YSTVhRVIxTUZJdiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mzk6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9wZXJ1c2FoYWFuL2phZHdhbCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjUwO30=', 1754645757);
+('Z9gEfvQ5QNlUDN1yiFspWUvzzIkZ3Z3MimxkxJDL', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiOUJVUGg0OTk4dmMxU3MwVGYwSEtVbkFBZjRWeVZncEd0NmZsU3VMdSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7fX0=', 1755601246);
 
 -- --------------------------------------------------------
 
@@ -658,13 +730,15 @@ INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, 
 --
 
 CREATE TABLE `users` (
-  `id` bigint UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role` enum('admin','pelamar','perusahaan') COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `otp_code` varchar(255) DEFAULT NULL,
+  `otp_expires_at` timestamp NULL DEFAULT NULL,
+  `role` enum('admin','pelamar','perusahaan','umkm') NOT NULL,
+  `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -673,55 +747,69 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `role`, `remember_token`, `created_at`, `updated_at`) VALUES
-(2, 'Mas Admin', 'admin@messari.com', '2025-07-24 17:02:14', '$2y$12$wft2UfJgDYHDEf2NM4uZlOYL0CRsaGmN6UuRDO1L9TZZNx/h4cBVa', 'admin', NULL, '2025-07-24 17:02:14', '2025-07-24 10:04:11'),
-(3, 'akmal', 'akmalzaid24@gmail.com', NULL, '$2y$12$D.1QZlQ1dHG7ikg.gprZ4.qGFyLbb9VHJgLFS7/ASQSW93uKsNiB2', 'pelamar', NULL, '2025-07-24 11:43:24', '2025-07-24 11:43:24'),
-(7, 'arryaduta', 'duta23@gmail.com', NULL, '$2y$12$gvOvbZvi4D5ndvMB5qEeU.gdP7JjxSYctz0xIdXuycgSsPTMzOZh.', 'pelamar', NULL, '2025-07-26 01:44:14', '2025-07-26 01:44:14'),
-(8, 'abel', 'abel.24@gmail.com', NULL, '$2y$12$uQkOu8AMkd2UASxiH/X27.29jjbwBDRxVNMe/1O0RwPcrYBPndc7C', 'pelamar', NULL, '2025-07-26 01:55:45', '2025-07-26 01:55:45'),
-(9, 'rizki', 'rizki.gaming@gmail.com', NULL, '$2y$12$Pq5W2d35lroeCrErLErH0uLuaJpQM3aqxxybZpUtDiQWD83UqEbVK', 'pelamar', NULL, '2025-07-26 04:28:37', '2025-07-26 04:28:37'),
-(10, 'muna', 'muna@gmail.com', NULL, '$2y$12$OrItEZ8dPWb1fgMx.qL0t.fzTwY.pH7pnmeX8rw4tNF.fr.gswg6q', 'pelamar', NULL, '2025-07-29 12:48:25', '2025-07-29 12:48:25'),
-(11, 'lia', 'lia@gmail.com', NULL, '$2y$12$A5PLPTnZwPe6sZVbuFwzCeoj47YQHJvtSVLFvlOwHtWZBK/Ks2Rt.', 'pelamar', NULL, '2025-07-29 12:58:19', '2025-07-29 12:58:19'),
-(12, 'branzz', 'branzz@gmail.com', NULL, '$2y$12$g2yhM1Obfotf1sWDDInpM.KXVenq0YjqnmJeHkN7hvmB0alAC2iTu', 'pelamar', NULL, '2025-07-29 13:33:24', '2025-07-29 13:33:24'),
-(13, 'abdul1', 'abdul@gmail.com', NULL, '$2y$12$jTEvrSlu0JLR3aKk1z4Vgeig3pK6kRbytzlqxxwvd5P.67uO2xOk6', 'pelamar', NULL, '2025-07-29 13:49:23', '2025-07-30 07:25:53'),
-(14, 'karim', 'karim@gmail.com', NULL, '$2y$12$rUooEISy1mjEq9EHBCQvku7rUyopvqLk5n8p60nfNXDqejK7YcyKC', 'pelamar', NULL, '2025-07-29 13:51:56', '2025-07-29 13:51:56'),
-(15, 'akmal', 'akmal.tbn@gmail.com', NULL, '$2y$12$pehlfVDJ3hEeRGwNjuTNaOIOJ3zx7Si737.BR0QP6ExjizteQopmq', 'pelamar', NULL, '2025-07-29 13:52:54', '2025-07-29 13:52:54'),
-(16, 'tegar', 'tegar@gmail.com', NULL, '$2y$12$nzdH2cHiHgmio8h3N5XSZO7D9VJg9NI7iGnM3qXn8BjPw8qis7mkW', 'pelamar', NULL, '2025-07-29 13:53:53', '2025-07-29 13:53:53'),
-(17, 'abel', 'abel24@gmail.com', NULL, '$2y$12$JKnXr/T5Tj5axkln.oTWH.Ot0HE3lKWD7AbHZPuG81079qcLitoW6', 'pelamar', NULL, '2025-07-30 03:08:37', '2025-07-30 03:08:37'),
-(18, 'merlin', 'merlin@gmail.com', NULL, '$2y$12$W1YlIZhiLCR5IAoyzKWk/uMan2gUDNBhNLToAngzF0txpE8MY.4WO', 'pelamar', NULL, '2025-07-30 03:16:37', '2025-07-30 08:15:10'),
-(19, 'bono', 'bono@gmail.com', NULL, '$2y$12$27iKGYAEgnGa/m2tyF8QQeJ/X9jSZd2eao7jkjAOx1ZOoEkJwnuUq', 'pelamar', NULL, '2025-07-30 03:20:44', '2025-07-30 03:20:44'),
-(20, 'ikmil', 'ikmil@gmail.com', NULL, '$2y$12$An/Jz.AKu/lErWUr69hvQ./0USlOotGHnAr1wwPeQepws4.yTSKR6', 'pelamar', NULL, '2025-07-30 03:38:40', '2025-07-30 03:38:40'),
-(21, 'ikmil', 'ikmal@gmail.com', NULL, '$2y$12$KwrHGey6/JPpLGq2iljeQetvfE/VsHCaIKDWdlRNtPvf4Irv6EToy', 'pelamar', NULL, '2025-07-30 03:42:15', '2025-07-30 03:42:15'),
-(22, 'nafa', 'nafa@gmail.com', NULL, '$2y$12$DqoPQByfJBfjMhfe5SUG6OLjqfhY3bTzFnmfBeKGFSekRLfIrnpV.', 'pelamar', NULL, '2025-07-30 03:55:16', '2025-07-30 03:55:16'),
-(23, 'zaid', 'zaid@gmail.com', NULL, '$2y$12$f00nk9z/XQrM/NaLHec4H.VAvwh561NHtAosD2luXlv0WIYBbS3aa', 'pelamar', NULL, '2025-07-30 09:06:25', '2025-07-30 09:06:25'),
-(24, 'zaid', 'zaid2@gmail.com', NULL, '$2y$12$z2XvMNr0aAYWwuwENGpPZudxoOfO7rVQumVIHnSBQfV48YOoThc5C', 'pelamar', NULL, '2025-07-30 09:13:20', '2025-07-30 09:13:20'),
-(25, 'zaid', 'zaid1@gmail.com', NULL, '$2y$12$nvEeEURapCkpOnscigYpHe3Wzbp1rzd3bMb6f2CLenu0dGGF93Nd2', 'pelamar', NULL, '2025-07-30 09:15:16', '2025-07-30 09:15:16'),
-(26, 'zaid', 'zaid3@gmail.com', NULL, '$2y$12$c0dK96eLlJBdVEQmjIuKUe/MmL2Iqr7WU.Eo405skSOCB/FuybDHy', 'pelamar', NULL, '2025-07-30 09:20:29', '2025-07-30 09:20:29'),
-(27, 'stel', 'stel@gmail.com', NULL, '$2y$12$RvOgYGX.LRei2RGMU8wz8.2Fm3XziU8VeebFVJ4m8.6zS8KjXgsG2', 'pelamar', NULL, '2025-07-30 09:21:30', '2025-07-30 09:21:30'),
-(28, 'baba', 'baba@gmail.com', NULL, '$2y$12$jf4xSh/H9VsLT7U5dBga0.f4iDdiwTh.CZEXSCZd6Pnjrk67RPGoO', 'pelamar', NULL, '2025-07-30 09:24:09', '2025-07-30 09:24:09'),
-(29, 'mama', 'mama@gmail.com', NULL, '$2y$12$GQsYn5C/L9y1QrTtOKpU8e3vn/oXBHXRWzk1HGAGHqZpdBg.UwqI2', 'pelamar', NULL, '2025-07-30 09:27:15', '2025-07-30 09:27:15'),
-(30, 'mimi', 'mimi@gmail.com', NULL, '$2y$12$DxGsHJwNOHiQ7nrKUQZ7gO6aVfJUD7AogtCToCF2.G65Icy0YNL7G', 'pelamar', NULL, '2025-07-30 09:33:50', '2025-07-30 09:33:50'),
-(31, 'momo', 'momo@gmail.com', NULL, '$2y$12$gVN2onkWC2m2t3gneilNDe3lvrQKnLLRTmPIVEpglGjbI0oUSVuN6', 'pelamar', NULL, '2025-07-30 09:48:49', '2025-07-30 09:48:49'),
-(32, 'mumu', 'mumu@gmail.com', NULL, '$2y$12$BvolmG7.psD/8kIzSTLye.Xj.1KrNTaCpINE1BG63C7P5q7FL8aLW', 'pelamar', NULL, '2025-07-30 10:16:31', '2025-07-30 10:16:31'),
-(34, 'dika', 'dika@gmail.com', NULL, '$2y$12$gJyCNbEnmIOAj6UBkjSjceqZ3HTl3Gu2V6.pfJH7BnU77U9IfWBVa', 'pelamar', NULL, '2025-07-31 08:26:19', '2025-07-31 08:26:19'),
-(35, 'ini', 'ini@gmail.com', NULL, '$2y$12$9enIpIlzSM4x0Soe56Kgbemk.5DA/a8936JRlIGW1iiWHxPsPumGS', 'pelamar', NULL, '2025-07-31 08:39:27', '2025-07-31 08:39:27'),
-(36, 'inu', 'inu@gmail.com', NULL, '$2y$12$0MezNTFv2J3aM9gbU8s9Uuj6xSD3OIyzV0EAmvO3mAeavkaDI5Ydi', 'pelamar', NULL, '2025-07-31 09:17:11', '2025-07-31 09:17:11'),
-(37, 'unu', 'unu@gmail.com', NULL, '$2y$12$kofOw6vS2TJ9J7MT0kyacutLO341QAj1g55CKiPulTug87CIqbKKq', 'pelamar', NULL, '2025-07-31 10:21:31', '2025-07-31 10:21:31'),
-(38, 'ono', 'ono@gmail.com', NULL, '$2y$12$xg9ukxNLYzd2EX5Fcjqkh.fR4nFXn3GfgXb/8bt3KFQS1hL8sKLpG', 'pelamar', NULL, '2025-07-31 10:54:27', '2025-07-31 10:54:27'),
-(40, 'telkom', 'telkom@gmail.com', NULL, '$2y$12$oeTAgmYPfp77nGkerrFQ/uGbiRDRyXYPzc9uSHEk1Ig2n1cJyW3Li', 'perusahaan', NULL, '2025-07-31 11:12:30', '2025-07-31 11:12:30'),
-(41, 'telkom', 'telkom1@gmail.com', NULL, '$2y$12$Ntp81160h0COtOydPUpa7ut2LrgTo7t.nhrKtBgCHcj28BVudwAmC', 'perusahaan', NULL, '2025-07-31 11:23:42', '2025-07-31 11:23:42'),
-(42, 'indo', 'indo@gmail.com', NULL, '$2y$12$RnRrDCI35uduNjfeBkFdBebcbRsZfEIWewUtShQXwYZzWbf.KOKZ6', 'perusahaan', NULL, '2025-07-31 11:28:40', '2025-07-31 11:28:40'),
-(43, 'ine', 'ine@gmail.com', NULL, '$2y$12$H6jY2G44278wWC4UDHgMMuqPhAHY6mEhj.C5BsZA/8bg06fAeZ.qC', 'pelamar', NULL, '2025-07-31 11:29:55', '2025-07-31 11:29:55'),
-(44, 'indu', 'indu@gmail.com', NULL, '$2y$12$oJaPVOY4dEf9umt7y39sb.ZEZST6ira4Ut6c.0igYL7wbxLx8QPyq', 'perusahaan', NULL, '2025-07-31 11:34:53', '2025-07-31 11:34:53'),
-(45, 'stel2', 'stel2@gmail.com', NULL, '$2y$12$yKSxpgA9Yf.2UPbADCULnuLsgRbn5MVJnF.CQYjZQpG7o0eP3y.ge', 'pelamar', NULL, '2025-07-31 11:37:23', '2025-07-31 11:37:23'),
-(46, 'Anda', 'ramtech12@gmail.com', NULL, '$2y$12$eamY6WQZtPXlmfSHLgtNR.LebJ6uPtPcmb.hUExff1fup6GLlbOQ2', 'pelamar', NULL, '2025-08-01 02:56:12', '2025-08-01 02:56:12'),
-(47, 'RAquaticus', 'ramtech17@gmail.com', NULL, '$2y$12$vnRtupr8NpdmfxxinvftMuBxespgM.6allBOVITBsRzEecC1DQ43S', 'perusahaan', NULL, '2025-08-01 02:57:40', '2025-08-01 02:57:40'),
-(48, 'Maulana Aditia', 'maulana@gmail.com', NULL, '$2y$12$d3Uh6umdYNnByrg2Z/gzPers7bI5SLnMRPehSxL3aHml0vlf8C.ge', 'pelamar', NULL, '2025-08-01 06:43:06', '2025-08-01 06:43:06'),
-(49, 'PT.ABADI', 'abadi@gmail.com', NULL, '$2y$12$FsYr/1jL4mzWdjkW36K.B.pYhGLxIPVknurUT07SnXAqdo22rMUji', 'perusahaan', NULL, '2025-08-01 07:53:30', '2025-08-01 07:53:30'),
-(50, 'Mas Rizqi ganteng', 'ramstore1@gmail.com', NULL, '$2y$12$Z0JY3MQluoKGk1O6jCedsurFnEbZyJ3ngLMn2jnQWAL2kqmcslED2', 'perusahaan', NULL, '2025-08-01 16:40:39', '2025-08-05 06:08:25'),
-(51, 'Mayamaria jelek', 'maya1@gmail.com', NULL, '$2y$12$W07uZnlllmy1ot30z.ppSOFxROPumE1whAc4CP3du9Z2mo.y7lvfu', 'pelamar', NULL, '2025-08-02 11:24:13', '2025-08-07 15:10:53'),
-(52, 'BataRingan', 'bata@gmail.com', NULL, '$2y$12$Kf1zAoTsAeqe/pU3hVI/IuQWhN9uwC/1BAOZTc/dw0rnOCQjW6/oa', 'perusahaan', NULL, '2025-08-05 06:13:47', '2025-08-05 06:13:47'),
-(53, 'PT.VictorRacket', 'viktor@gmail.com', NULL, '$2y$12$Eks5pcPBWkp4rDrmAb4feen.mfKUVDLik/DlZ42iVebj57TMD8bXy', 'perusahaan', NULL, '2025-08-06 05:37:44', '2025-08-06 05:37:44'),
-(54, 'Arrya Duta', 'dutaarryaduta98@gmail.com', NULL, '$2y$12$SdLpjN2JRQajxgwwCISs8.kcDKMjYmse9GDcjRZixTNzHmtyb9azu', 'pelamar', NULL, '2025-08-07 13:41:27', '2025-08-07 13:41:27');
+INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `otp_code`, `otp_expires_at`, `role`, `remember_token`, `created_at`, `updated_at`) VALUES
+(2, 'Mas Admin', 'admin@messari.com', '2025-07-24 17:02:14', '$2y$12$wft2UfJgDYHDEf2NM4uZlOYL0CRsaGmN6UuRDO1L9TZZNx/h4cBVa', NULL, NULL, 'admin', NULL, '2025-07-24 17:02:14', '2025-07-24 10:04:11'),
+(3, 'akmal', 'akmalzaid24@gmail.com', NULL, '$2y$12$D.1QZlQ1dHG7ikg.gprZ4.qGFyLbb9VHJgLFS7/ASQSW93uKsNiB2', NULL, NULL, 'pelamar', NULL, '2025-07-24 11:43:24', '2025-07-24 11:43:24'),
+(7, 'arryaduta', 'duta23@gmail.com', NULL, '$2y$12$gvOvbZvi4D5ndvMB5qEeU.gdP7JjxSYctz0xIdXuycgSsPTMzOZh.', NULL, NULL, 'pelamar', NULL, '2025-07-26 01:44:14', '2025-07-26 01:44:14'),
+(8, 'abel', 'abel.24@gmail.com', NULL, '$2y$12$uQkOu8AMkd2UASxiH/X27.29jjbwBDRxVNMe/1O0RwPcrYBPndc7C', NULL, NULL, 'pelamar', NULL, '2025-07-26 01:55:45', '2025-07-26 01:55:45'),
+(9, 'rizki', 'rizki.gaming@gmail.com', NULL, '$2y$12$Pq5W2d35lroeCrErLErH0uLuaJpQM3aqxxybZpUtDiQWD83UqEbVK', NULL, NULL, 'pelamar', NULL, '2025-07-26 04:28:37', '2025-07-26 04:28:37'),
+(10, 'muna', 'muna@gmail.com', NULL, '$2y$12$OrItEZ8dPWb1fgMx.qL0t.fzTwY.pH7pnmeX8rw4tNF.fr.gswg6q', NULL, NULL, 'pelamar', NULL, '2025-07-29 12:48:25', '2025-07-29 12:48:25'),
+(11, 'lia', 'lia@gmail.com', NULL, '$2y$12$A5PLPTnZwPe6sZVbuFwzCeoj47YQHJvtSVLFvlOwHtWZBK/Ks2Rt.', NULL, NULL, 'pelamar', NULL, '2025-07-29 12:58:19', '2025-07-29 12:58:19'),
+(12, 'branzz', 'branzz@gmail.com', NULL, '$2y$12$g2yhM1Obfotf1sWDDInpM.KXVenq0YjqnmJeHkN7hvmB0alAC2iTu', NULL, NULL, 'pelamar', NULL, '2025-07-29 13:33:24', '2025-07-29 13:33:24'),
+(13, 'abdul1', 'abdul@gmail.com', NULL, '$2y$12$jTEvrSlu0JLR3aKk1z4Vgeig3pK6kRbytzlqxxwvd5P.67uO2xOk6', NULL, NULL, 'pelamar', NULL, '2025-07-29 13:49:23', '2025-07-30 07:25:53'),
+(14, 'karim', 'karim@gmail.com', NULL, '$2y$12$rUooEISy1mjEq9EHBCQvku7rUyopvqLk5n8p60nfNXDqejK7YcyKC', NULL, NULL, 'pelamar', NULL, '2025-07-29 13:51:56', '2025-07-29 13:51:56'),
+(15, 'akmal', 'akmal.tbn@gmail.com', NULL, '$2y$12$pehlfVDJ3hEeRGwNjuTNaOIOJ3zx7Si737.BR0QP6ExjizteQopmq', NULL, NULL, 'pelamar', NULL, '2025-07-29 13:52:54', '2025-07-29 13:52:54'),
+(16, 'tegar', 'tegar@gmail.com', NULL, '$2y$12$nzdH2cHiHgmio8h3N5XSZO7D9VJg9NI7iGnM3qXn8BjPw8qis7mkW', NULL, NULL, 'pelamar', NULL, '2025-07-29 13:53:53', '2025-07-29 13:53:53'),
+(17, 'abel', 'abel24@gmail.com', NULL, '$2y$12$JKnXr/T5Tj5axkln.oTWH.Ot0HE3lKWD7AbHZPuG81079qcLitoW6', NULL, NULL, 'pelamar', NULL, '2025-07-30 03:08:37', '2025-07-30 03:08:37'),
+(18, 'merlin', 'merlin@gmail.com', NULL, '$2y$12$W1YlIZhiLCR5IAoyzKWk/uMan2gUDNBhNLToAngzF0txpE8MY.4WO', NULL, NULL, 'pelamar', NULL, '2025-07-30 03:16:37', '2025-07-30 08:15:10'),
+(19, 'bono', 'bono@gmail.com', NULL, '$2y$12$27iKGYAEgnGa/m2tyF8QQeJ/X9jSZd2eao7jkjAOx1ZOoEkJwnuUq', NULL, NULL, 'pelamar', NULL, '2025-07-30 03:20:44', '2025-07-30 03:20:44'),
+(20, 'ikmil', 'ikmil@gmail.com', NULL, '$2y$12$An/Jz.AKu/lErWUr69hvQ./0USlOotGHnAr1wwPeQepws4.yTSKR6', NULL, NULL, 'pelamar', NULL, '2025-07-30 03:38:40', '2025-07-30 03:38:40'),
+(21, 'ikmil', 'ikmal@gmail.com', NULL, '$2y$12$KwrHGey6/JPpLGq2iljeQetvfE/VsHCaIKDWdlRNtPvf4Irv6EToy', NULL, NULL, 'pelamar', NULL, '2025-07-30 03:42:15', '2025-07-30 03:42:15'),
+(22, 'nafa', 'nafa@gmail.com', NULL, '$2y$12$DqoPQByfJBfjMhfe5SUG6OLjqfhY3bTzFnmfBeKGFSekRLfIrnpV.', NULL, NULL, 'pelamar', NULL, '2025-07-30 03:55:16', '2025-07-30 03:55:16'),
+(23, 'zaid', 'zaid@gmail.com', NULL, '$2y$12$f00nk9z/XQrM/NaLHec4H.VAvwh561NHtAosD2luXlv0WIYBbS3aa', NULL, NULL, 'pelamar', NULL, '2025-07-30 09:06:25', '2025-07-30 09:06:25'),
+(24, 'zaid', 'zaid2@gmail.com', NULL, '$2y$12$z2XvMNr0aAYWwuwENGpPZudxoOfO7rVQumVIHnSBQfV48YOoThc5C', NULL, NULL, 'pelamar', NULL, '2025-07-30 09:13:20', '2025-07-30 09:13:20'),
+(25, 'zaid', 'zaid1@gmail.com', NULL, '$2y$12$nvEeEURapCkpOnscigYpHe3Wzbp1rzd3bMb6f2CLenu0dGGF93Nd2', NULL, NULL, 'pelamar', NULL, '2025-07-30 09:15:16', '2025-07-30 09:15:16'),
+(26, 'zaid', 'zaid3@gmail.com', NULL, '$2y$12$c0dK96eLlJBdVEQmjIuKUe/MmL2Iqr7WU.Eo405skSOCB/FuybDHy', NULL, NULL, 'pelamar', NULL, '2025-07-30 09:20:29', '2025-07-30 09:20:29'),
+(27, 'stel', 'stel@gmail.com', NULL, '$2y$12$RvOgYGX.LRei2RGMU8wz8.2Fm3XziU8VeebFVJ4m8.6zS8KjXgsG2', NULL, NULL, 'pelamar', NULL, '2025-07-30 09:21:30', '2025-07-30 09:21:30'),
+(28, 'baba', 'baba@gmail.com', NULL, '$2y$12$jf4xSh/H9VsLT7U5dBga0.f4iDdiwTh.CZEXSCZd6Pnjrk67RPGoO', NULL, NULL, 'pelamar', NULL, '2025-07-30 09:24:09', '2025-07-30 09:24:09'),
+(29, 'mama', 'mama@gmail.com', NULL, '$2y$12$GQsYn5C/L9y1QrTtOKpU8e3vn/oXBHXRWzk1HGAGHqZpdBg.UwqI2', NULL, NULL, 'pelamar', NULL, '2025-07-30 09:27:15', '2025-07-30 09:27:15'),
+(30, 'mimi', 'mimi@gmail.com', NULL, '$2y$12$DxGsHJwNOHiQ7nrKUQZ7gO6aVfJUD7AogtCToCF2.G65Icy0YNL7G', NULL, NULL, 'pelamar', NULL, '2025-07-30 09:33:50', '2025-07-30 09:33:50'),
+(31, 'momo', 'momo@gmail.com', NULL, '$2y$12$gVN2onkWC2m2t3gneilNDe3lvrQKnLLRTmPIVEpglGjbI0oUSVuN6', NULL, NULL, 'pelamar', NULL, '2025-07-30 09:48:49', '2025-07-30 09:48:49'),
+(32, 'mumu', 'mumu@gmail.com', NULL, '$2y$12$BvolmG7.psD/8kIzSTLye.Xj.1KrNTaCpINE1BG63C7P5q7FL8aLW', NULL, NULL, 'pelamar', NULL, '2025-07-30 10:16:31', '2025-07-30 10:16:31'),
+(34, 'dika', 'dika@gmail.com', NULL, '$2y$12$gJyCNbEnmIOAj6UBkjSjceqZ3HTl3Gu2V6.pfJH7BnU77U9IfWBVa', NULL, NULL, 'pelamar', NULL, '2025-07-31 08:26:19', '2025-07-31 08:26:19'),
+(35, 'ini', 'ini@gmail.com', NULL, '$2y$12$9enIpIlzSM4x0Soe56Kgbemk.5DA/a8936JRlIGW1iiWHxPsPumGS', NULL, NULL, 'pelamar', NULL, '2025-07-31 08:39:27', '2025-07-31 08:39:27'),
+(36, 'inu', 'inu@gmail.com', NULL, '$2y$12$0MezNTFv2J3aM9gbU8s9Uuj6xSD3OIyzV0EAmvO3mAeavkaDI5Ydi', NULL, NULL, 'pelamar', NULL, '2025-07-31 09:17:11', '2025-07-31 09:17:11'),
+(37, 'unu', 'unu@gmail.com', NULL, '$2y$12$kofOw6vS2TJ9J7MT0kyacutLO341QAj1g55CKiPulTug87CIqbKKq', NULL, NULL, 'pelamar', NULL, '2025-07-31 10:21:31', '2025-07-31 10:21:31'),
+(38, 'ono', 'ono@gmail.com', NULL, '$2y$12$xg9ukxNLYzd2EX5Fcjqkh.fR4nFXn3GfgXb/8bt3KFQS1hL8sKLpG', NULL, NULL, 'pelamar', NULL, '2025-07-31 10:54:27', '2025-07-31 10:54:27'),
+(40, 'telkom', 'telkom@gmail.com', NULL, '$2y$12$oeTAgmYPfp77nGkerrFQ/uGbiRDRyXYPzc9uSHEk1Ig2n1cJyW3Li', NULL, NULL, 'perusahaan', NULL, '2025-07-31 11:12:30', '2025-07-31 11:12:30'),
+(41, 'telkom', 'telkom1@gmail.com', NULL, '$2y$12$Ntp81160h0COtOydPUpa7ut2LrgTo7t.nhrKtBgCHcj28BVudwAmC', NULL, NULL, 'perusahaan', NULL, '2025-07-31 11:23:42', '2025-07-31 11:23:42'),
+(42, 'indo', 'indo@gmail.com', NULL, '$2y$12$RnRrDCI35uduNjfeBkFdBebcbRsZfEIWewUtShQXwYZzWbf.KOKZ6', NULL, NULL, 'perusahaan', NULL, '2025-07-31 11:28:40', '2025-07-31 11:28:40'),
+(43, 'ine', 'ine@gmail.com', NULL, '$2y$12$H6jY2G44278wWC4UDHgMMuqPhAHY6mEhj.C5BsZA/8bg06fAeZ.qC', NULL, NULL, 'pelamar', NULL, '2025-07-31 11:29:55', '2025-07-31 11:29:55'),
+(44, 'indu', 'indu@gmail.com', NULL, '$2y$12$oJaPVOY4dEf9umt7y39sb.ZEZST6ira4Ut6c.0igYL7wbxLx8QPyq', NULL, NULL, 'perusahaan', NULL, '2025-07-31 11:34:53', '2025-07-31 11:34:53'),
+(45, 'stel2', 'stel2@gmail.com', NULL, '$2y$12$yKSxpgA9Yf.2UPbADCULnuLsgRbn5MVJnF.CQYjZQpG7o0eP3y.ge', NULL, NULL, 'pelamar', NULL, '2025-07-31 11:37:23', '2025-07-31 11:37:23'),
+(46, 'Anda', 'ramtech12@gmail.com', NULL, '$2y$12$eamY6WQZtPXlmfSHLgtNR.LebJ6uPtPcmb.hUExff1fup6GLlbOQ2', NULL, NULL, 'pelamar', NULL, '2025-08-01 02:56:12', '2025-08-01 02:56:12'),
+(47, 'RAquaticus', 'ramtech17@gmail.com', NULL, '$2y$12$vnRtupr8NpdmfxxinvftMuBxespgM.6allBOVITBsRzEecC1DQ43S', NULL, NULL, 'perusahaan', NULL, '2025-08-01 02:57:40', '2025-08-01 02:57:40'),
+(48, 'Maulana Aditia', 'maulana@gmail.com', NULL, '$2y$12$d3Uh6umdYNnByrg2Z/gzPers7bI5SLnMRPehSxL3aHml0vlf8C.ge', NULL, NULL, 'pelamar', NULL, '2025-08-01 06:43:06', '2025-08-01 06:43:06'),
+(49, 'PT.ABADI', 'abadi@gmail.com', NULL, '$2y$12$FsYr/1jL4mzWdjkW36K.B.pYhGLxIPVknurUT07SnXAqdo22rMUji', NULL, NULL, 'perusahaan', NULL, '2025-08-01 07:53:30', '2025-08-01 07:53:30'),
+(50, 'Mas Rizqi ganteng', 'ramstore1@gmail.com', NULL, '$2y$12$Z0JY3MQluoKGk1O6jCedsurFnEbZyJ3ngLMn2jnQWAL2kqmcslED2', NULL, NULL, 'perusahaan', NULL, '2025-08-01 16:40:39', '2025-08-05 06:08:25'),
+(51, 'Mayamaria jelek', 'maya1@gmail.com', NULL, '$2y$12$W07uZnlllmy1ot30z.ppSOFxROPumE1whAc4CP3du9Z2mo.y7lvfu', NULL, NULL, 'pelamar', NULL, '2025-08-02 11:24:13', '2025-08-07 15:10:53'),
+(52, 'BataRingan', 'bata@gmail.com', NULL, '$2y$12$Kf1zAoTsAeqe/pU3hVI/IuQWhN9uwC/1BAOZTc/dw0rnOCQjW6/oa', NULL, NULL, 'perusahaan', NULL, '2025-08-05 06:13:47', '2025-08-05 06:13:47'),
+(53, 'PT.VictorRacket', 'viktor@gmail.com', NULL, '$2y$12$Eks5pcPBWkp4rDrmAb4feen.mfKUVDLik/DlZ42iVebj57TMD8bXy', NULL, NULL, 'perusahaan', NULL, '2025-08-06 05:37:44', '2025-08-06 05:37:44'),
+(55, 'branzz', 'cilok@gmail.com', NULL, '$2y$12$47mKh5W22oZC0A2ibEJblu38fQthmojJJ5lGsjyIAU9XmQrAed/EO', NULL, NULL, 'umkm', NULL, '2025-08-13 02:32:15', '2025-08-13 02:32:15'),
+(56, 'uhuy', 'uhuy@gmail.com', NULL, '$2y$12$Gsnpgkgg8HTdAl6X0eRMEeGgVPXpuFlxKg9BewrZLZqJABxjnIt1e', NULL, NULL, 'pelamar', NULL, '2025-08-13 02:45:19', '2025-08-13 02:45:19'),
+(57, 'akmal', 'bakso@gmail.com', NULL, '$2y$12$K0so6Jj0m/E/QvOPS83IZ.WlBLNl4xaTRhfGPWAcGEsgXjhoddkpK', NULL, NULL, 'umkm', NULL, '2025-08-13 10:50:32', '2025-08-13 10:50:32'),
+(58, 'kempung', 'pukis@gmail.com', NULL, '$2y$12$FVY1eyABy8QWAXN/oKK2k.wJHPSHLCEYWlKeRgnoAGdPTT0UJtzNq', NULL, NULL, 'umkm', NULL, '2025-08-13 10:53:07', '2025-08-13 10:53:07'),
+(59, 'uhuy', 'uhiy@gmail.com', NULL, '$2y$12$gucBD.cSsJpNrCvbr6S9Z.upPjl/eY9NzoLBPrXpDhRXGZDdrq74m', NULL, NULL, 'pelamar', NULL, '2025-08-13 11:04:03', '2025-08-13 11:04:03'),
+(61, 'ahah', 'ahah@gmail.com', NULL, '$2y$12$V2728IE702rbKxB0xzRt7OGG2BWQCulmNCkspJjS3zxCXg5JEosei', NULL, NULL, 'pelamar', NULL, '2025-08-13 12:28:17', '2025-08-13 12:28:17'),
+(62, 'mumu', 'mumu1@gmail.com', NULL, '$2y$12$mGJn75.tAw4xQ2UEDUOwye/fOGA/Q0WsSEkpzsSMgkRkqZpgUSueq', NULL, NULL, 'pelamar', NULL, '2025-08-13 12:32:12', '2025-08-13 12:32:12'),
+(63, 'mami', 'mami@gmail.com', NULL, '$2y$12$ex/jhSb0vO.LQzYS6XRNmeByOYLmSm62Tcxsk23xRWmFLLEz/9keS', NULL, NULL, 'pelamar', NULL, '2025-08-13 12:36:01', '2025-08-13 12:36:01'),
+(64, 'branzzstudio', 'branzzstudio@gmail.com', NULL, '$2y$12$rgqkdhJRFWJUfDt6spk4xeI1ZXax5E8gk/6XfwKZcuj6siU5HZVqy', NULL, NULL, 'perusahaan', NULL, '2025-08-13 12:36:53', '2025-08-13 12:36:53'),
+(65, 'burjo', 'burjo@gmail.com', NULL, '$2y$12$9rfdwK9AWZD3WnD9UpjGdu66A6YMcS8j9JhRsqkeFEkc9iY3RgMkS', NULL, NULL, 'umkm', NULL, '2025-08-13 12:38:06', '2025-08-13 12:38:06'),
+(66, 'mimo', 'mimo@gmail.com', NULL, '$2y$12$KydMU9HgqFI0dBK74pFUtOTmOT/g8xmlHs0pqaOQ/AvrnUg9dh2M6', NULL, NULL, 'pelamar', NULL, '2025-08-13 12:57:21', '2025-08-13 12:57:21'),
+(67, 'angkringan', 'angkringan@gmail.com', NULL, '$2y$12$ffCo0AdlwZEOKMFHMV2KUOvvS4DD6OIFUZYQkwa6OGitLr31Lj6Ty', NULL, NULL, 'umkm', NULL, '2025-08-15 07:09:18', '2025-08-15 07:09:18'),
+(68, 'mumi', 'mumi@gmail.com', NULL, '$2y$12$d.cTw8eRFLZz8xxb5d0HJuAvjA9VhosAyVrH9IaBx8QQCLvAOu6LO', NULL, NULL, 'pelamar', NULL, '2025-08-18 21:51:51', '2025-08-18 21:51:51'),
+(70, 'merlina', 'branzzgaming94@gmail.com', '2025-08-19 03:55:23', '$2y$12$An46m0T2Oa0ZGUVSc574ZurfoqFhdiwOOWNgBg0zhv0veouxAYoii', NULL, NULL, 'pelamar', NULL, '2025-08-19 03:54:54', '2025-08-19 03:55:23'),
+(71, 'dutaedan', 'dutaarryaduta98@gmail.com', '2025-08-19 04:00:15', '$2y$12$VBIAINovZLk4JsYskK0.9OBr3fFcl0sfS9U4lt0y7pyKCUaSrT59i', NULL, NULL, 'pelamar', NULL, '2025-08-19 03:59:57', '2025-08-19 04:00:15');
 
 --
 -- Indexes for dumped tables
@@ -848,6 +936,13 @@ ALTER TABLE `profiles_perusahaan`
   ADD KEY `profiles_perusahaan_user_id_foreign` (`user_id`);
 
 --
+-- Indexes for table `profiles_umkm`
+--
+ALTER TABLE `profiles_umkm`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `profiles_umkm_user_id_foreign` (`user_id`);
+
+--
 -- Indexes for table `sessions`
 --
 ALTER TABLE `sessions`
@@ -870,85 +965,91 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `berita`
 --
 ALTER TABLE `berita`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `bidang_keahlians`
 --
 ALTER TABLE `bidang_keahlians`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `bidang_pekerjaan`
 --
 ALTER TABLE `bidang_pekerjaan`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `jadwal_wawancara`
 --
 ALTER TABLE `jadwal_wawancara`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `kategori`
 --
 ALTER TABLE `kategori`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `keahlian`
 --
 ALTER TABLE `keahlian`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `lamaran`
 --
 ALTER TABLE `lamaran`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `lowongan_pekerjaan`
 --
 ALTER TABLE `lowongan_pekerjaan`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `lowongan_tersimpan`
 --
 ALTER TABLE `lowongan_tersimpan`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `profiles_pelamar`
 --
 ALTER TABLE `profiles_pelamar`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `profiles_perusahaan`
 --
 ALTER TABLE `profiles_perusahaan`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `profiles_umkm`
+--
+ALTER TABLE `profiles_umkm`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- Constraints for dumped tables
@@ -1005,6 +1106,12 @@ ALTER TABLE `profiles_pelamar`
 --
 ALTER TABLE `profiles_perusahaan`
   ADD CONSTRAINT `profiles_perusahaan_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `profiles_umkm`
+--
+ALTER TABLE `profiles_umkm`
+  ADD CONSTRAINT `profiles_umkm_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

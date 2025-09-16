@@ -115,28 +115,28 @@
             margin-right: 1rem;
             flex-shrink: 0;
         }
-           .activity-list-wrapper {
-        overflow-y: auto; /* Menambahkan scrollbar vertikal jika konten meluap */
-        flex-grow: 1; /* Membuat elemen ini mengisi sisa ruang vertikal */
-        padding-right: 8px; /* Memberi sedikit ruang untuk scrollbar */
-    }
+            .activity-list-wrapper {
+            overflow-y: auto; /* Menambahkan scrollbar vertikal jika konten meluap */
+            flex-grow: 1; /* Membuat elemen ini mengisi sisa ruang vertikal */
+            padding-right: 8px; /* Memberi sedikit ruang untuk scrollbar */
+        }
 
-    /* Optional: Style untuk scrollbar agar serasi dengan tema */
-    .activity-list-wrapper::-webkit-scrollbar {
-        width: 6px;
-    }
-    .activity-list-wrapper::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.2);
-        border-radius: 3px;
-    }
-    .activity-list-wrapper::-webkit-scrollbar-thumb {
-        background: rgba(255, 255, 255, 0.5);
-        border-radius: 3px;
-    }
-    .activity-list-wrapper::-webkit-scrollbar-thumb:hover {
-        background: rgba(255, 255, 255, 0.7);
-    }
-    
+        /* Optional: Style untuk scrollbar agar serasi dengan tema */
+        .activity-list-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+        .activity-list-wrapper::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+        .activity-list-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 3px;
+        }
+        .activity-list-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.7);
+        }
+        
         .table-custom .badge {
             padding: 0.5em 0.75em;
             font-weight: 500;
@@ -145,13 +145,14 @@
 </head>
 <body>
     <div class="admin-layout">
-        <!-- Sidebar -->
         <aside class="sidebar">
             <div class="logo">Job Recruitment</div>
             <nav class="nav flex-column">
                 <a class="nav-link {{ Request::routeIs('admin.homepage') ? 'active' : '' }}" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
                 <a class="nav-link {{ Request::routeIs('admin.pelamar.index') ? 'active' : '' }}" href="{{ route('admin.pelamar.index') }}"><i class="bi bi-people-fill"></i> Pelamar</a>
                 <a class="nav-link" href="#"><i class="bi bi-building-fill"></i> Perusahaan</a>
+                {{-- [BARU] Tambahkan link untuk UMKM --}}
+                <a class="nav-link" href="#"><i class="bi bi-shop"></i> UMKM</a>
                 <a class="nav-link {{ Request::routeIs('admin.pelamar.ranking') ? 'active' : '' }}" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
                 <a class="nav-link" href="#"><i class="bi bi-bell-fill"></i> Notifikasi</a>
                 <a class="nav-link" href="#"><i class="bi bi-gear-fill"></i> Pengaturan</a>
@@ -179,18 +180,14 @@
             </div>
         </aside>
 
-        <!-- Main Content -->
         <main class="main-wrapper">
-            <!-- Header -->
             <header class="mb-5">
                 <h2>Selamat Datang <span style="color: var(--orange);">Mas Admin</span></h2>
                 <p class="text-secondary">Kelola Proses Rekrutmen Anda Dengan Mudah</p>
             </header>
 
-            <!-- Kartu Statistik -->
             <div class="row g-4 mb-5">
-                <div class="col-md-3">
-                    {{-- FIX: Ditambahkan kelas h-100 --}}
+                <div class="col-lg-3 col-md-6">
                     <div class="stat-card h-100">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
@@ -205,8 +202,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    {{-- FIX: Ditambahkan kelas h-100 --}}
+                <div class="col-lg-3 col-md-6">
                     <div class="stat-card h-100">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
@@ -221,8 +217,25 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    {{-- FIX: Ditambahkan kelas h-100 --}}
+                
+                {{-- [BARU] Kartu Statistik untuk UMKM --}}
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card h-100">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <small class="text-secondary">Total UMKM</small>
+                                <h3>{{ number_format($totalUmkm, 0, ',', '.') }}</h3>
+                                <span class="percentage {{ $persentaseUmkm['status'] == 'increase' ? 'text-success' : 'text-danger' }}">
+                                    <i class="bi {{ $persentaseUmkm['status'] == 'increase' ? 'bi-arrow-up' : 'bi-arrow-down' }}"></i>
+                                    {{ $persentaseUmkm['value'] }}% Dari Bulan Lalu
+                                </span>
+                            </div>
+                            <div class="icon" style="background-color: #6366f1;"><i class="bi bi-shop"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-6">
                     <div class="stat-card h-100">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
@@ -234,38 +247,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    {{-- FIX: Ditambahkan kelas h-100 --}}
-                    <div class="stat-card h-100">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <small class="text-secondary">Lamaran Masuk (24 Jam)</small>
-                                <h3>{{ number_format($lamaranMasuk24Jam, 0, ',', '.') }}</h3>
-                                <span class="percentage text-secondary">Dalam 24 jam terakhir</span>
-                            </div>
-                            <div class="icon" style="background-color: #8b5cf6;"><i class="bi bi-file-earmark-text-fill"></i></div>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <!-- Grafik dan Aktivitas -->
-        <div class="row g-4 mb-5">
+            <div class="row g-4 mb-5">
             <div class="col-md-8">
-                {{-- FIX: Ditambahkan kelas h-100 --}}
                 <div class="chart-card h-100">
                     <h5 class="mb-4">Grafik Pendaftaran User Baru (20 Hari Terakhir)</h5>
                     <div style="height: 300px;">
-                        <canvas id="userChart" data-labels='@json($chartLabels)' data-pelamar='@json($pelamarChartData)' data-perusahaan='@json($perusahaanChartData)'></canvas>
+                        {{-- [DIUBAH] Menambahkan data-umkm --}}
+                        <canvas id="userChart" 
+                                data-labels='@json($chartLabels)' 
+                                data-pelamar='@json($pelamarChartData)' 
+                                data-perusahaan='@json($perusahaanChartData)'
+                                data-umkm='@json($umkmChartData)'></canvas>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
-                {{-- FIX: Ditambahkan kelas h-100 dan struktur internal diubah --}}
-                <div class="activity-card h-100">
+                <div class="activity-card h-100 d-flex flex-column">
                     <h5 class="mb-4 flex-shrink-0">Aktivitas Terkini</h5>
                     
-                    {{-- Wrapper baru untuk daftar aktivitas agar bisa di-scroll --}}
                     <div class="activity-list-wrapper">
                         @forelse($recentActivities as $activity)
                             <div class="activity-item">
@@ -274,6 +275,9 @@
                                         <i class="bi bi-person-plus-fill"></i>
                                     @elseif($activity->activity_type == 'Pendaftaran Perusahaan')
                                         <i class="bi bi-building-add"></i>
+                                    {{-- [BARU] Tambahkan ikon untuk pendaftaran UMKM --}}
+                                    @elseif($activity->activity_type == 'Pendaftaran UMKM')
+                                        <i class="bi bi-shop"></i>
                                     @else
                                         <i class="bi bi-bell-fill"></i>
                                     @endif
@@ -293,7 +297,6 @@
             </div>
         </div>
 
-            <!-- Tabel Menunggu Persetujuan -->
             <div class="table-card">
                 <h5 class="mb-4">Menunggu Persetujuan</h5>
                 <div class="table-responsive">
@@ -331,19 +334,23 @@
         </main>
     </div>
 
+    {{-- [DIUBAH] Memperbarui script untuk memasukkan data UMKM --}}
     <script>
         const chartCanvas = document.getElementById('userChart');
         const chartLabels = JSON.parse(chartCanvas.dataset.labels);
         const pelamarData = JSON.parse(chartCanvas.dataset.pelamar);
         const perusahaanData = JSON.parse(chartCanvas.dataset.perusahaan);
+        const umkmData = JSON.parse(chartCanvas.dataset.umkm); // [BARU] Baca data UMKM
 
         new Chart(chartCanvas.getContext('2d'), {
             type: 'bar',
             data: {
                 labels: chartLabels,
                 datasets: [
-                    { label: 'Pelamar', data: pelamarData, backgroundColor: '#3b82f6' },
-                    { label: 'Perusahaan', data: perusahaanData, backgroundColor: '#10b981' }
+                    { label: 'Pelamar', data: pelamarData, backgroundColor: '#3b82f6', borderRadius: 4 },
+                    { label: 'Perusahaan', data: perusahaanData, backgroundColor: '#10b981', borderRadius: 4 },
+                    // [BARU] Tambahkan dataset untuk UMKM
+                    { label: 'UMKM', data: umkmData, backgroundColor: '#f59e0b', borderRadius: 4 } 
                 ]
             },
             options: {
@@ -352,14 +359,12 @@
                 scales: {
                     y: { 
                         beginAtZero: true,
-                        max: 10,
                         ticks: {
                             stepSize: 1
                         }
                     },
                     x: { 
                         grid: { display: false },
-                        // FIX: Menambahkan opsi untuk memaksa semua label tanggal muncul
                         ticks: {
                             autoSkip: false,
                             maxRotation: 90,

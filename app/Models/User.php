@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable  // <-- TAMBAHKAN "implements MustVerifyEmail"
 {
     use HasFactory, Notifiable;
 
@@ -59,5 +59,13 @@ class User extends Authenticatable
     public function profilePerusahaan()
     {
         return $this->hasOne(ProfilePerusahaan::class);
+    }
+
+    /**
+     * Relasi ke profil UMKM (jika role-nya umkm).
+     */
+    public function profileUmkm()
+    {
+        return $this->hasOne(ProfileUmkm::class);
     }
 }

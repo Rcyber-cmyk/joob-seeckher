@@ -6,18 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\ActivityLog;
 use App\Models\ProfilePelamar;
-use App\Models\ProfilePerusahaan; // Pastikan model ini di-import
+use App\Models\ProfilePerusahaan;
+use App\Models\ProfileUmkm;
 use App\Models\BidangKeahlian;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail; // BARU: Import Mail facade
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use App\Mail\OtpVerificationMail; // Pastikan Mailable ini sudah Anda buat
 
-class RegisteredUserController 
+class RegisteredUserController extends Controller
 {
     /**
      * Menampilkan halaman registrasi.
@@ -34,14 +36,14 @@ class RegisteredUserController
      */
     public function store(Request $request): RedirectResponse
     {
-        // Validasi input dari form
+        // Validasi input dari form (Tidak ada perubahan di sini)
         $request->validate([
             // Aturan Umum
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => ['required', 'in:pelamar,perusahaan'],
-            
+            'role' => ['required', 'in:pelamar,perusahaan,umkm'],
+
             // Aturan Khusus Pelamar
             'nik' => ['required_if:role,pelamar', 'nullable', 'string', 'size:16', 'unique:profiles_pelamar,nik'],
             'alamat' => ['required_if:role,pelamar', 'nullable', 'string'],
@@ -52,6 +54,7 @@ class RegisteredUserController
             'pengalaman_kerja' => ['required_if:role,pelamar', 'nullable', 'string', 'max:255'],
             'gender' => ['required_if:role,pelamar', 'nullable', 'in:Laki-laki,Perempuan'],
             'no_hp' => ['required_if:role,pelamar', 'nullable', 'string', 'max:20'],
+            'nilai_akhir' => ['required_if:role,pelamar', 'nullable', 'numeric', 'between:0,100.00'],
 
             // Aturan Khusus Perusahaan
             'alamat_jalan' => ['required_if:role,perusahaan', 'nullable', 'string'],
@@ -59,6 +62,15 @@ class RegisteredUserController
             'kode_pos' => ['required_if:role,perusahaan', 'nullable', 'string', 'max:10'],
             'no_telp_perusahaan' => ['required_if:role,perusahaan', 'nullable', 'string', 'max:20'],
             'npwp_perusahaan' => ['required_if:role,perusahaan', 'nullable', 'string', 'max:25'],
+
+            // Aturan Khusus UMKM
+            'nama_pemilik' => ['required_if:role,umkm', 'nullable', 'string', 'max:255'],
+            'alamat_usaha' => ['required_if:role,umkm', 'nullable', 'string'],
+            'kota' => ['required_if:role,umkm', 'nullable', 'string', 'max:255'],
+            'no_hp_umkm' => ['required_if:role,umkm', 'nullable', 'string', 'max:20'],
+            'kategori_usaha' => ['required_if:role,umkm', 'nullable', 'string', 'max:255'],
+            'deskripsi_usaha' => ['nullable', 'string'],
+            'situs_web_atau_medsos' => ['nullable', 'string', 'max:255'],
         ]);
 
         // --- PENYIMPANAN DATA ---
@@ -70,10 +82,11 @@ class RegisteredUserController
                 'role' => $request->role,
             ]);
 
+            // Logika pembuatan profil dan activity log (Tidak ada perubahan)
             if ($request->role === 'pelamar') {
                 $user->profilePelamar()->create($request->only([
                     'nik', 'alamat', 'tanggal_lahir', 'domisili', 'lulusan',
-                    'tahun_lulus', 'pengalaman_kerja', 'gender', 'no_hp'
+                    'tahun_lulus', 'pengalaman_kerja','nilai_akhir', 'gender', 'no_hp'
                 ]) + ['nama_lengkap' => $request->name]);
 
                 ActivityLog::create([
@@ -83,8 +96,6 @@ class RegisteredUserController
                 ]);
 
             } elseif ($request->role === 'perusahaan') {
-                // --- PERBAIKAN FINAL ---
-                // Menyimpan data ke kolom yang benar sesuai dengan database Anda
                 $user->profilePerusahaan()->create([
                     'nama_perusahaan' => $request->name,
                     'alamat_jalan' => $request->alamat_jalan,
@@ -99,26 +110,51 @@ class RegisteredUserController
                     'activity_type' => 'Pendaftaran Perusahaan',
                     'description' => $user->name . ' mendaftar sebagai perusahaan baru.'
                 ]);
+            } elseif ($request->role === 'umkm') {
+                $user->profileUmkm()->create([
+                    'nama_usaha' => $request->name,
+                    'nama_pemilik' => $request->nama_pemilik,
+                    'alamat_usaha' => $request->alamat_usaha,
+                    'kota' => $request->kota,
+                    'no_hp_umkm' => $request->no_hp_umkm,
+                    'kategori_usaha' => $request->kategori_usaha,
+                    'deskripsi_usaha' => $request->deskripsi_usaha,
+                    'situs_web_atau_medsos' => $request->situs_web_atau_medsos,
+                ]);
+
+                ActivityLog::create([
+                    'user_id' => $user->id,
+                    'activity_type' => 'Pendaftaran UMKM',
+                    'description' => $user->name . ' mendaftar sebagai UMKM baru.'
+                ]);
             }
             
             return $user;
         });
 
-        event(new Registered($user));
-        Auth::login($user);
+        // --- UBAH: LOGIKA VERIFIKASI OTP ---
 
-        // --- PENGALIHAN ---
-        if ($user->role === 'perusahaan') {
-            return redirect(route('perusahaan.dashboard'));
-        }
+        // 1. Buat OTP 4 digit
+        $otp = rand(1000, 9999);
+
+        // 2. Simpan OTP dan waktu kedaluwarsa ke user
+        $user->otp_code = $otp;
+        $user->otp_expires_at = now()->addMinutes(10); // OTP berlaku 10 menit
+        $user->save();
+
+        // 3. Kirim OTP ke email pengguna
+        Mail::to($user->email)->send(new OtpVerificationMail($otp));
+
+        // 4. Login-kan pengguna
+        Auth::login($user);
         
+        // 5. Simpan ID pelamar di session jika role-nya pelamar
         if ($user->role === 'pelamar') {
             $request->session()->put('new_pelamar_id', $user->profilePelamar->id);
-            return redirect()->route('register.keahlian.create');
         }
 
-        // Fallback
-        return redirect(route('login'));
+        // 6. Arahkan SEMUA pengguna ke halaman verifikasi OTP
+        return redirect()->route('otp.verification.notice');
     }
 
     /**
@@ -129,7 +165,8 @@ class RegisteredUserController
         $pelamarId = session('new_pelamar_id');
 
         if (!$pelamarId) {
-            return redirect(route('register'));
+            // Jika sesi hilang, arahkan kembali ke login atau dashboard
+            return redirect(route('login'));
         }
 
         $bidangKeahlians = BidangKeahlian::with('keahlian')->orderBy('nama_bidang')->get();
@@ -153,8 +190,8 @@ class RegisteredUserController
 
         $profilePelamar = ProfilePelamar::find($request->pelamar_id);
 
-        if (!$profilePelamar) {
-            return redirect(route('register'));
+        if (!$profilePelamar || $profilePelamar->user->id !== Auth::id()) {
+            return redirect(route('login'));
         }
         
         if ($request->has('keahlian')) {
@@ -162,11 +199,6 @@ class RegisteredUserController
         }
 
         $request->session()->forget('new_pelamar_id');
-
-        $user = $profilePelamar->user;
-
-        event(new Registered($user));
-        Auth::login($user);
 
         return redirect(route('pelamar.dashboard'));
     }

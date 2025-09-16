@@ -25,12 +25,11 @@
         .navbar-nav .nav-link { margin-right: 1rem; color: white; }
         .navbar-nav .nav-link:hover { color: #071b2f; }
         .navbar-nav .highlight-text { color: #071b2f !important; font-weight: bold; }
-        #offcanvasNavbar.offcanvas {
-            background-color: #ff7a00 !important; /* Ganti ke Biru Navy */
+         #offcanvasNavbar.offcanvas {
+            background-color: #ff7a00 !important;
         }
-
         #offcanvasNavbar .offcanvas-header {
-            background-color: #ff7a00 !important; /* Ganti ke Biru Navy */
+            background-color: #ff7a00 !important;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         #offcanvasNavbar .offcanvas-title {
@@ -38,20 +37,19 @@
             font-weight: bold;
         }
         #offcanvasNavbar .offcanvas-body {
-            background-color: #ff7a00 !important; /* Ganti ke Biru Navy */
-            color: white !important; /* Warna teks default offcanvas putih */
+            background-color: #ff7a00 !important;
+            color: white !important;
             padding-top: 1rem;
             display: flex;
             flex-direction: column;
         }
-        /* Link di dalam offcanvas */
         #offcanvasNavbar .offcanvas-body .navbar-nav {
-            width: 100%;
+            width: 90%;
             margin-left: 0;
             flex-grow: 1;
         }
         #offcanvasNavbar .offcanvas-body .navbar-nav .nav-item {
-            width: 100%;
+            width: 60%;
             text-align: left;
             margin-bottom: 0.5rem;
         }
@@ -59,19 +57,15 @@
             padding: 0.75rem 1rem;
             border-radius: 5px;
             transition: background-color 0.3s ease;
-            color: white !important; /* Link di offcanvas harus putih */
+            color: white !important;
         }
         #offcanvasNavbar .offcanvas-body .navbar-nav .nav-link:hover {
-            background-color: rgba(255,123,0,0.2); /* Efek hover oranye transparan pada background biru navy */
+            background-color: rgba(255,123,0,0.2);
         }
-        /* Memastikan highlight-text juga terlihat di offcanvas */
         #offcanvasNavbar .offcanvas-body .navbar-nav .nav-link.highlight-text {
-            color: white !important; /* Tetap putih agar terlihat di offcanvas biru navy */
+            color: white !important;
             font-weight: bold;
         }
-
-
-        /* Tombol di dalam offcanvas (untuk mobile only) */
         #offcanvasNavbar .offcanvas-buttons {
             margin-top: 1.5rem;
             width: 100%;
@@ -82,7 +76,6 @@
         #offcanvasNavbar .offcanvas-buttons .btn {
             width: 100%;
         }
-        /* Gaya spesifik untuk tombol di offcanvas */
         #offcanvasNavbar .offcanvas-buttons .btn-outline-light {
             border-color: white !important;
             color: white !important;
@@ -93,7 +86,7 @@
             color: #071b2f !important;
         }
         #offcanvasNavbar .offcanvas-buttons .btn-dark {
-            background-color: #071b2f !important; /* Ganti ke Oranye agar kontras dengan navbar biru navy */
+            background-color: #071b2f !important;
             color: white !important;
             border: none !important;
         }
@@ -101,7 +94,7 @@
             background-color: #0A2C4FFF !important;
         }
 
-        @media (max-width: 991.98px) {
+        @media (max-width: 768px) {
             .navbar .ms-auto { display: none !important; }
         }
 
@@ -171,12 +164,12 @@
 
 
         /* --- Responsive Adjustments --- */
-        @media (max-width: 991.98px) {
+        @media (max-width: 360px) {
             .navbar .ms-auto { display: none !important; }
         }
             @media (max-width: 767.98px) {
             .hero-section {
-                min-height: 100vh; /* Pastikan tinggi penuh untuk centering vertikal */
+                min-height: 60vh; /* Pastikan tinggi penuh untuk centering vertikal */
                 padding: 2rem 1rem;
                 display: flex; /* Aktifkan flexbox */
                 flex-direction: column; /* Susun item secara vertikal */
@@ -200,20 +193,20 @@
 
             /* Gaya untuk kolom teks/tombol (kolom pertama) */
             .hero-section .col-md-6:first-child {
-                flex: 0 0 70% !important; /* Memaksa lebar 50% */
-                max-width: 70% !important;
+                flex: 0 0 60% !important; /* Memaksa lebar 50% */
+                max-width: 60% !important;
                 text-align: left !important; /* Teks rata kiri */
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start !important; /* Elemen di dalam kolom (h1, p, div tombol) rata kiri */
                 justify-content: center;
-                margin-bottom: 0 !important;
+                margin-bottom: 2rem !important;
             }
 
             /* Gaya untuk kolom gambar (kolom kedua) */
             .hero-section .col-md-6.text-center {
-                flex: 0 0 30% !important; /* Memaksa lebar 50% */
-                max-width: 30% !important;
+                flex: 0 0 40% !important; /* Memaksa lebar 50% */
+                max-width: 40% !important;
                 text-align: center !important; /* Pusatkan gambar */
                 display: flex; /* Gunakan flexbox untuk kolom gambar */
                 flex-direction: column;
@@ -224,24 +217,23 @@
             }
 
             .hero-section h1 {
-                font-size: 1.3rem;
-            }
-            .hero-section p {
                 font-size: 1rem;
             }
+            .hero-section p {
+                font-size: 0.5rem;
+            }
             .hero-img {
-                max-width: 200px;
+                max-width: 80%;
             }
             .hero-section .mt-3 { /* Div yang berisi tombol-tombol */
                 display: flex;
                 flex-direction: row !important; /* Susun tombol secara horizontal */
                 gap: 1rem !important; /* Jarak antar tombol */
-                width: auto !important; /* Tombol kontainer mengambil lebar sesuai konten */
+                width: 90% !important; /* Tombol kontainer mengambil lebar sesuai konten */
                 align-items: flex-start !important; /* Rata kiri tombol */
             }
             .hero-section .mt-3 .btn {
-                width: auto !important; /* Tombol mengambil lebar sesuai kontennya */
-                margin: 0 !important; /* Hapus margin yang mengganggu */
+                width: 40% !important; /* Tombol mengambil lebar sesuai kontennya */
             }
         }
 
@@ -310,8 +302,8 @@
                 text-align: left;
             }
             .cta-section .col-md-5 {
-                flex: 0 0 40% !important;
-                max-width: 40% !important;
+                flex: 0 0 30% !important;
+                max-width: 30% !important;
             }
             .cta-section h2 {
                 font-size: 1.8rem;
@@ -325,7 +317,7 @@
                 padding: 0.4rem 0.8rem;
             }
             .cta-section .cta-img {
-                max-width: 200px;
+                max-width: 130%;
                 margin-bottom: 0;
                 margin-left: auto;
                 margin-right: auto;
@@ -383,8 +375,11 @@
                     <li class="nav-item">
                         <a class="nav-link highlight-text" href="#">Beranda</a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('marketplace.index') }}" class="nav-link">MarketPlace</a>
+                    </li>
                 </ul>
-    
+                
                 <div class="d-flex ms-auto">
                     @auth
                         <div class="nav-item dropdown">
@@ -407,7 +402,8 @@
                         </div>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-outline-light me-2">MASUK</a>
-                        <a href="{{ route('home') }}" class="btn btn-dark">PELAMAR</a>
+                        <a href="{{ route('home') }}" class="btn btn-dark me-2">PELAMAR</a>
+                        <a href="{{ route('toko-umkm.index') }}" class="btn btn-dark">UMKM</a>
                     @endauth
                 </div>
             </div>
@@ -431,6 +427,9 @@
                         <li class="nav-item">
                             <a class="nav-link {{ Request::is('/') || Request::is('perusahaan') ? 'highlight-text' : '' }}" href="{{ Auth::user()->role === 'pelamar' ? route('pelamar.profile.edit') : (Auth::user()->role === 'perusahaan' ? route('perusahaan.profile.edit') : route('admin.profile.edit')) }}">Profile Perusahaan</a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('marketplace.index') }}" class="nav-link">MarketPlace</a>
+                        </li>
                     </ul>
                     <div class="mt-auto">
                         <div class="d-grid gap-2">
@@ -445,6 +444,7 @@
                     <div class="offcanvas-buttons mt-3">
                         <a href="{{ route('login') }}" class="btn btn-outline-light">MASUK</a>
                         <a href="{{ route('home') }}" class="btn btn-dark">PELAMAR</a>
+                        <a href="{{ route('toko-umkm.index') }}" class="btn btn-dark">UMKM</a>
                     </div>  
                     @endauth
                 </div>
@@ -463,8 +463,10 @@
                                 YANG TEPAT UNTUK <br>
                                 PERUSAHAAN ANDA
                             </h1>
-                            <p class="text-light mb-2" style="font-size: 14px;">Dapatkan akses ke ribuan pelamar berkualitas yang siap bergabung dengan tim Anda.</p>
+                            <p class="text-light mb-2" style="font-size: 12px;">Dapatkan akses ke ribuan pelamar berkualitas yang siap bergabung dengan tim Anda.</p>
+                            <div class="mt-1">
                             <a href="{{ route('perusahaan.kandidat-pelamar.index') }}" class="btn btn-navy">Dashboard Perusahaan</a>
+                            </div>
                         </div>
                         <div class="col-md-6 text-center">
                             <img src="{{ asset('images/gambar1.png') }}" alt="We Are Hiring" class="img-fluid hero-img">
@@ -556,7 +558,7 @@
                         <p>Dapatkan iklan lowongan dan temukan kandidat yang tepat di platform rekrutmen #1 di Indonesia.</p>
                         @auth
                             @if(Auth::user()->role === 'perusahaan')
-                                <a href="{{ route('perusahaan.dashboard') }}" class="btn btn-orange">Pasang Iklan</a>
+                                <a href="/perusahaan/iklan/pasang-baru" class="btn btn-orange">Pasang Iklan</a>
                             @else
                                 <a href="#" class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Pasang Iklan</a>
                             @endif

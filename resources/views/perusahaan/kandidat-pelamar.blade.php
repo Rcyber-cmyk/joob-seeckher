@@ -1,19 +1,18 @@
 @extends('perusahaan.layouts.app')
 
 @section('content')
-    {{-- Header Dashboard yang Responsif, Dibuat Seragam untuk Semua Ukuran --}}
     <div class="header-dashboard d-flex flex-wrap justify-content-between align-items-center mb-4">
         <div class="w-100 w-md-auto mb-3 mb-md-0">
             <h1>Selamat Datang PT {{ Auth::user()->profilePerusahaan->nama_perusahaan ?? 'Perusahaan' }}</h1>
-            <p class="text-muted">Kelola Proses Rekrutmen Anda Dengan Mudah</p>
+            <p class="text-muted">Kelola Proses Rekrutmen Anda Dengan Mudah</p></br>
         </div>
-        <a href="{{ route('perusahaan.lowongan.create') }}" class="btn btn-primary d-flex align-items-center btn-post">
+        <a href="{{ route('perusahaan.lowongan.create') }}" class="btn btn-primary d-flex align-items-center btn-post" style="background-color: var(--primary-color); border-color: var(--primary-color);">
             <i class="bi bi-plus-circle-fill me-2"></i> Buat Lowongan
         </a>
     </div>
 
     <div class="row g-4 mb-4">
-        <div class="col-12 col-md-6 col-lg-3">
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="info-card d-flex flex-column info-lowongan">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div>
@@ -24,10 +23,10 @@
                         <i class="bi bi-house-door-fill"></i>
                     </div>
                 </div>
-                <span class="change-text fw-semibold">+2% Dari Bulan Lalu</span>
+                <span class="change-text fw-semibold text-success">+2% Dari Bulan Lalu</span>
             </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-3">
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="info-card d-flex flex-column info-pelamar">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div>
@@ -38,10 +37,10 @@
                         <i class="bi bi-people-fill"></i>
                     </div>
                 </div>
-                <span class="change-text fw-semibold">+2% Dari Bulan Lalu</span>
+                <span class="change-text fw-semibold text-success">+2% Dari Bulan Lalu</span>
             </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-3">
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="info-card d-flex flex-column info-wawancara">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div>
@@ -52,10 +51,10 @@
                         <i class="bi bi-calendar-event"></i>
                     </div>
                 </div>
-                <span class="change-text fw-semibold">+2% Dari Bulan Lalu</span>
+                <span class="change-text fw-semibold text-success">+2% Dari Bulan Lalu</span>
             </div>
         </div>
-        <div class="col-12 col-md-6 col-lg-3">
+        <div class="col-12 col-sm-6 col-lg-3">
             <div class="info-card d-flex flex-column info-diterima">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div>
@@ -66,7 +65,7 @@
                         <i class="bi bi-person-check-fill"></i>
                     </div>
                 </div>
-                <span class="change-text fw-semibold">+2% Dari Bulan Lalu</span>
+                <span class="change-text fw-semibold text-success">+2% Dari Bulan Lalu</span>
             </div>
         </div>
     </div>
@@ -75,61 +74,25 @@
         <div class="col-lg-6">
             <div class="dashboard-section h-100">
                 <h5 class="mb-4">Kandidat Terbaru</h5>
+                <a href="#" class="btn btn-primary d-flex align-items-center btn-post" style="background-color: var(--primary-color); border-color: var(--primary-color);">
+                    <i class="bi bi-plus-circle-fill me-2"></i> Dapatkan Kandidat Pelamar Terbaik
+                </a>
                 <div class="kandidat-list">
-                    <div class="kandidat-item d-flex align-items-center">
-                        <img src="https://via.placeholder.com/40" alt="Profile" class="profile-img me-3">
-                        <div class="flex-grow-1">
-                            <h6 class="name mb-0">Arsura gaur</h6>
-                            <span class="email">arsuragaur@gmail.com</span>
+                    @for ($i = 0; $i < 6; $i++)
+                        <div class="kandidat-item d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <img src="https://via.placeholder.com/40" alt="Profile" class="profile-img me-3">
+                                <div>
+                                    <h6 class="name mb-0">Arsura gaur</h6>
+                                    <span class="email d-none d-sm-block">arsuragaur@gmail.com</span>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center ms-auto">
+                                <span class="date me-3 d-none d-md-block">12 Dec, 2020</span>
+                                <span class="status new">Baru</span>
+                            </div>
                         </div>
-                        <span class="date me-3 d-none d-md-block">12 Dec, 2020</span>
-                        <span class="status new">Baru</span>
-                    </div>
-                    <div class="kandidat-item d-flex align-items-center">
-                        <img src="https://via.placeholder.com/40" alt="Profile" class="profile-img me-3">
-                        <div class="flex-grow-1">
-                            <h6 class="name mb-0">James Mullican</h6>
-                            <span class="email">jamesmullican@gmail.com</span>
-                        </div>
-                        <span class="date me-3 d-none d-md-block">10 Dec, 2020</span>
-                        <span class="status new">Baru</span>
-                    </div>
-                    <div class="kandidat-item d-flex align-items-center">
-                        <img src="https://via.placeholder.com/40" alt="Profile" class="profile-img me-3">
-                        <div class="flex-grow-1">
-                            <h6 class="name mb-0">Anne Jacob</h6>
-                            <span class="email">annejacob@gmail.com</span>
-                        </div>
-                        <span class="date me-3 d-none d-md-block">10 Dec, 2020</span>
-                        <span class="status new">Baru</span>
-                    </div>
-                    <div class="kandidat-item d-flex align-items-center">
-                        <img src="https://via.placeholder.com/40" alt="Profile" class="profile-img me-3">
-                        <div class="flex-grow-1">
-                            <h6 class="name mb-0">James Mullican</h6>
-                            <span class="email">jamesmullican@gmail.com</span>
-                        </div>
-                        <span class="date me-3 d-none d-md-block">10 Dec, 2020</span>
-                        <span class="status new">Baru</span>
-                    </div>
-                    <div class="kandidat-item d-flex align-items-center">
-                        <img src="https://via.placeholder.com/40" alt="Profile" class="profile-img me-3">
-                        <div class="flex-grow-1">
-                            <h6 class="name mb-0">Anne Jacob</h6>
-                            <span class="email">annejacob@gmail.com</span>
-                        </div>
-                        <span class="date me-3 d-none d-md-block">10 Dec, 2020</span>
-                        <span class="status new">Baru</span>
-                    </div>
-                    <div class="kandidat-item d-flex align-items-center">
-                        <img src="https://via.placeholder.com/40" alt="Profile" class="profile-img me-3">
-                        <div class="flex-grow-1">
-                            <h6 class="name mb-0">Arsura gaur</h6>
-                            <span class="email">arsuragaur@gmail.com</span>
-                        </div>
-                        <span class="date me-3 d-none d-md-block">12 Dec, 2020</span>
-                        <span class="status new">Baru</span>
-                    </div>
+                    @endfor
                 </div>
             </div>
         </div>
@@ -137,31 +100,31 @@
         <div class="col-lg-6">
             <div class="dashboard-section h-100">
                 <h5 class="mb-4">Aktivitas Lowongan</h5>
-                <div class="d-flex align-items-center">
-                    <div class="chart-container flex-grow-1">
+                <div class="d-flex flex-column flex-md-row align-items-center h-100">
+                    <div class="chart-container flex-grow-1 mb-4 mb-md-0 me-md-4" style="max-height: 250px;">
                         <canvas id="lowonganChart"></canvas>
                     </div>
                     <div class="chart-legend">
-                        <div class="chart-legend-item d-flex justify-content-between align-items-center mb-1">
+                        <div class="chart-legend-item d-flex justify-content-between align-items-center mb-2">
                             <div class="d-flex align-items-center">
                                 <div class="chart-legend-color me-2" style="background-color: #dc3545;"></div>
-                                <span>Ditolak</span>
+                                <span class="fw-semibold">Ditolak</span>
                             </div>
-                            <span class="ms-auto">25%</span>
+                            <span class="ms-auto text-muted">25%</span>
                         </div>
-                        <div class="chart-legend-item d-flex justify-content-between align-items-center mb-1">
+                        <div class="chart-legend-item d-flex justify-content-between align-items-center mb-2">
                             <div class="d-flex align-items-center">
                                 <div class="chart-legend-color me-2" style="background-color: #ff7a00;"></div>
-                                <span>Wawancara</span>
+                                <span class="fw-semibold">Wawancara</span>
                             </div>
-                            <span class="ms-auto">45%</span>
+                            <span class="ms-auto text-muted">45%</span>
                         </div>
-                        <div class="chart-legend-item d-flex justify-content-between align-items-center mb-1">
+                        <div class="chart-legend-item d-flex justify-content-between align-items-center mb-2">
                             <div class="d-flex align-items-center">
                                 <div class="chart-legend-color me-2" style="background-color: #071b2f;"></div>
-                                <span>Diterima</span>
+                                <span class="fw-semibold">Diterima</span>
                             </div>
-                            <span class="ms-auto">30%</span>
+                            <span class="ms-auto text-muted">30%</span>
                         </div>
                     </div>
                 </div>

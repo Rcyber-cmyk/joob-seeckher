@@ -7,7 +7,7 @@ use App\Http\Controllers\Pelamar\DashboardController as PelamarDashboardControll
 use App\Http\Controllers\Perusahaan\DashboardController as PerusahaanDashboardController;
 use App\Http\Controllers\Admin\PelamarController as AdminPelamarController;
 use App\Http\Controllers\Perusahaan\PelamarController as PerusahaanPelamarController; 
-use App\Http\Controllers\Auth\RegisteredUserController;// Mengganti nama alias agar tidak konflik
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Perusahaan\KandidatPelamarController;
 use App\Http\Controllers\Perusahaan\LowonganSayaController;
 use App\Http\Controllers\Perusahaan\JadwalController;
@@ -17,33 +17,31 @@ use App\Http\Controllers\Perusahaan\JumlahPelamarController;
 use App\Http\Controllers\Perusahaan\WawancaraController;
 use App\Http\Controllers\Perusahaan\LowonganPekerjaanController;
 use App\Http\Controllers\Perusahaan\DetailPelamarController;
+use App\Http\Controllers\Perusahaan\IklanController;
+use App\Http\Controllers\Perusahaan\PengaturanController;
 use App\Http\Controllers\Pelamar\BeritaController;
 use App\Http\Controllers\Pelamar\HomepageController;
 use App\Http\Controllers\Pelamar\LowonganController;
 use App\Http\Controllers\Pelamar\PerusahaanController;
 use App\Http\Controllers\Pelamar\AktivitasController;
 use App\Http\Controllers\Pelamar\ProfilePelamarController;
-
-
-
+// Ganti nama alias controller UMKM agar lebih jelas
+use App\Http\Controllers\umkm\UmkmController; 
+use App\Http\Controllers\Auth\OtpVerificationController;
+use App\Http\Controllers\MarketplaceController; 
 
 /*
 |--------------------------------------------------------------------------
 | Rute Halaman Publik
 |--------------------------------------------------------------------------
-|
-| Rute-rute ini bisa diakses oleh semua pengunjung tanpa perlu login.
-|
 */
 Route::get('/cari-lowongan', [LowonganController::class, 'index'])->name('lowongan.index');
 Route::get('/jelajahi-perusahaan', [PerusahaanController::class, 'index'])->name('perusahaan.index');
 
-// Rute untuk halaman utama (diarahkan ke halaman pelamar)
 Route::get('/', function () {
     return view('pelamar.homepage');
 })->name('home');
 
-// Rute untuk halaman utama perusahaan (publik)
 Route::get('/perusahaan', function () {
     return view('perusahaan.homepage');
 })->name('perusahaan');
@@ -51,31 +49,33 @@ Route::get('/perusahaan', function () {
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::get('/berita/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 
+Route::get('/toko-umkm', [UmkmController::class, 'indexToko'])->name('toko-umkm.index');
+
+
 
 /*
 |--------------------------------------------------------------------------
 | Rute yang Membutuhkan Otentikasi (Login)
 |--------------------------------------------------------------------------
-|
-| Semua rute di dalam grup ini dilindungi oleh middleware 'auth'.
-|
 */
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    Route::get('/marketplace', [MarketplaceController::class, 'index'])->name('marketplace.index');
+    Route::get('/marketplace/{product}', [MarketplaceController::class, 'show'])->name('marketplace.show');
     Route::middleware('role:pelamar')->group(function () {
-        Route::get('/lowongan/detail/{lowongan}', [LowonganController::class, 'showDetailPartial'])->name('lowongan.showDetail');
+         Route::get('/lowongan/detail/{lowongan}', [LowonganController::class, 'showDetailPartial'])->name('lowongan.showDetail');
         Route::post('/lowongan/{lowongan}/simpan', [LowonganController::class, 'toggleSimpan'])->name('lowongan.toggleSimpan');
         
         // PERUBAHAN: Mengganti route 'lamar' yang lama dengan yang baru
         Route::get('/lowongan/{lowongan}/lamar', [LowonganController::class, 'showLamarForm'])->name('lowongan.lamar.form');
         Route::post('/lowongan/{lowongan}/lamar', [LowonganController::class, 'storeLamar'])->name('lowongan.lamar.store');
-    });
-    // --- AKHIR RUTE INTERAKSI LOWONGAN ---
 
-    // Rute publik yang butuh login
-    Route::get('/lamar/success', [LowonganController::class, 'lamarSuccess'])->name('lowongan.lamar.success')->middleware('role:pelamar');
+    });
+
+     Route::get('/lamar/success', [LowonganController::class, 'lamarSuccess'])->name('lowongan.lamar.success')->middleware('role:pelamar');
 
     // Rute khusus untuk Admin Utama
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
@@ -84,7 +84,6 @@ Route::middleware('auth')->group(function () {
         Route::get('/ranking', [AdminPelamarController::class, 'showAutoRanking'])->name('pelamar.ranking');
         Route::get('/pelamar', [AdminPelamarController::class, 'index'])->name('pelamar.index');
 
-        // Rute Profil untuk Admin
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -101,6 +100,13 @@ Route::middleware('auth')->group(function () {
         Route::get('/aktivitas', [AktivitasController::class, 'index'])->name('aktivitas.index');
     });
 
+    // Rute khusus untuk UMKM
+    Route::middleware('role:umkm')->prefix('umkm')->name('umkm.')->group(function () {
+        Route::get('/dashboard', [UmkmController::class, 'dashboard'])->name('dashboard');
+        // Anda bisa menambahkan rute lain khusus UMKM di sini, contoh:
+        // Route::get('/profile', [UmkmController::class, 'profile'])->name('profile');
+        // Route::get('/lowongan', [UmkmController::class, 'lowongan'])->name('lowongan');
+    });
 
     // Rute khusus untuk Perusahaan
     Route::middleware('role:perusahaan')->prefix('perusahaan')->name('perusahaan.')->group(function () {
@@ -130,6 +136,18 @@ Route::middleware('auth')->group(function () {
         Route::post('/wawancara/store', [WawancaraController::class, 'store'])->name('wawancara.store');
         // Rute tanpa parameter (dari tombol "Buat Jadwal Baru")
         Route::get('/wawancara/create', [WawancaraController::class, 'create'])->name('wawancara.create_tanpa_param');
+        Route::get('/jadwal/{id}/view', [JadwalController::class, 'view'])->name('jadwal.view');
+        Route::get('/jadwal/{id}/edit', [JadwalController::class, 'edit'])->name('jadwal.edit');
+        Route::patch('/jadwal/{id}', [JadwalController::class, 'update'])->name('jadwal.update');
+
+        // Rute untuk menampilkan form pasang iklan
+        Route::get('/iklan/pasang-baru', [IklanController::class, 'create'])
+            ->name('iklan.create');
+
+        Route::get('/pengaturan', [PengaturanController::class, 'edit'])->name('settings.edit');
+    
+    // Route untuk memproses update pengaturan
+        Route::patch('/pengaturan', [PengaturanController::class, 'update'])->name('settings.update');
 
         // Rute Profil untuk Perusahaan
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -141,13 +159,15 @@ Route::middleware('auth')->group(function () {
         Route::get('/lowongan/{lowongan_id}/pelamar/{pelamar_id}/detail', [DetailPelamarController::class, 'showDetail'])->name('pelamar.detail');
     });
 });
-// ==================================================================
-// == RUTE BARU UNTUK PROSES PEMILIHAN KEAHLIAN ==
-// ==================================================================
-// Rute ini ditempatkan di luar grup 'auth' karena diakses
-// selama proses registrasi, sebelum user sepenuhnya login.
+
+// Rute untuk proses pemilihan keahlian setelah registrasi
 Route::get('/register/keahlian', [RegisteredUserController::class, 'createKeahlian'])->name('register.keahlian.create');
 Route::post('/register/keahlian', [RegisteredUserController::class, 'storeKeahlian'])->name('register.keahlian.store');
 
-// Ini memuat semua rute otentikasi bawaan Laravel (login, register, logout, dll)
+Route::middleware('auth')->group(function () {
+    Route::get('/verify-otp', [OtpVerificationController::class, 'show'])->name('otp.verification.notice');
+    Route::post('/verify-otp', [OtpVerificationController::class, 'verify'])->name('otp.verification.verify');
+});
+
+// Memuat semua rute otentikasi bawaan Laravel
 require __DIR__.'/auth.php';

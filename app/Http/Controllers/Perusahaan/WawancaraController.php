@@ -50,7 +50,7 @@ class WawancaraController extends Controller
             'link_zoom' => 'nullable|required_if:metode_wawancara,Virtual Interview|url',
             'tanggal_interview' => 'required|date',
             'waktu_interview' => 'required|date_format:H:i',
-            'deskripsi_lowongan' => 'nullable|string',
+
         ]);
         
         // Simpan jadwal wawancara baru ke database
@@ -63,7 +63,6 @@ class WawancaraController extends Controller
             'link_zoom' => $request->input('link_zoom'),
             'tanggal_interview' => $validatedData['tanggal_interview'],
             'waktu_interview' => $validatedData['waktu_interview'],
-            'deskripsi' => $validatedData['deskripsi_lowongan'],
         ]);
 
         return Redirect::route('perusahaan.jadwal.index')->with('success', 'Jadwal wawancara berhasil dibuat!');

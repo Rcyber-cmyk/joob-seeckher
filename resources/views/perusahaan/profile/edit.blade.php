@@ -10,7 +10,7 @@
         body {
             background-color: #f8f9fa;
             font-family: 'Segoe UI', sans-serif;
-            color: #1a202c;  /* Much darker gray for better contrast */
+            color: #1a202c;
         }
         .main-container {
             min-height: 100vh;
@@ -18,32 +18,35 @@
             justify-content: center;
             align-items: center;
             padding: 2rem;
-            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb);
+            background: #e9eff5; /* Warna latar belakang yang lebih kalem */
         }
         .profile-card {
             background-color: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            padding: 2.5rem;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1); /* Bayangan lebih halus */
+            padding: 3rem;
             display: flex;
-            gap: 2.5rem;
+            gap: 3rem;
             width: 100%;
             max-width: 1200px;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: none;
         }
         .sidebar {
-            flex: 0 0 350px;
-            background: linear-gradient(to bottom, #ffffff, #f0f4f8);
-            border-left: 5px solid #4fd1c5;
-            border-radius: 10px;
+            flex: 0 0 320px;
+            background-color: #f7f9fc; /* Warna background sidebar yang lebih terang */
+            border-radius: 15px;
             padding: 2rem;
             text-align: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #e0e6ed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .profile-image-container {
             position: relative;
-            width: 120px;
-            height: 120px;
+            width: 150px; /* Ukuran foto lebih besar */
+            height: 150px;
             margin: 0 auto 1.5rem;
         }
         .profile-image {
@@ -51,36 +54,47 @@
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
-            border: 4px solid #4299e1;
+            border: 4px solid #ff7a00; /* Border dengan warna yang menonjol */
         }
         .edit-icon {
             position: absolute;
-            bottom: 5px;
-            right: 5px;
+            bottom: 0;
+            right: 15px;
             background-color: #ff7a00;
             color: white;
             border-radius: 50%;
-            padding: 5px;
-            font-size: 0.8rem;
+            padding: 8px;
+            font-size: 1rem;
             cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .edit-icon:hover {
+            background-color: #e66a00;
+            transform: scale(1.1);
         }
         .user-info h4 {
             font-weight: 700;
             color: #212529;
             margin-bottom: 0.25rem;
+            font-size: 1.5rem;
         }
         .user-info p {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: #6c757d;
+        }
+        .user-info hr {
+            margin: 1.5rem 0;
         }
         .main-form-content {
             flex-grow: 1;
         }
         .form-section-title {
+            font-size: 1.8rem;
             font-weight: 700;
-            color: #3182ce;
-            border-bottom: 3px solid #63b3ed;
-            padding-bottom: 0.5rem;
+            color: #ff7a00; /* Warna utama yang konsisten */
+            border-bottom: 2px solid #ff7a00;
+            padding-bottom: 0.75rem;
             margin-bottom: 2rem;
             letter-spacing: 0.5px;
         }
@@ -94,7 +108,7 @@
         }
         .form-control {
             border-radius: 8px;
-            border: 1px solid #a0aec0;
+            border: 1px solid #e0e6ed;
             padding: 0.75rem 1rem;
             transition: all 0.3s;
         }
@@ -103,11 +117,11 @@
             box-shadow: 0 0 0 0.25rem rgba(255, 122, 0, 0.25);
         }
         .form-control[readonly] {
-            background-color: #e9ecef;
+            background-color: #f1f5f9; /* Warna abu-abu yang lebih halus */
             cursor: not-allowed;
         }
         .btn-orange {
-            background: linear-gradient(to right, #4299e1, #3182ce, #2c5282);
+            background-color: #ff7a00;
             color: white;
             padding: 0.75rem 2rem;
             border-radius: 8px;
@@ -117,21 +131,31 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .btn-orange:hover {
-            background: linear-gradient(to right, #5a67d8, #6b46c1);
+            background-color: #e66a00;
             transform: translateY(-2px);
             box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        .btn-outline-primary {
+            border-color: #ff7a00;
+            color: #ff7a00;
+        }
+        .btn-outline-primary:hover {
+            background-color: #ff7a00;
+            color: white;
         }
         .alert-success {
             background-color: #d4edda;
             color: #155724;
             border-color: #c3e6cb;
             border-radius: 8px;
+            font-size: 0.9rem;
         }
         .alert-danger {
             background-color: #f8d7da;
             color: #721c24;
             border-color: #f5c6cb;
             border-radius: 8px;
+            font-size: 0.9rem;
         }
 
         /* Responsif */
@@ -152,12 +176,35 @@
                 padding: 0.75rem;
             }
         }
+        @media (max-width: 576px) {
+            .profile-card {
+                padding: 1rem;
+            }
+            .sidebar {
+                padding: 1.5rem;
+            }
+            .profile-image-container {
+                width: 120px;
+                height: 120px;
+            }
+            .user-info h4 {
+                font-size: 1.25rem;
+            }
+            .form-section-title {
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="main-container">
         <div class="profile-card">
             <div class="sidebar">
+                <form id="uploadLogoForm" action="{{ route('perusahaan.profile.upload_logo') }}" method="POST" enctype="multipart/form-data" style="display: none;">
+                    @csrf
+                    <input type="file" name="logo" id="uploadLogo" accept="image/*" onchange="this.form.submit()">
+                </form>
+
                 <div class="profile-image-container">
                     @if ($profile->logo_perusahaan)
                         <img src="{{ asset('storage/' . $profile->logo_perusahaan) }}" alt="Logo Perusahaan" class="profile-image">
@@ -176,13 +223,9 @@
                         Kelengkapan Profil: <strong>{{ $profile->kelengkapan_profil }}%</strong>
                     </p>
                 </div>
-                <div class="mt-4">
-                    <a href="{{ route('perusahaan.dashboard') }}" class="btn btn-navy w-100">Kembali ke Homepage</a>
+                <div class="mt-auto w-100">
+                    <a href="{{ route('perusahaan') }}" class="btn btn-outline-primary w-100">Kembali ke Dashboard</a>
                 </div>
-                <form id="uploadLogoForm" action="{{ route('perusahaan.profile.upload_logo') }}" method="POST" enctype="multipart/form-data" style="display: none;">
-                    @csrf
-                    <input type="file" name="logo" id="uploadLogo" accept="image/*" onchange="document.getElementById('uploadLogoForm').submit()">
-                </form>
             </div>
 
             <div class="main-form-content">

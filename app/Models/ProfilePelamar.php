@@ -22,6 +22,7 @@ class ProfilePelamar extends Model
         'domisili',
         'lulusan',
         'tahun_lulus', 
+        'nilai_akhir',
         'pengalaman_kerja',
         'gender', 
         'no_hp', 

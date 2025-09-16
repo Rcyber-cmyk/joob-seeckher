@@ -39,8 +39,8 @@
     @php
         $cards = [
             ['title' => 'Total Pelamar', 'value' => 140, 'icon' => 'people-fill', 'class' => 'info-total'],
-            ['title' => 'Pelamar Diterima', 'value' => 60, 'icon' => 'check-circle-fill', 'class' => 'info-diterima'],
-            ['title' => 'Pelamar Ditolak', 'value' => 25, 'icon' => 'x-circle-fill', 'class' => 'info-ditolak'],
+            ['title' => 'Pelamar Interview', 'value' => 60, 'icon' => 'check-circle-fill', 'class' => 'info-diterima'],
+            ['title' => 'Pelamar non Interview', 'value' => 25, 'icon' => 'x-circle-fill', 'class' => 'info-ditolak'],
             ['title' => 'Rata Rata Nilai', 'value' => '75%', 'icon' => 'percent', 'class' => 'info-nilai'],
         ];
     @endphp
@@ -81,8 +81,15 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>
                             <div class="d-flex align-items-center">
-                                <img src="https://via.placeholder.com/40" alt="Profile" class="rounded-circle me-3" width="40" height="40">
-                                <span class="fw-semibold">{{ $item->pelamar->user->name }}</span>
+                                <img 
+                                        src="{{ $item->pelamar->foto_profil ? asset('storage/' . $item->pelamar->foto_profil) : asset('images/default-profile.png') }}" 
+                                        alt="Profile" 
+                                        class="rounded-circle me-3" 
+                                        width="40" 
+                                        height="40" 
+                                        style="object-fit: cover;">
+                                    {{-- ============================================================= --}}
+                                    <span class="fw-semibold">{{ $item->pelamar->user->name }}</span>
                             </div>
                         </td>
                         <td>

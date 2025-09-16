@@ -7,16 +7,18 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rule;
 use App\Models\LowonganPekerjaan;
 
-class LowonganPekerjaanController
+// PASTIKAN CLASS ANDA MENG-EXTENDS CONTROLLER
+class LowonganPekerjaanController extends Controller
 {
     /**
      * Menampilkan form untuk membuat lowongan baru.
      */
     public function create(): View
     {
+        // Pastikan nama view ini benar, misalnya 'create' atau 'addlowongan'
+        // Laravel case-sensitive, jadi 'addlowongan' lebih aman daripada 'Addlowongan'
         return view('perusahaan.lowongan.addlowongan');
     }
 
@@ -25,36 +27,30 @@ class LowonganPekerjaanController
      */
     public function store(Request $request)
     {
-        $user = Auth::user();
-        $perusahaan = $user->profilePerusahaan;
-
-        // Validasi semua field yang ada di formulir
+        // ======================= PERUBAHAN UTAMA DI SINI =======================
+        // NAMA VALIDASI DISESUAIKAN DENGAN NAMA KOLOM DATABASE DAN INPUT FORM
         $validatedData = $request->validate([
-            'posisi_pekerjaan' => ['required', 'string', 'max:255'],
+            'judul_lowongan' => ['required', 'string', 'max:255'],
             'domisili' => ['required', 'string', 'max:255'],
-            'deskripsi_lowongan' => ['required', 'string'],
+            'deskripsi_pekerjaan' => ['required', 'string'],
+            'tipe_pekerjaan' => ['required', 'string', 'max:255'], // Ditambahkan
             'gender' => ['nullable', 'string', 'in:Laki-laki,Perempuan,Semua'],
             'pendidikan_terakhir' => ['nullable', 'string', 'max:255'],
             'usia' => ['nullable', 'string', 'max:255'],
-            'nilai_pendidikan' => ['nullable', 'string', 'max:255'],
+            'nilai_pendidikan_terakhir' => ['nullable', 'string', 'max:255'],
             'pengalaman_kerja' => ['nullable', 'string', 'max:255'],
-            'keahlian' => ['nullable', 'string'],
+            'keahlian_bidang_pekerjaan' => ['nullable', 'string'],
         ]);
+        // ===================== AKHIR PERUBAHAN VALIDASI =====================
 
-        // Simpan semua data lowongan baru ke tabel
-        $lowongan = new LowonganPekerjaan();
-        $lowongan->perusahaan_id = $perusahaan->id;
-        $lowongan->judul_lowongan = $validatedData['posisi_pekerjaan'];
-        $lowongan->deskripsi_pekerjaan = $validatedData['deskripsi_lowongan'];
-        $lowongan->domisili = $validatedData['domisili'];
-        $lowongan->gender = $validatedData['gender'];
-        $lowongan->pendidikan_terakhir = $validatedData['pendidikan_terakhir'];
-        $lowongan->usia = $validatedData['usia'];
-        $lowongan->nilai_pendidikan_terakhir = $validatedData['nilai_pendidikan'];
-        $lowongan->pengalaman_kerja = $validatedData['pengalaman_kerja'];
-        $lowongan->keahlian_bidang_pekerjaan = $validatedData['keahlian'];
-        $lowongan->is_active = true;
-        $lowongan->save();
+        $user = Auth::user();
+        $perusahaan = $user->profilePerusahaan;
+
+        // Tambahkan perusahaan_id ke data yang akan disimpan
+        $validatedData['perusahaan_id'] = $perusahaan->id;
+
+        // Menggunakan Mass Assignment (create()) agar lebih ringkas dan aman
+        LowonganPekerjaan::create($validatedData);
         
         return Redirect::route('perusahaan.lowongan-saya.index')->with('success', 'Lowongan berhasil ditambahkan!');
     }
@@ -87,34 +83,26 @@ class LowonganPekerjaanController
      */
     public function update(Request $request, $id)
     {
+        // Validasi juga disesuaikan di sini
+        $validatedData = $request->validate([
+            'judul_lowongan' => ['required', 'string', 'max:255'],
+            'domisili' => ['required', 'string', 'max:255'],
+            'deskripsi_pekerjaan' => ['required', 'string'],
+            'tipe_pekerjaan' => ['required', 'string', 'max:255'],
+            'gender' => ['nullable', 'string', 'in:Laki-laki,Perempuan,Semua'],
+            'pendidikan_terakhir' => ['nullable', 'string', 'max:255'],
+            'usia' => ['nullable', 'string', 'max:255'],
+            'nilai_pendidikan_terakhir' => ['nullable', 'string', 'max:255'],
+            'pengalaman_kerja' => ['nullable', 'string', 'max:255'],
+            'keahlian_bidang_pekerjaan' => ['nullable', 'string'],
+        ]);
+
         $user = Auth::user();
         $perusahaan = $user->profilePerusahaan;
         $lowongan = LowonganPekerjaan::where('perusahaan_id', $perusahaan->id)
                                     ->findOrFail($id);
 
-        $validatedData = $request->validate([
-            'posisi_pekerjaan' => ['required', 'string', 'max:255'],
-            'domisili' => ['required', 'string', 'max:255'],
-            'deskripsi_lowongan' => ['required', 'string'],
-            'gender' => ['nullable', 'string', 'in:Laki-laki,Perempuan,Semua'],
-            'pendidikan_terakhir' => ['nullable', 'string', 'max:255'],
-            'usia' => ['nullable', 'string', 'max:255'],
-            'nilai_pendidikan' => ['nullable', 'string', 'max:255'],
-            'pengalaman_kerja' => ['nullable', 'string', 'max:255'],
-            'keahlian' => ['nullable', 'string'],
-        ]);
-
-        $lowongan->update([
-            'judul_lowongan' => $validatedData['posisi_pekerjaan'],
-            'domisili' => $validatedData['domisili'],
-            'deskripsi_pekerjaan' => $validatedData['deskripsi_lowongan'],
-            'gender' => $validatedData['gender'],
-            'pendidikan_terakhir' => $validatedData['pendidikan_terakhir'],
-            'usia' => $validatedData['usia'],
-            'nilai_pendidikan_terakhir' => $validatedData['nilai_pendidikan'],
-            'pengalaman_kerja' => $validatedData['pengalaman_kerja'],
-            'keahlian_bidang_pekerjaan' => $validatedData['keahlian'],
-        ]);
+        $lowongan->update($validatedData);
 
         return Redirect::route('perusahaan.lowongan-saya.index')->with('success', 'Lowongan berhasil diperbarui!');
     }
