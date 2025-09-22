@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\LowonganPekerjaan;
 
-// PASTIKAN CLASS ANDA MENG-EXTENDS CONTROLLER
 class LowonganPekerjaanController extends Controller
 {
     /**
@@ -17,8 +16,6 @@ class LowonganPekerjaanController extends Controller
      */
     public function create(): View
     {
-        // Pastikan nama view ini benar, misalnya 'create' atau 'addlowongan'
-        // Laravel case-sensitive, jadi 'addlowongan' lebih aman daripada 'Addlowongan'
         return view('perusahaan.lowongan.addlowongan');
     }
 
@@ -27,29 +24,43 @@ class LowonganPekerjaanController extends Controller
      */
     public function store(Request $request)
     {
-        // ======================= PERUBAHAN UTAMA DI SINI =======================
-        // NAMA VALIDASI DISESUAIKAN DENGAN NAMA KOLOM DATABASE DAN INPUT FORM
+        // ======================= VALIDASI BARU YANG LENGKAP =======================
         $validatedData = $request->validate([
+            // Detail Lowongan
             'judul_lowongan' => ['required', 'string', 'max:255'],
             'domisili' => ['required', 'string', 'max:255'],
             'deskripsi_pekerjaan' => ['required', 'string'],
-            'tipe_pekerjaan' => ['required', 'string', 'max:255'], // Ditambahkan
+            'tipe_pekerjaan' => ['required', 'string', 'max:255'],
+            
+            // Kualifikasi
             'gender' => ['nullable', 'string', 'in:Laki-laki,Perempuan,Semua'],
             'pendidikan_terakhir' => ['nullable', 'string', 'max:255'],
-            'usia' => ['nullable', 'string', 'max:255'],
+            'usia' => ['required', 'integer', 'min:0'], // usia_maks
+            'usia_min' => ['required', 'integer', 'min:0', 'lte:usia'], // lte:less than or equal to usia_maks
             'nilai_pendidikan_terakhir' => ['nullable', 'string', 'max:255'],
-            'pengalaman_kerja' => ['nullable', 'string', 'max:255'],
-            'keahlian_bidang_pekerjaan' => ['nullable', 'string'],
+            'pengalaman_kerja' => ['required', 'integer', 'min:0'], // pengalaman_kerja_min
+            'pengalaman_kerja_maks' => ['required', 'integer', 'min:0', 'gte:pengalaman_kerja'], // gte:greater than or equal to pengalaman_kerja_min
+            
+            // Bobot E-Ranking
+            'bobot_domisili' => ['required', 'integer', 'min:0', 'max:100'],
+            'bobot_usia' => ['required', 'integer', 'min:0', 'max:100'],
+            'bobot_gender' => ['required', 'integer', 'min:0', 'max:100'],
+            'bobot_pendidikan' => ['required', 'integer', 'min:0', 'max:100'],
+            'bobot_nilai' => ['required', 'integer', 'min:0', 'max:100'],
+            'bobot_pengalaman' => ['required', 'integer', 'min:0', 'max:100'],
         ]);
-        // ===================== AKHIR PERUBAHAN VALIDASI =====================
+        // ===================== AKHIR VALIDASI BARU =====================
+
+        // Validasi kustom untuk memastikan total bobot adalah 100
+        $totalBobot = $validatedData['bobot_domisili'] + $validatedData['bobot_usia'] + $validatedData['bobot_gender'] + $validatedData['bobot_pendidikan'] + $validatedData['bobot_nilai'] + $validatedData['bobot_pengalaman'];
+        if ($totalBobot !== 100) {
+            return back()->withErrors(['total_bobot' => 'Total persentase bobot harus tepat 100%.'])->withInput();
+        }
 
         $user = Auth::user();
         $perusahaan = $user->profilePerusahaan;
-
-        // Tambahkan perusahaan_id ke data yang akan disimpan
         $validatedData['perusahaan_id'] = $perusahaan->id;
 
-        // Menggunakan Mass Assignment (create()) agar lebih ringkas dan aman
         LowonganPekerjaan::create($validatedData);
         
         return Redirect::route('perusahaan.lowongan-saya.index')->with('success', 'Lowongan berhasil ditambahkan!');
@@ -83,7 +94,7 @@ class LowonganPekerjaanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validasi juga disesuaikan di sini
+        // ======================= VALIDASI UPDATE YANG LENGKAP =======================
         $validatedData = $request->validate([
             'judul_lowongan' => ['required', 'string', 'max:255'],
             'domisili' => ['required', 'string', 'max:255'],
@@ -91,11 +102,25 @@ class LowonganPekerjaanController extends Controller
             'tipe_pekerjaan' => ['required', 'string', 'max:255'],
             'gender' => ['nullable', 'string', 'in:Laki-laki,Perempuan,Semua'],
             'pendidikan_terakhir' => ['nullable', 'string', 'max:255'],
-            'usia' => ['nullable', 'string', 'max:255'],
+            'usia' => ['required', 'integer', 'min:0'],
+            'usia_min' => ['required', 'integer', 'min:0', 'lte:usia'],
             'nilai_pendidikan_terakhir' => ['nullable', 'string', 'max:255'],
-            'pengalaman_kerja' => ['nullable', 'string', 'max:255'],
-            'keahlian_bidang_pekerjaan' => ['nullable', 'string'],
+            'pengalaman_kerja' => ['required', 'integer', 'min:0'],
+            'pengalaman_kerja_maks' => ['required', 'integer', 'min:0', 'gte:pengalaman_kerja'],
+            'bobot_domisili' => ['required', 'integer', 'min:0', 'max:100'],
+            'bobot_usia' => ['required', 'integer', 'min:0', 'max:100'],
+            'bobot_gender' => ['required', 'integer', 'min:0', 'max:100'],
+            'bobot_pendidikan' => ['required', 'integer', 'min:0', 'max:100'],
+            'bobot_nilai' => ['required', 'integer', 'min:0', 'max:100'],
+            'bobot_pengalaman' => ['required', 'integer', 'min:0', 'max:100'],
         ]);
+        // ===================== AKHIR VALIDASI UPDATE =====================
+
+        // Validasi kustom untuk total bobot
+        $totalBobot = $validatedData['bobot_domisili'] + $validatedData['bobot_usia'] + $validatedData['bobot_gender'] + $validatedData['bobot_pendidikan'] + $validatedData['bobot_nilai'] + $validatedData['bobot_pengalaman'];
+        if ($totalBobot !== 100) {
+            return back()->withErrors(['total_bobot' => 'Total persentase bobot harus tepat 100%.'])->withInput();
+        }
 
         $user = Auth::user();
         $perusahaan = $user->profilePerusahaan;
@@ -122,3 +147,4 @@ class LowonganPekerjaanController extends Controller
         return Redirect::route('perusahaan.lowongan-saya.index')->with('success', 'Lowongan berhasil dihapus!');
     }
 }
+

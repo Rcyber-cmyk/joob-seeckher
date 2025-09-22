@@ -167,9 +167,14 @@
                        value="{{ old('pendidikan_terakhir', $lowongan->pendidikan_terakhir) }}">
             </div>
             <div class="col-12 col-md-6">
-                <label for="usia" class="form-label">Usia Minimal</label>
-                <input type="text" name="usia" id="usia" class="form-control" 
-                       value="{{ old('usia', $lowongan->usia) }}">
+            <label for="usia_min" class="form-label">Usia Minimal</label>
+            <input type="number" name="usia_min" id="usia_min" class="form-control" 
+                   value="{{ old('usia_min', $lowongan->usia_min) }}" placeholder="Contoh: 21">
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="usia" class="form-label">Usia Maksimal</label>
+                <input type="number" name="usia" id="usia" class="form-control" 
+                    value="{{ old('usia', $lowongan->usia) }}" placeholder="Contoh: 35">
             </div>
             <div class="col-12 col-md-6">
                 <label for="nilai_pendidikan_terakhir" class="form-label">Nilai Pendidikan Terakhir</label>
@@ -177,15 +182,14 @@
                        value="{{ old('nilai_pendidikan_terakhir', $lowongan->nilai_pendidikan_terakhir) }}">
             </div>
             <div class="col-12 col-md-6">
-                <label for="pengalaman_kerja" class="form-label">Pengalaman Kerja</label>
-                <select name="pengalaman_kerja" id="pengalaman_kerja" class="form-select">
-                    <option value="">Pilih Pengalaman Kerja</option>
-                    <option value="None" {{ old('pengalaman_kerja', $lowongan->pengalaman_kerja) == 'None' ? 'selected' : '' }}>None</option>
-                    <option value="<1 tahun" {{ old('pengalaman_kerja', $lowongan->pengalaman_kerja) == '<1 tahun' ? 'selected' : '' }}>Kurang dari 1 tahun</option>
-                    <option value="1-3 tahun" {{ old('pengalaman_kerja', $lowongan->pengalaman_kerja) == '1-3 tahun' ? 'selected' : '' }}>1 - 3 tahun</option>
-                    <option value="3-5 tahun" {{ old('pengalaman_kerja', $lowongan->pengalaman_kerja) == '3-5 tahun' ? 'selected' : '' }}>3 - 5 tahun</option>
-                    <option value=">5 tahun" {{ old('pengalaman_kerja', $lowongan->pengalaman_kerja) == '>5 tahun' ? 'selected' : '' }}>Lebih dari 5 tahun</option>
-                </select>
+            <label for="pengalaman_kerja" class="form-label">Pengalaman Min (Tahun)</label>
+            <input type="number" name="pengalaman_kerja" id="pengalaman_kerja" class="form-control" 
+                   value="{{ old('pengalaman_kerja', $lowongan->pengalaman_kerja) }}" placeholder="Contoh: 1">
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="pengalaman_kerja_maks" class="form-label">Pengalaman Maks (Tahun)</label>
+                <input type="number" name="pengalaman_kerja_maks" id="pengalaman_kerja_maks" class="form-control" 
+                    value="{{ old('pengalaman_kerja_maks', $lowongan->pengalaman_kerja_maks) }}" placeholder="Contoh: 5">
             </div>
             <div class="col-12 col-md-6">
                 <label for="keahlian_bidang_pekerjaan" class="form-label">Keahlian Bidang Pekerjaan</label>
@@ -194,9 +198,83 @@
         </div>
     </div>
 
+    {{-- ========================== BLOK BOBOT E-RANKING (DISESUAIKAN) ========================== --}}
+    <div class="form-section p-4 mb-4">
+        <h5 class="mb-3"><i class="bi bi-sliders me-2"></i> Atur Bobot Penilaian (E-Ranking)</h5>
+        <p class="text-muted">Tentukan persentase penilaian untuk setiap kriteria. **Pastikan totalnya adalah 100%**.</p>
+        
+        <div class="row g-4" id="ranking-weights">
+            <div class="col-12 col-md-6 col-lg-4">
+                <label for="bobot_domisili" class="form-label">Domisili (%)</label>
+                <input type="number" name="bobot_domisili" id="bobot_domisili" class="form-control weight-input" placeholder="Contoh: 10" value="{{ old('bobot_domisili', $lowongan->bobot_domisili) }}" min="0" max="100">
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+                <label for="bobot_usia" class="form-label">Usia (%)</label>
+                <input type="number" name="bobot_usia" id="bobot_usia" class="form-control weight-input" placeholder="Contoh: 5" value="{{ old('bobot_usia', $lowongan->bobot_usia) }}" min="0" max="100">
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+                <label for="bobot_gender" class="form-label">Gender (%)</label>
+                <input type="number" name="bobot_gender" id="bobot_gender" class="form-control weight-input" placeholder="Contoh: 5" value="{{ old('bobot_gender', $lowongan->bobot_gender) }}" min="0" max="100">
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+                <label for="bobot_pendidikan" class="form-label">Pendidikan (%)</label>
+                <input type="number" name="bobot_pendidikan" id="bobot_pendidikan" class="form-control weight-input" placeholder="Contoh: 15" value="{{ old('bobot_pendidikan', $lowongan->bobot_pendidikan) }}" min="0" max="100">
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+                <label for="bobot_nilai" class="form-label">Nilai Akhir (%)</label>
+                <input type="number" name="bobot_nilai" id="bobot_nilai" class="form-control weight-input" placeholder="Contoh: 15" value="{{ old('bobot_nilai', $lowongan->bobot_nilai) }}" min="0" max="100">
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+                <label for="bobot_pengalaman" class="form-label">Pengalaman Kerja (%)</label>
+                <input type="number" name="bobot_pengalaman" id="bobot_pengalaman" class="form-control weight-input" placeholder="Contoh: 25" value="{{ old('bobot_pengalaman', $lowongan->bobot_pengalaman) }}" min="0" max="100">
+            </div>
+            <div class="col-12">
+                <div class="alert alert-info d-flex align-items-center">
+                    <strong class="me-2">Total Bobot Saat Ini:</strong>
+                    <span id="total-weight" class="fw-bold fs-5">0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- ======================= AKHIR BLOK BOBOT E-RANKING ======================= --}}
+
+
     <div class="d-flex justify-content-end gap-2">
         <a href="{{ route('perusahaan.lowongan-saya.index') }}" class="btn btn-cancel">Batal</a>
         <button type="submit" class="btn btn-submit">Simpan Perubahan</button>
     </div>
 </form>
 @endsection
+
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const container = document.getElementById('ranking-weights');
+        const totalWeightEl = document.getElementById('total-weight');
+        const weightInputs = container.querySelectorAll('.weight-input');
+
+        function calculateTotal() {
+            let total = 0;
+            weightInputs.forEach(input => {
+                total += parseInt(input.value) || 0;
+            });
+            totalWeightEl.textContent = total + '%';
+            
+            // Mengubah warna alert berdasarkan total
+            const alertBox = totalWeightEl.parentElement;
+            alertBox.classList.remove('alert-success', 'alert-danger', 'alert-info'); // Hapus semua kelas warna
+            if (total === 100) {
+                alertBox.classList.add('alert-success');
+            } else {
+                alertBox.classList.add('alert-danger');
+            }
+        }
+
+        // Jalankan event listener setiap kali ada input
+        container.addEventListener('input', calculateTotal);
+        
+        // Panggil fungsi sekali saat halaman dimuat untuk menampilkan total awal
+        calculateTotal(); 
+    });
+</script>
+@endpush

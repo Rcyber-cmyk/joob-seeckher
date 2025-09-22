@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\LowonganPekerjaan;
 use App\Models\Lamaran;
 use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class PelamarController extends Controller
 {
@@ -24,98 +25,109 @@ class PelamarController extends Controller
             abort(403);
         }
 
-        // [MODIFIKASI] Eager load disederhanakan sesuai model ProfilePelamar Anda
+        // Eager load relasi untuk optimasi query
         $lamarans = $lowongan->lamaran()->with([
             'pelamar.user',
-            'pelamar.keahlian', // Relasi keahlian tetap digunakan
+            'pelamar.keahlian',
         ])->get();
 
         $total_pelamar = $lamarans->count();
-        $pelamar_diterima = $lamarans->where('status', 'diterima')->count();
-        $pelamar_ditolak = $lamarans->where('status', 'ditolak')->count();
-        $rata_rata_nilai = 75; // Data dummy
+        $pelamar_diterima = $lamarans->where('status', 'Diterima')->count();
+        $pelamar_ditolak = $lamarans->where('status', 'Ditolak')->count();
 
         // =====================================================================
-        // [LOGIKA PERANKINGAN DISESUAIKAN DENGAN MODEL PROFILEPELAMAR]
+        // [LOGIKA PERANKINGAN DENGAN BOBOT DINAMIS]
         // =====================================================================
         
-        $bobot = [
-            'pengalaman' => 30,
-            'keahlian' => 30,
-            'pendidikan' => 15,
-            'nilai' => 10,
-            'usia' => 10,
-            'gender' => 5,
-        ];
+        // Hapus array bobot statis, kita akan gunakan bobot dari $lowongan
+        // $bobot = [...];
 
-        $lamarans->map(function ($lamaran) use ($lowongan, $bobot) {
+        $lamarans->each(function ($lamaran) use ($lowongan) {
             $pelamar = $lamaran->pelamar;
             if (!$pelamar) {
                 $lamaran->skor_ranking = 0;
-                return $lamaran;
+                return; // Gunakan return kosong karena kita pakai each()
             }
 
-            // --- SKOR PENGALAMAN KERJA --- (Menggunakan kolom 'pengalaman_kerja')
+            // --- SKOR PENGALAMAN KERJA ---
             $pengalamanPelamar = (int)$pelamar->pengalaman_kerja;
             $pengalamanLowongan = (int)$lowongan->pengalaman_kerja;
             $skorPengalaman = 0;
             if ($pengalamanLowongan > 0) {
-                $skorPengalaman = ($pengalamanPelamar / $pengalamanLowongan) * 100;
-            } else {
+                // Skor proporsional, maksimal 100
+                $skorPengalaman = min(($pengalamanPelamar / $pengalamanLowongan) * 100, 100);
+            } elseif ($pengalamanPelamar >= 0) {
+                // Jika lowongan tidak butuh pengalaman, semua dapat skor 100
                 $skorPengalaman = 100;
             }
-            $skorPengalaman = min($skorPengalaman, 100);
 
-            // --- SKOR KEAHLIAN --- (Logika ini tetap sama)
+            // --- SKOR KEAHLIAN ---
             $keahlianLowonganIds = $lowongan->keahlianYangDibutuhkan->pluck('id');
             $keahlianPelamarIds = $pelamar->keahlian->pluck('id');
             $cocok = $keahlianLowonganIds->intersect($keahlianPelamarIds)->count();
             $skorKeahlian = $keahlianLowonganIds->isEmpty() ? 100 : ($cocok / $keahlianLowonganIds->count()) * 100;
 
-            // --- SKOR PENDIDIKAN (Jenjang) --- (Menggunakan kolom 'lulusan')
+            // --- SKOR PENDIDIKAN ---
             $levelPendidikan = ['SMA' => 1, 'D3' => 2, 'S1' => 3, 'S2' => 4, 'S3' => 5];
             $levelPelamar = $levelPendidikan[$pelamar->lulusan] ?? 0;
             $levelLowongan = $levelPendidikan[$lowongan->pendidikan_terakhir] ?? 0;
             $skorPendidikan = ($levelPelamar >= $levelLowongan) ? 100 : 0;
 
-            // --- SKOR NILAI --- (Menggunakan kolom 'nilai_akhir')
-            $nilaiPelamar = (float)$pelamar->nilai_akhir;
-            $nilaiLowongan = (float)$lowongan->nilai_pendidikan_terakhir;
-            $skorNilai = ($nilaiPelamar >= $nilaiLowongan) ? 100 : 0;
-            
-            // --- SKOR USIA --- (Menggunakan kolom 'tanggal_lahir')
+            // --- SKOR NILAI ---
+            $nilaiPelamar = (float) str_replace(',', '.', $pelamar->nilai_akhir);
+            $nilaiLowongan = (float) str_replace(',', '.', $lowongan->nilai_pendidikan_terakhir);
+            $skorNilai = ($nilaiLowongan > 0 && $nilaiPelamar >= $nilaiLowongan) ? 100 : 0;
+            if($nilaiLowongan == 0) $skorNilai = 100; // Jika tidak ada syarat nilai, skor 100
+
+            // --- SKOR USIA ---
             $usiaMaksimal = (int)$lowongan->usia;
             $usiaPelamar = $pelamar->tanggal_lahir ? Carbon::parse($pelamar->tanggal_lahir)->age : 99;
-            $skorUsia = ($usiaPelamar <= $usiaMaksimal) ? 100 : 0;
+            $skorUsia = ($usiaMaksimal > 0 && $usiaPelamar <= $usiaMaksimal) ? 100 : 0;
+            if($usiaMaksimal == 0) $skorUsia = 100; // Jika tidak ada syarat usia, skor 100
 
-            // --- SKOR GENDER --- (Menggunakan kolom 'gender')
+            // --- SKOR GENDER ---
             $skorGender = 100;
             if ($lowongan->gender !== 'Semua' && $pelamar->gender !== $lowongan->gender) {
                 $skorGender = 0;
             }
 
-            // --- HITUNG SKOR AKHIR BERDASARKAN BOBOT ---
+            // --- [PERUBAHAN UTAMA] HITUNG SKOR AKHIR BERDASARKAN BOBOT DINAMIS DARI LOWONGAN ---
             $skorAkhir = 
-                ($skorPengalaman * $bobot['pengalaman'] / 100) +
-                ($skorKeahlian * $bobot['keahlian'] / 100) +
-                ($skorPendidikan * $bobot['pendidikan'] / 100) +
-                ($skorNilai * $bobot['nilai'] / 100) +
-                ($skorUsia * $bobot['usia'] / 100) +
-                ($skorGender * $bobot['gender'] / 100);
+                ($skorPengalaman * $lowongan->bobot_pengalaman / 100) +
+                ($skorKeahlian * $lowongan->bobot_keahlian / 100) +
+                ($skorPendidikan * $lowongan->bobot_pendidikan / 100) +
+                ($skorNilai * $lowongan->bobot_nilai / 100) +
+                ($skorUsia * $lowongan->bobot_usia / 100) +
+                ($skorGender * $lowongan->bobot_gender / 100);
             
+            // Tambahkan juga skor domisili jika ada logika khususnya
+            // Contoh sederhana: Jika domisili pelamar sama dengan domisili lowongan
+            $skorDomisili = (strtolower($pelamar->domisili) == strtolower($lowongan->domisili)) ? 100 : 0;
+            $skorAkhir += ($skorDomisili * $lowongan->bobot_domisili / 100);
+
             $lamaran->skor_ranking = $skorAkhir;
-            return $lamaran;
         });
 
+        // Urutkan collection berdasarkan skor ranking yang sudah dihitung
         $lamaranTerurut = $lamarans->sortByDesc('skor_ranking');
+        
+        // --- [PERUBAHAN UTAMA] MEMBUAT PAGINASI SECARA MANUAL DARI COLLECTION ---
+        $page = request()->get('page', 1);
+        $perPage = 10; // Jumlah pelamar per halaman
+        $paginatedPelamar = new LengthAwarePaginator(
+            $lamaranTerurut->forPage($page, $perPage),
+            $lamaranTerurut->count(),
+            $perPage,
+            $page,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
         
         return view('perusahaan.lowongan.jumlah-pelamar', [
             'lowongan' => $lowongan,
-            'pelamar' => $lamaranTerurut,
+            'pelamar' => $paginatedPelamar, // Kirim data yang SUDAH dipaginasi
             'total_pelamar' => $total_pelamar,
             'pelamar_diterima' => $pelamar_diterima,
             'pelamar_ditolak' => $pelamar_ditolak,
-            'rata_rata_nilai' => $rata_rata_nilai,
         ]);
     }
 }

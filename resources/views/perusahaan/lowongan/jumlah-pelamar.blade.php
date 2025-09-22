@@ -4,8 +4,9 @@
     {{-- Header Halaman --}}
 <div class="header-dashboard d-flex flex-wrap justify-content-between align-items-center mb-4">
     <div>
-        <h1 class="fw-bold">Lihat Lowongan</h1>
-        <p class="text-muted fs-6">Senior UI/UX Designer</p>
+        {{-- JUDUL DINAMIS --}}
+        <h1 class="fw-bold">Pelamar untuk Lowongan</h1>
+        <p class="text-muted fs-6">{{ $lowongan->judul_lowongan }}</p>
     </div>
     <a href="{{ route('perusahaan.lowongan-saya.index') }}" class="btn btn-outline-primary">
         <i class="bi bi-arrow-left"></i> Kembali
@@ -36,30 +37,54 @@
 
 {{-- Stat Cards --}}
 <div class="row g-4 mb-4">
-    @php
-        $cards = [
-            ['title' => 'Total Pelamar', 'value' => 140, 'icon' => 'people-fill', 'class' => 'info-total'],
-            ['title' => 'Pelamar Interview', 'value' => 60, 'icon' => 'check-circle-fill', 'class' => 'info-diterima'],
-            ['title' => 'Pelamar non Interview', 'value' => 25, 'icon' => 'x-circle-fill', 'class' => 'info-ditolak'],
-            ['title' => 'Rata Rata Nilai', 'value' => '75%', 'icon' => 'percent', 'class' => 'info-nilai'],
-        ];
-    @endphp
-
-    @foreach($cards as $card)
     <div class="col-12 col-sm-6 col-lg-3">
-        <div class="info-card {{ $card['class'] }} p-4">
+        <div class="info-card info-total p-4">
             <div class="d-flex justify-content-between align-items-start">
                 <div>
-                    <h6 class="text-uppercase fw-bold small text-muted">{{ $card['title'] }}</h6>
-                    <div class="fs-3 fw-bold">{{ $card['value'] }}</div>
+                    <h6 class="text-uppercase fw-bold small text-muted">Total Pelamar</h6>
+                    {{-- DATA DINAMIS --}}
+                    <div class="fs-3 fw-bold">{{ $total_pelamar }}</div>
                 </div>
-                <div class="icon-circle">
-                    <i class="bi bi-{{ $card['icon'] }}"></i>
-                </div>
+                <div class="icon-circle"><i class="bi bi-people-fill"></i></div>
             </div>
         </div>
     </div>
-    @endforeach
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="info-card info-diterima p-4">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="text-uppercase fw-bold small text-muted">Pelamar Diterima</h6>
+                     {{-- DATA DINAMIS --}}
+                    <div class="fs-3 fw-bold">{{ $pelamar_diterima }}</div>
+                </div>
+                <div class="icon-circle"><i class="bi bi-check-circle-fill"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="info-card info-ditolak p-4">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="text-uppercase fw-bold small text-muted">Pelamar Ditolak</h6>
+                     {{-- DATA DINAMIS --}}
+                    <div class="fs-3 fw-bold">{{ $pelamar_ditolak }}</div>
+                </div>
+                <div class="icon-circle"><i class="bi bi-x-circle-fill"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-6 col-lg-3">
+        <div class="info-card info-nilai p-4">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="text-uppercase fw-bold small text-muted">Rata-Rata Skor</h6>
+                     {{-- DATA DINAMIS --}}
+                    <div class="fs-3 fw-bold">{{ round($pelamar->avg('skor_ranking') ?? 0) }}%</div>
+                </div>
+                <div class="icon-circle"><i class="bi bi-percent"></i></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {{-- Tabel Pelamar --}}
@@ -70,7 +95,7 @@
                 <tr>
                     <th>NO</th>
                     <th>Kandidat</th>
-                    <th>Detail Pelamar</th>
+                    <th>Skor Ranking</th> {{-- KOLOM BARU --}}
                     <th>Status</th>
                     <th>Aksi</th>
                 </tr>
@@ -81,21 +106,35 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>
                             <div class="d-flex align-items-center">
-                                <img 
-                                        src="{{ $item->pelamar->foto_profil ? asset('storage/' . $item->pelamar->foto_profil) : asset('images/default-profile.png') }}" 
-                                        alt="Profile" 
-                                        class="rounded-circle me-3" 
-                                        width="40" 
-                                        height="40" 
-                                        style="object-fit: cover;">
-                                    {{-- ============================================================= --}}
-                                    <span class="fw-semibold">{{ $item->pelamar->user->name }}</span>
+                                <img src="{{ $item->pelamar->foto_profil ? asset('storage/' . $item->pelamar->foto_profil) : asset('images/default-profile.png') }}" 
+                                    alt="Profile" class="rounded-circle me-3" width="40" height="40" style="object-fit: cover;">
+                                <div>
+                                    <span class="fw-semibold d-block">{{ $item->pelamar->user->name }}</span>
+                                    {{-- Link Detail dipindah ke sini agar lebih intuitif --}}
+                                    <a href="{{ route('perusahaan.pelamar.detail', ['lowongan_id' => $lowongan->id, 'pelamar_id' => $item->pelamar->id]) }}" class="small text-primary text-decoration-none">
+                                        Lihat Detail <i class="bi bi-box-arrow-up-right"></i>
+                                    </a>
+                                </div>
                             </div>
                         </td>
+                        
+                        {{-- ========================== KOLOM SKOR E-RANKING (BARU) ========================== --}}
                         <td>
-                            <a href="{{ route('perusahaan.pelamar.detail', ['lowongan_id' => $lowongan->id, 'pelamar_id' => $item->pelamar->id]) }}" class="btn btn-outline-primary btn-sm">
-                                <i class="bi bi-file-earmark-person"></i>
-                            </a>
+                            @php
+                                $score = round($item->skor_ranking);
+                                $bgColor = 'bg-danger'; // Default merah
+                                if ($score >= 75) {
+                                    $bgColor = 'bg-success'; // Hijau untuk skor tinggi
+                                } elseif ($score >= 50) {
+                                    $bgColor = 'bg-warning'; // Kuning untuk skor sedang
+                                }
+                            @endphp
+                            <div class="d-flex align-items-center">
+                                <span class="fw-bold me-2" style="width: 40px;">{{ $score }}%</span>
+                                <div class="progress flex-grow-1" style="height: 10px;">
+                                    <div class="progress-bar {{ $bgColor }}" role="progressbar" style="width: {{ $score }}%;" aria-valuenow="{{ $score }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
                         </td>
                         <td>
                             <span class="badge
@@ -122,22 +161,9 @@
 
         {{-- Pagination --}}
         <div class="d-flex justify-content-between align-items-center mt-4 p-3">
-            <small class="text-muted">Menampilkan 1-5 dari 53 Lowongan</small>
-            <nav>
-                <ul class="pagination pagination-sm mb-0">
-                    <li class="page-item disabled">
-                        <a class="page-link" href="#">Previous</a>
-                    </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                    <li class="page-item"><a class="page-link" href="#">5</a></li>
-                    <li class="page-item">
-                        <a class="page-link" href="#">Next</a>
-                    </li>
-                </ul>
-            </nav>
+            <div class="d-flex justify-content-end mt-4">
+                {{ $pelamar->links() }}
+            </div>
         </div>
     </div>
 @endsection
