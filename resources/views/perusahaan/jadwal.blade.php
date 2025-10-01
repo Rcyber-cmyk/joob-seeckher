@@ -197,7 +197,9 @@
                     <tr>
                         <td>
                             <div class="d-flex align-items-center">
-                                <img src="https://via.placeholder.com/40" alt="Profile" class="profile-img me-3">
+                                <img src="{{ $item->pelamar->foto_profil ? asset('storage/' . $item->pelamar->foto_profil) : asset('images/default-profile.png') }}" 
+                                        alt="Profile" class="rounded-circle me-3" width="40" height="40" style="object-fit: cover;">
+                                    <div>
                                 <span class="fw-bold text-dark">{{ $item->pelamar->user->name ?? 'Tidak diketahui' }}</span>
                             </div>
                         </td>

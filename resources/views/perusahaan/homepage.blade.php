@@ -9,6 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
     <!-- Style Global dan Responsif -->
     <style>
@@ -457,7 +458,7 @@
             <div class="hero-section bg-orange text-white py-5">
                 <div class="container">
                     <div class="row align-items-center">
-                        <div class="col-md-6 mb-4 mb-md-0">
+                        <div class="col-md-6 mb-4 mb-md-0" data-aos="fade-right">
                             <h1 class="fw-bold mb-3">
                                 REKRUT KANDIDAT <br>
                                 YANG TEPAT UNTUK <br>
@@ -468,7 +469,7 @@
                             <a href="{{ route('perusahaan.kandidat-pelamar.index') }}" class="btn btn-navy">Dashboard Perusahaan</a>
                             </div>
                         </div>
-                        <div class="col-md-6 text-center">
+                        <div class="col-md-6 text-center" data-aos="fade-left">
                             <img src="{{ asset('images/gambar1.png') }}" alt="We Are Hiring" class="img-fluid hero-img">
                         </div>
                     </div>
@@ -478,7 +479,7 @@
             <div class="hero-section bg-orange text-white py-5">
                 <div class="container">
                     <div class="row align-items-center">
-                        <div class="col-md-6 mb-4 mb-md-0">
+                        <div class="col-md-6 mb-4 mb-md-0" data-aos="fade-right">
                             <h1 class="fw-bold mb-3">
                                 REKRUT KANDIDAT <br>
                                 YANG TEPAT UNTUK <br>
@@ -490,7 +491,7 @@
                                 <a href="{{ route('register') }}" class="btn btn-navy">DAFTAR</a>
                             </div>
                         </div>
-                        <div class="col-md-6 text-center">
+                        <div class="col-md-6 text-center" data-aos="fade-left">
                             <img src="{{ asset('images/gambar1.png') }}" alt="We Are Hiring" class="img-fluid hero-img">
                         </div>
                     </div>
@@ -499,10 +500,10 @@
         @endauth
     
         <div class="main-content">
-            <div class="container">
+            <div class="container" >
                 <div class="info-section container py-5 bg-white text-center text-dark">
-                    <h4 class="fw-bold mb-4">Mencari kandidat untuk perusahaan anda menjadi<br>lebih mudah dan cepat</h4>
-                    <div class="row justify-content-center align-items-center mb-5 g-4">
+                    <h4 class="fw-bold mb-4" data-aos="zoom-in">Mencari kandidat untuk perusahaan anda menjadi<br>lebih mudah dan cepat</h4>
+                    <div class="row justify-content-center align-items-center mb-5 g-4" data-aos="zoom-in" data-aos-delay="200">
                         <div class="col-md-4">
                             <h2 class="fw-bold text-primary">250+</h2>
                             <p class="fw-semibold">Perusahaan Terdaftar</p>
@@ -522,8 +523,8 @@
                         </div>
                     </div>
                     <hr class="my-4" style="border-color: #ccc;">
-                    <h4 class="fw-bold mb-4">Mulai merekrut dengan 3 langkah mudah</h4>
-                    <div class="row text-start steps-section justify-content-center g-4">
+                    <h4 class="fw-bold mb-4"  data-aos="zoom-in" data-aos-delay="200">Mulai merekrut dengan 3 langkah mudah</h4>
+                    <div class="row text-start steps-section justify-content-center g-4"  data-aos="zoom-in" data-aos-delay="400">
                         <div class="col-md-4">
                             <div class="p-4 bg-dark text-white rounded shadow h-100">
                                 <div class="mb-2 rounded-circle bg-warning text-center text-dark fw-bold" style="width: 30px; height: 30px;">1</div>
@@ -553,7 +554,7 @@
         <section class="cta-section">
             <div class="container">
                 <div class="row align-items-center">
-                    <div class="col-md-7">
+                    <div class="col-md-7" data-aos="fade-right">
                         <h2>Pasang iklan GRATIS, juga pilihan pro</h2>
                         <p>Dapatkan iklan lowongan dan temukan kandidat yang tepat di platform rekrutmen #1 di Indonesia.</p>
                         @auth
@@ -566,7 +567,7 @@
                             <a href="#" class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Pasang Iklan</a>
                         @endauth
                     </div>
-                    <div class="col-md-5 text-center">
+                    <div class="col-md-5 text-center" data-aos="fade-left">
                         <img src="{{ asset('images/iklan.png') }}" alt="Recruitment Illustration" class="img-fluid cta-img">
                     </div>
                 </div>
@@ -643,5 +644,12 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init({
+            duration: 1000,
+            once: true
+        });
+    </script>
 </body>
 </html>

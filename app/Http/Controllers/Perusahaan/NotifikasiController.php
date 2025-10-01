@@ -7,22 +7,39 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 
-class NotifikasiController
+class NotifikasiController extends Controller
 {
-    /**
-     * Menampilkan halaman notifikasi.
-     */
     public function index(): View
     {
         $user = Auth::user();
-        $perusahaan = $user->profilePerusahaan;
+        $notifications = $user->notifications()->latest()->paginate(15);
 
-        // Ambil data notifikasi yang masuk ke perusahaan yang sedang login
-        // Misalnya dari tabel notifikasi
-        // $notifikasi = Notifikasi::where('perusahaan_id', $perusahaan->id)->get();
-        
         return view('perusahaan.notifikasi', [
-            // 'notifikasi' => $notifikasi,
+            'notifications' => $notifications,
         ]);
+    }
+    public function markAllAsRead()
+    {
+        Auth::user()->unreadNotifications->markAsRead();
+        return back()->with('success', 'Semua notifikasi telah ditandai sebagai terbaca.');
+    }
+
+    public function readAndRedirect($notificationId)
+    {
+        // Cari notifikasi milik user yang sedang login
+        $notification = Auth::user()->notifications()->find($notificationId);
+
+        if ($notification) {
+            // Tandai sebagai sudah dibaca
+            $notification->markAsRead();
+
+            // Redirect ke link tujuan notifikasi
+            // Dalam kasus ini, ke halaman daftar pelamar untuk lowongan tersebut
+            $lowonganId = $notification->data['lowongan_id'];
+            return redirect()->route('perusahaan.lowongan.pelamar.index', ['lowongan_id' => $lowonganId]);
+        }
+
+        // Jika notifikasi tidak ditemukan, kembali ke halaman notifikasi
+        return redirect()->route('perusahaan.notifikasi.index');
     }
 }

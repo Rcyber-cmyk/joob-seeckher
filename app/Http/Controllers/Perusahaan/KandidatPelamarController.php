@@ -3,36 +3,60 @@
 namespace App\Http\Controllers\Perusahaan;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Models\Lamaran;
+use App\Models\LowonganPekerjaan;
+use App\Models\JadwalWawancara;
+use App\Models\ProfilePelamar;
 
-class KandidatPelamarController
+class KandidatPelamarController extends Controller
 {
     /**
-     * Menampilkan daftar kandidat pelamar.
+     * Menampilkan dashboard utama perusahaan dengan data rekrutmen dinamis.
      */
     public function index(): View
     {
-        $user = Auth::user();
-        $perusahaan = $user->profilePerusahaan;
+        $perusahaan = Auth::user()->profilePerusahaan;
+        $perusahaanId = $perusahaan->id;
 
-        // Ubah 'lowonganPekerjaan' menjadi 'lowongan'
-        $lamaran = Lamaran::whereHas('lowongan', function ($query) use ($perusahaan) {
-            $query->where('perusahaan_id', $perusahaan->id);
-        })->get();
+        // 1. Mengambil data untuk kartu statistik
+        $lowonganAktifCount = LowonganPekerjaan::where('perusahaan_id', $perusahaanId)->where('is_active', true)->count();
+        $totalLamaranCount = Lamaran::whereHas('lowongan', fn($q) => $q->where('perusahaan_id', $perusahaanId))->count();
+        $kandidatDiterimaCount = Lamaran::whereHas('lowongan', fn($q) => $q->where('perusahaan_id', $perusahaanId))->where('status', 'Diterima')->count();
+        
+        // 2. Mengambil data untuk chart dan kartu Wawancara
+        $wawancaraTerjadwalCount = JadwalWawancara::whereHas('lowongan', function ($query) use ($perusahaanId) {
+            $query->where('perusahaan_id', $perusahaanId);
+        })->where('status', 'terjadwal')->count();
 
-        // Ini hanya contoh data statis, Anda bisa menggantinya dengan data dari database
-        $kandidat = [
-            ['nama' => 'Bambang Wijaya', 'email' => 'bambang.w@mail.com', 'telepon' => '08123456789', 'status' => 'Baru'],
-            ['nama' => 'Siti Rahayu', 'email' => 'siti.rahayu@mail.com', 'telepon' => '08765432109', 'status' => 'Diterima'],
-            ['nama' => 'Rudi Susanto', 'email' => 'rudi.susanto@mail.com', 'telepon' => '08555544433', 'status' => 'Ditolak'],
-        ];
+        $belumDipanggilCount = $totalLamaranCount - $wawancaraTerjadwalCount;
+
+        // --- PERBAIKAN DI SINI ---
+        // Data untuk Chart
+        $chartLabels = ['Sudah Dipanggil', 'Belum Dipanggil'];
+        $chartValues = [$wawancaraTerjadwalCount, $belumDipanggilCount];
+        // Buat collection $chartData secara manual untuk dikirim ke view
+        $chartData = collect(array_combine($chartLabels, $chartValues));
+        // ========================
+
+        // 3. Mengambil 5 pelamar terbaru yang mendaftar di platform
+        $pelamarTerbaru = ProfilePelamar::with('user')
+            ->latest()
+            ->take(5)
+            ->get();
 
         return view('perusahaan.kandidat-pelamar', [
-            'kandidat' => $kandidat,
-            'lamaran' => $lamaran
+            'lowonganAktifCount' => $lowonganAktifCount,
+            'totalPelamarCount' => $totalLamaranCount,
+            'wawancaraTerjadwalCount' => $wawancaraTerjadwalCount,
+            'kandidatDiterimaCount' => $kandidatDiterimaCount,
+            'pelamarTerbaru' => $pelamarTerbaru,
+            'chartLabels' => collect($chartLabels),
+            'chartValues' => collect($chartValues),
+            'chartData' => $chartData, // <-- Variabel $chartData sekarang dikirim kembali
         ]);
     }
 }
+

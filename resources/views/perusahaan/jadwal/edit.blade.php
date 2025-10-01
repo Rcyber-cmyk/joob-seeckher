@@ -129,6 +129,21 @@
     <p class="text-muted">Ubah detail jadwal wawancara untuk pelamar</p>
 </div>
 
+{{-- Menampilkan pesan sukses atau error --}}
+@if (session('success'))
+    <div class="alert alert-success">{{ session('success') }}</div>
+@endif
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+
 <div class="form-section p-4">
     <h5 class="fw-bold mb-3"><i class="bi bi-person-fill me-2"></i> Informasi Wawancara Pelamar</h5>
     <form action="{{ route('perusahaan.jadwal.update', $jadwal->id) }}" method="POST">
@@ -153,14 +168,14 @@
             <div class="d-flex flex-column flex-md-row gap-4">
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="metode_wawancara" id="walkIn" value="Walk In Interview" 
-                           {{ $jadwal->metode_wawancara === 'Walk In Interview' ? 'checked' : '' }}>
+                           {{ old('metode_wawancara', $jadwal->metode_wawancara) === 'Walk In Interview' ? 'checked' : '' }}>
                     <label class="form-check-label" for="walkIn">
                         Walk In Interview
                     </label>
                 </div>
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="metode_wawancara" id="virtual" value="Virtual Interview"
-                           {{ $jadwal->metode_wawancara === 'Virtual Interview' ? 'checked' : '' }}>
+                           {{ old('metode_wawancara', $jadwal->metode_wawancara) === 'Virtual Interview' ? 'checked' : '' }}>
                     <label class="form-check-label" for="virtual">
                         Virtual Interview
                     </label>
@@ -172,32 +187,32 @@
             <div class="col-12 col-md-6">
                 <label for="lokasi_interview" class="form-label">Lokasi Interview</label>
                 <input type="text" name="lokasi_interview" id="lokasi_interview" class="form-control" 
-                       placeholder="Lokasi Interview" value="{{ $jadwal->lokasi_interview }}"
-                       {{ $jadwal->metode_wawancara === 'Virtual Interview' ? 'disabled' : '' }}>
+                       placeholder="Alamat lengkap lokasi interview" value="{{ old('lokasi_interview', $jadwal->lokasi_interview) }}">
             </div>
             <div class="col-12 col-md-6">
-                <label for="link_zoom" class="form-label">Link Zoom</label>
-                <input type="text" name="link_zoom" id="link_zoom" class="form-control" 
-                       placeholder="Link Zoom" value="{{ $jadwal->link_zoom }}"
-                       {{ $jadwal->metode_wawancara === 'Walk In Interview' ? 'disabled' : '' }}>
+                <label for="link_zoom" class="form-label">Link Meeting</label>
+                <input type="url" name="link_zoom" id="link_zoom" class="form-control" 
+                       placeholder="https://zoom.us/j/..." value="{{ old('link_zoom', $jadwal->link_zoom) }}">
             </div>
         </div>
 
         <div class="row g-4 mb-4">
             <div class="col-12 col-md-6">
                 <label for="tanggal_interview" class="form-label">Tanggal Interview</label>
+                {{-- PERBAIKAN FORMAT TANGGAL --}}
                 <input type="date" name="tanggal_interview" id="tanggal_interview" class="form-control"
-                       value="{{ $jadwal->tanggal_interview }}">
+                       value="{{ old('tanggal_interview', \Carbon\Carbon::parse($jadwal->tanggal_interview)->format('Y-m-d')) }}">
             </div>
             <div class="col-12 col-md-6">
                 <label for="waktu_interview" class="form-label">Waktu Interview</label>
+                {{-- PERBAIKAN FORMAT WAKTU --}}
                 <input type="time" name="waktu_interview" id="waktu_interview" class="form-control"
-                       value="{{ $jadwal->waktu_interview }}">
+                       value="{{ old('waktu_interview', \Carbon\Carbon::parse($jadwal->waktu_interview)->format('H:i')) }}">
             </div>
         </div>
         
         <div class="d-flex justify-content-end gap-2">
-            <a href="{{ route('perusahaan.jadwal.index') }}" class="btn btn-cancel">Batal</a>
+            <a href="{{ route('perusahaan.jadwal.view', $jadwal->id) }}" class="btn btn-secondary">Batal</a>
             <button type="submit" class="btn btn-submit">Simpan Perubahan</button>
         </div>
     </form>
@@ -212,25 +227,24 @@
         const lokasiInput = document.getElementById('lokasi_interview');
         const zoomInput = document.getElementById('link_zoom');
 
-        const toggleInputs = () => {
+        function toggleInputs() {
             if (walkInRadio.checked) {
                 lokasiInput.disabled = false;
-                lokasiInput.removeAttribute('disabled'); // Pastikan tidak disabled
                 zoomInput.disabled = true;
-                zoomInput.value = '';
+                // Kosongkan nilai zoom jika tidak digunakan agar tidak terkirim
+                // zoomInput.value = ''; 
             } else {
                 lokasiInput.disabled = true;
-                lokasiInput.value = '';
                 zoomInput.disabled = false;
-                zoomInput.removeAttribute('disabled'); // Pastikan tidak disabled
+                 // Kosongkan nilai lokasi jika tidak digunakan agar tidak terkirim
+                // lokasiInput.value = '';
             }
-        };
+        }
 
         walkInRadio.addEventListener('change', toggleInputs);
         virtualRadio.addEventListener('change', toggleInputs);
         
-        // Atur status input saat halaman pertama kali dimuat
-        toggleInputs();
+        toggleInputs(); // Panggil saat halaman dimuat
     });
 </script>
 @endpush
