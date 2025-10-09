@@ -33,10 +33,11 @@ class LowonganPekerjaan extends Model
         return $this->belongsTo(ProfilePerusahaan::class, 'perusahaan_id');
     }
     
-    public function keahlianYangDibutuhkan()
+    public function keahlianDibutuhkan() // NAMA FUNGSI SUDAH DIUBAH
     {
         return $this->belongsToMany(Keahlian::class, 'lowongan_keahlian_dibutuhkan', 'lowongan_id', 'keahlian_id');
     }
+
 
     public function lamaran()
     {

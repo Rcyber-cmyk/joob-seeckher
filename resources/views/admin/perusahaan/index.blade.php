@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Ranking - Admin</title>
-
+    <title>Manajemen Perusahaan - Admin JobRec</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <style>
         /* === GLOBAL & LAYOUT STYLING === */
         :root {
@@ -121,21 +121,21 @@
         .sidebar-mobile .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
 
         /* === PAGE-SPECIFIC STYLING === */
-        .table-card, .criteria-card, .selection-card {
-            background-color: white;
+        .table-card {
+            background-color: var(--white);
             border-radius: 0.75rem;
             padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
         thead th {
             font-weight: 600;
             color: var(--slate);
         }
-        .progress {
-            height: 8px;
-        }
-        .progress-bar {
-            width: var(--progress-width, 0%);
+        .pagination-container .pagination {
+            --bs-pagination-color: var(--slate);
+            --bs-pagination-active-bg: var(--dark-blue);
+            --bs-pagination-active-border-color: var(--dark-blue);
+            --bs-pagination-hover-color: var(--dark-blue);
         }
     </style>
 </head>
@@ -174,104 +174,90 @@
     <main class="main-wrapper">
         <header class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h2 class="mb-1 fw-bold">Auto <span style="color: var(--orange);">Ranking</span></h2>
-                <p class="text-secondary mb-0">Lihat pelamar dengan mudah berdasarkan kecocokan lowongan.</p>
+                <h2 class="mb-1 fw-bold">Manajemen Perusahaan</h2>
+                <p class="text-secondary mb-0">Daftar semua perusahaan yang terdaftar di sistem.</p>
             </div>
-             <button class="btn btn-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
+            <button class="btn btn-light d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileSidebar" aria-controls="mobileSidebar">
                 <i class="bi bi-list"></i>
             </button>
         </header>
 
-        <div class="selection-card mb-4">
-            <form action="{{ route('admin.pelamar.ranking') }}" method="GET">
-                <div class="mb-0">
-                    <label for="lowongan_id" class="form-label fw-bold">Pilih Lowongan untuk Dianalisis:</label>
-                    <div class="input-group">
-                        <select name="lowongan_id" id="lowongan_id" class="form-select">
-                            <option value="">-- Pilih Lowongan --</option>
-                            @foreach($lowonganList as $lowongan)
-                                <option value="{{ $lowongan->id }}" {{ optional($selectedLowongan)->id == $lowongan->id ? 'selected' : '' }}>
-                                    {{ $lowongan->judul_lowongan }} ({{ $lowongan->perusahaan->nama_perusahaan }})
-                                </option>
-                            @endforeach
-                        </select>
-                        <button class="btn btn-primary" type="submit">Analisis</button>
+        <div class="card mb-4">
+            <div class="card-body">
+                <form action="{{ route('admin.perusahaan.index') }}" method="GET">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="search" class="form-label"><strong>Cari Perusahaan</strong></label>
+                            <input type="text" name="search" id="search" class="form-control" placeholder="Ketik nama perusahaan..." value="{{ request('search') }}">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="filter-kota" class="form-label"><strong>Filter Berdasarkan Kota</strong></label>
+                            <select name="kota" id="filter-kota" class="form-select">
+                                <option value="">Semua Kota</option>
+                                @foreach($lokasi as $item)
+                                    <option value="{{ $item->alamat_kota }}" @selected(request('kota') == $item->alamat_kota)>
+                                        {{ $item->alamat_kota }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">Cari</button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
 
-        @if($selectedLowongan)
-            <div class="criteria-card mb-4">
-                <h5 class="mb-3">Kriteria Penilaian Utama</h5>
-                <div class="row g-3">
-                    <div class="col-md-4"><i class="bi bi-briefcase-fill me-2 text-primary"></i><strong>Pengalaman Kerja:</strong> {{ $selectedLowongan->pengalaman_kerja ?? 'Tidak ditentukan' }}</div>
-                    <div class="col-md-4"><i class="bi bi-mortarboard-fill me-2 text-primary"></i><strong>Edukasi:</strong> {{ $selectedLowongan->pendidikan_terakhir ?? 'Tidak ditentukan' }}</div>
-                    <div class="col-md-4"><i class="bi bi-tools me-2 text-primary"></i><strong>Keahlian Wajib:</strong> {{ optional($selectedLowongan->keahlianDibutuhkan)->pluck('nama_keahlian')->join(', ') ?: 'Tidak ada' }}</div>
+        <div class="table-card">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Nama Perusahaan</th>
+                            <th>Email</th>
+                            <th>Kota</th>
+                            <th>No. Telepon</th>
+                            <th>Tanggal Bergabung</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($perusahaan as $item)
+                        <tr>
+                            <td><strong>{{ $item->nama_perusahaan }}</strong></td>
+                            <td>{{ $item->user->email ?? 'N/A' }}</td>
+                            <td>{{ $item->alamat_kota ?? 'N/A' }}</td>
+                            <td>{{ $item->no_telp_perusahaan ?? 'N/A' }}</td>
+                            <td>{{ $item->created_at->format('d M Y') }}</td>
+                            <td>
+                                <a href="{{ route('admin.perusahaan.show', $item->id) }}" class="btn btn-sm btn-info text-white" title="Lihat Detail">
+                                    <i class="bi bi-eye-fill"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">Data perusahaan tidak ditemukan.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            
+            @if ($perusahaan->hasPages())
+            <div class="d-flex justify-content-between align-items-center mt-4 pagination-container">
+                <div class="text-secondary small">
+                    Menampilkan {{ $perusahaan->firstItem() }} sampai {{ $perusahaan->lastItem() }} dari {{ $perusahaan->total() }} perusahaan
+                </div>
+                <div>
+                    {{ $perusahaan->links('pagination::bootstrap-5') }}
                 </div>
             </div>
-
-            <div class="table-card">
-                <h5 class="mb-4">Peringkat Pelamar</h5>
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead>
-                            <tr>
-                                <th>Peringkat</th>
-                                <th>Nama Pelamar</th>
-                                <th>Skor Akhir</th>
-                                <th>Kecocokan Pengalaman</th>
-                                <th>Kecocokan Keahlian</th>
-                                <th>Kecocokan Edukasi</th>
-                                <th>Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($rankedPelamar as $index => $pelamar)
-                                <tr>
-                                    <td><span class="badge bg-dark fs-6">#{{ $index + 1 }}</span></td>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <img src="https://placehold.co/40x40/f1f5f9/1e293b?text={{ substr($pelamar->name, 0, 1) }}" class="rounded-circle me-3" alt="Avatar">
-                                            <div>
-                                                <div class="fw-bold">{{ $pelamar->name }}</div>
-                                                <small class="text-muted">{{ $pelamar->email }}</small>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="fw-bold fs-5" style="color: var(--dark-blue);">{{ round($pelamar->final_score) }}%</div>
-                                        <div class="progress mt-1" role="progressbar">
-                                            <div class="progress-bar bg-success" style="--progress-width: {{ round($pelamar->final_score) }}%;"></div>
-                                        </div>
-                                    </td>
-                                    <td><span class="badge {{ $pelamar->match_details['pengalaman']['score'] > 50 ? 'text-bg-success' : 'text-bg-danger' }}">{{ $pelamar->match_details['pengalaman']['text'] }}</span></td>
-                                    <td><span class="badge {{ $pelamar->match_details['keahlian']['score'] > 50 ? 'text-bg-success' : 'text-bg-warning' }}">{{ $pelamar->match_details['keahlian']['text'] }}</span></td>
-                                    <td><span class="badge {{ $pelamar->match_details['edukasi']['score'] > 50 ? 'text-bg-success' : 'text-bg-danger' }}">{{ $pelamar->match_details['edukasi']['text'] }}</span></td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-outline-primary">Lihat Profil</a>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="7" class="text-center text-muted py-5">
-                                        <p>Tidak ada data pelamar untuk ditampilkan atau belum ada pelamar yang melamar.</p>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        @else
-            <div class="text-center text-muted py-5">
-                <i class="bi bi-search fs-1"></i>
-                <h5 class="mt-3">Mulai Analisis Peringkat</h5>
-                <p>Silakan pilih lowongan pekerjaan di atas untuk memulai analisis peringkat otomatis.</p>
-            </div>
-        @endif
+            @endif
+        </div>
     </main>
-    
+
     <div class="offcanvas offcanvas-start sidebar-mobile" tabindex="-1" id="mobileSidebar" aria-labelledby="mobileSidebarLabel">
          <div class="offcanvas-header">
             <h5 class="offcanvas-title logo" id="mobileSidebarLabel">JobRec</h5>
@@ -294,7 +280,7 @@
             <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
         </div>
     </div>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

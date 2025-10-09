@@ -19,6 +19,8 @@ use App\Http\Controllers\Perusahaan\LowonganPekerjaanController;
 use App\Http\Controllers\Perusahaan\DetailPelamarController;
 use App\Http\Controllers\Perusahaan\IklanController;
 use App\Http\Controllers\Perusahaan\PengaturanController;
+use App\Http\Controllers\Perusahaan\CariKandidatController;
+use App\Http\Controllers\Perusahaan\UndanganController;
 use App\Http\Controllers\Pelamar\BeritaController;
 use App\Http\Controllers\Pelamar\HomepageController;
 use App\Http\Controllers\Pelamar\LowonganController;
@@ -28,7 +30,9 @@ use App\Http\Controllers\Pelamar\ProfilePelamarController;
 // Ganti nama alias controller UMKM agar lebih jelas
 use App\Http\Controllers\umkm\UmkmController; 
 use App\Http\Controllers\Auth\OtpVerificationController;
-use App\Http\Controllers\MarketplaceController; 
+use App\Http\Controllers\MarketplaceController;
+use App\Http\Controllers\Admin\PerusahaanController as AdminPerusahaanController;
+use App\Http\Controllers\Auth\SocialLoginController; 
 
 /*
 |--------------------------------------------------------------------------
@@ -83,6 +87,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/homepage', [AdminDashboardController::class, 'homepage'])->name('homepage');
         Route::get('/ranking', [AdminPelamarController::class, 'showAutoRanking'])->name('pelamar.ranking');
         Route::get('/pelamar', [AdminPelamarController::class, 'index'])->name('pelamar.index');
+        Route::get('/perusahaan', [AdminPerusahaanController::class, 'index'])->name('perusahaan.index');
+        Route::get('/perusahaan/{perusahaan}', [AdminPerusahaanController::class, 'show'])->name('perusahaan.show');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -115,9 +121,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/kandidat-pelamar', [KandidatPelamarController::class, 'index'])->name('kandidat-pelamar.index');
         Route::get('/lowongan-saya', [LowonganSayaController::class, 'index'])->name('lowongan-saya.index');
         Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
-        Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
         Route::get('/bantuan', [BantuanController::class, 'index'])->name('bantuan.index');
+        
+        Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
 
+        Route::get('/perusahaan/notifikasi/{notificationId}/baca', [NotifikasiController::class, 'readAndRedirect'])->name('perusahaan.notifikasi.readAndRedirect');
         // Rute untuk melihat daftar pelamar dari lowongan tertentu
         Route::get('/lowongan/{lowongan_id}/pelamar', [JumlahPelamarController::class, 'index'])->name('lowongan.pelamar.index');
 
@@ -155,6 +163,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/profile/upload-logo', [ProfileController::class, 'uploadLogo'])->name('profile.upload_logo'); // Rute baru untuk upload logo
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+        Route::get('/cari-kandidat', [CariKandidatController::class, 'index'])->name('cari-kandidat.index');
+        Route::get('/kandidat/cari', [CariKandidatController::class, 'search'])->name('kandidat.search');
+        Route::get('/kandidat/premium', [CariKandidatController::class, 'searchPremium'])->name('kandidat.search.premium');
+
+        // --- RUTE UNTUK FITUR UNDANG MELAMAR (BARU) ---
+        Route::post('/kandidat/{pelamar}/undang', [UndanganController::class, 'store'])->name('kandidat.undang');
+
         // Rute untuk melihat detail pelamar
         Route::get('/lowongan/{lowongan_id}/pelamar/{pelamar_id}/detail', [DetailPelamarController::class, 'showDetail'])->name('pelamar.detail');
     });
@@ -168,6 +183,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/verify-otp', [OtpVerificationController::class, 'show'])->name('otp.verification.notice');
     Route::post('/verify-otp', [OtpVerificationController::class, 'verify'])->name('otp.verification.verify');
 });
+
+Route::get('/login/google', [SocialLoginController::class, 'redirectToGoogle'])->name('login.google');
+Route::get('/login/google/callback', [SocialLoginController::class, 'handleGoogleCallback']);
 
 // Memuat semua rute otentikasi bawaan Laravel
 require __DIR__.'/auth.php';

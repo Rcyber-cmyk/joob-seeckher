@@ -8,24 +8,32 @@ use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LowonganPekerjaan;
 use App\Models\ProfilePelamar;
+use App\Models\Lamaran;
+use App\Services\RankingService; // Pastikan baris ini ada
 
-class DetailPelamarController
+class DetailPelamarController extends Controller
 {
     /**
      * Menampilkan detail pelamar.
      */
-    public function showDetail($lowongan_id, $pelamar_id): View
+    public function showDetail($lowongan_id, $pelamar_id, RankingService $rankingService): View // Injeksi service
     {
         $user = Auth::user();
         $perusahaan = $user->profilePerusahaan;
 
-        // Memastikan lowongan yang diakses milik perusahaan yang sedang login
         $lowongan = LowonganPekerjaan::where('perusahaan_id', $perusahaan->id)
                                       ->findOrFail($lowongan_id);
                                       
-        // Cari pelamar berdasarkan ID
-        $pelamar = ProfilePelamar::with('user', 'keahlian')->findOrFail($pelamar_id);
+        $pelamar = ProfilePelamar::with('user')->findOrFail($pelamar_id);
+        
+        $lamaran = Lamaran::where('lowongan_id', $lowongan->id)
+                          ->where('pelamar_id', $pelamar->id)
+                          ->firstOrFail();
 
-        return view('perusahaan.lowongan.detail-pelamar', compact('lowongan', 'pelamar'));
+        // Panggil service untuk mendapatkan rincian skor
+        $rankingDetails = $rankingService->calculateScores($pelamar, $lowongan);
+
+        return view('perusahaan.lowongan.detail-pelamar', compact('lowongan', 'pelamar', 'lamaran', 'rankingDetails'));
     }
 }
+

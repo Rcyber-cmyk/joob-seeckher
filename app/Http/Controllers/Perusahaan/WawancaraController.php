@@ -52,7 +52,13 @@ class WawancaraController extends Controller
             'waktu_interview' => 'required|date_format:H:i',
 
         ]);
-        
+        $jadwalSudahAda = JadwalWawancara::where('lowongan_id', $validatedData['lowongan_id'])
+                                            ->where('pelamar_id', $validatedData['pelamar_id'])
+                                            ->exists();
+
+            if ($jadwalSudahAda) {
+                return Redirect::back()->withErrors(['jadwal_ganda' => 'Jadwal wawancara untuk kandidat ini di lowongan yang sama sudah ada.'])->withInput();
+            }
         // Simpan jadwal wawancara baru ke database
         // Perbaikan: Menggunakan request()->input() untuk mengambil nilai secara aman
         JadwalWawancara::create([

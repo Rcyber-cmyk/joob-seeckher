@@ -6,12 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Keahlian;
 use App\Models\ProfilePelamar;
-use App\Models\LowonganPekerjaan; // <-- PENTING: Pastikan model ini ada dan di-import
+use App\Models\LowonganPekerjaan;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Illuminate\Pagination\LengthAwarePaginator;
 
-class PelamarController 
+class PelamarController extends Controller
 {
     /**
      * Menampilkan halaman daftar pelamar biasa.
@@ -69,68 +68,53 @@ class PelamarController
      */
     public function showAutoRanking(Request $request): View
     {
-        // Ambil semua lowongan untuk ditampilkan di dropdown
         $lowonganList = LowonganPekerjaan::orderBy('judul_lowongan')->get();
-        $rankedPelamar = collect(); // Inisialisasi koleksi kosong
+        $rankedPelamar = collect();
         $selectedLowongan = null;
 
-        // Cek jika ada lowongan yang dipilih dari dropdown untuk dianalisis
         if ($request->filled('lowongan_id')) {
-            // Ambil data lowongan yang dipilih, beserta relasi keahlian yang dibutuhkan
             $selectedLowongan = LowonganPekerjaan::with('keahlianDibutuhkan')->find($request->input('lowongan_id'));
-            
-            // Ambil semua pelamar beserta profil dan keahlian mereka
             $allPelamar = User::where('role', 'pelamar')->with('profilePelamar.keahlian')->get();
 
-            // Hitung skor untuk setiap pelamar berdasarkan kriteria lowongan yang dipilih
             $scoredPelamar = $allPelamar->map(function ($pelamar) use ($selectedLowongan) {
-                // Jika pelamar tidak punya profil atau tidak ada lowongan yang dipilih, beri skor 0
                 if (!$pelamar->profilePelamar || !$selectedLowongan) {
                     $pelamar->final_score = 0;
                     $pelamar->match_details = [
-                        'pengalaman' => ['text' => 'Data tidak lengkap', 'score' => 0],
-                        'keahlian' => ['text' => 'Data tidak lengkap', 'score' => 0],
-                        'edukasi' => ['text' => 'Data tidak lengkap', 'score' => 0],
+                        'pengalaman' => ['text' => 'Profil tidak lengkap', 'score' => 0],
+                        'keahlian' => ['text' => 'Profil tidak lengkap', 'score' => 0],
+                        'edukasi' => ['text' => 'Profil tidak lengkap', 'score' => 0],
                     ];
                     return $pelamar;
                 }
 
-                // --- PERHITUNGAN SKOR ---
+                $profile = $pelamar->profilePelamar;
 
-                // 1. Skor Kecocokan Keahlian (Bobot: 50%)
+                // 1. Skor Kecocokan Keahlian (Bobot: 50%) - Logika tetap sama
                 $requiredSkills = $selectedLowongan->keahlianDibutuhkan->pluck('id');
-                $pelamarSkills = $pelamar->profilePelamar->keahlian->pluck('id');
+                $pelamarSkills = $profile->keahlian->pluck('id');
                 $matchedSkillsCount = $pelamarSkills->intersect($requiredSkills)->count();
                 $totalRequired = $requiredSkills->count() > 0 ? $requiredSkills->count() : 1;
                 $keahlianScore = ($matchedSkillsCount / $totalRequired) * 100;
-                $keahlianText = "{$matchedSkillsCount}/{$totalRequired} Cocok";
+                $keahlianText = "{$matchedSkillsCount}/{$requiredSkills->count()} Cocok";
 
-                // 2. Skor Kecocokan Pengalaman (Bobot: 30%)
-                // Anda harus menambahkan kolom 'pengalaman_minimal' di tabel 'lowongan_pekerjaan'
-                $pengalamanScore = 0;
-                $pengalamanText = "Tidak Sesuai";
-                if (isset($selectedLowongan->pengalaman_minimal) && $pelamar->profilePelamar->pengalaman_kerja == $selectedLowongan->pengalaman_minimal) {
-                    $pengalamanScore = 100;
-                    $pengalamanText = "Sesuai ({$pelamar->profilePelamar->pengalaman_kerja})";
-                } elseif (isset($pelamar->profilePelamar->pengalaman_kerja)) {
-                    $pengalamanText = "Kurang ({$pelamar->profilePelamar->pengalaman_kerja})";
-                }
+                // 2. Skor Kecocokan Pengalaman (Bobot: 30%) - [LOGIKA DISEMPURNAKAN]
+                $requiredExpValue = $this->getExperienceValue($selectedLowongan->pengalaman_kerja);
+                $pelamarExpValue = $this->getExperienceValue($profile->pengalaman_kerja);
+                $pengalamanScore = ($pelamarExpValue >= $requiredExpValue) ? 100 : 0;
+                $pengalamanText = ($pelamarExpValue >= $requiredExpValue) ? "Sesuai ({$profile->pengalaman_kerja})" : "Tidak Sesuai ({$profile->pengalaman_kerja})";
+                if (!$profile->pengalaman_kerja) $pengalamanText = "Tidak ada data";
 
-                // 3. Skor Kecocokan Edukasi (Bobot: 20%)
-                // Anda harus menambahkan kolom 'edukasi_minimal' di tabel 'lowongan_pekerjaan'
-                $edukasiScore = 0;
-                $edukasiText = "Tidak Sesuai";
-                if (isset($selectedLowongan->edukasi_minimal) && $pelamar->profilePelamar->lulusan == $selectedLowongan->edukasi_minimal) {
-                    $edukasiScore = 100;
-                    $edukasiText = "Sesuai ({$pelamar->profilePelamar->lulusan})";
-                } elseif (isset($pelamar->profilePelamar->lulusan)) {
-                    $edukasiText = "Tidak Sesuai ({$pelamar->profilePelamar->lulusan})";
-                }
+
+                // 3. Skor Kecocokan Edukasi (Bobot: 20%) - [LOGIKA DISEMPURNAKAN]
+                $requiredEduValue = $this->getEducationValue($selectedLowongan->pendidikan_terakhir);
+                $pelamarEduValue = $this->getEducationValue($profile->lulusan);
+                $edukasiScore = ($pelamarEduValue >= $requiredEduValue) ? 100 : 0;
+                $edukasiText = ($pelamarEduValue >= $requiredEduValue) ? "Sesuai ({$profile->lulusan})" : "Tidak Sesuai ({$profile->lulusan})";
+                if (!$profile->lulusan) $edukasiText = "Tidak ada data";
 
                 // Hitung Skor Akhir berdasarkan bobot
                 $pelamar->final_score = ($keahlianScore * 0.5) + ($pengalamanScore * 0.3) + ($edukasiScore * 0.2);
                 
-                // Simpan detail skor untuk ditampilkan di view
                 $pelamar->match_details = [
                     'pengalaman' => ['text' => $pengalamanText, 'score' => $pengalamanScore],
                     'keahlian'   => ['text' => $keahlianText, 'score' => $keahlianScore],
@@ -140,11 +124,47 @@ class PelamarController
                 return $pelamar;
             });
 
-            // Urutkan pelamar berdasarkan skor akhir dari yang tertinggi ke terendah
             $rankedPelamar = $scoredPelamar->sortByDesc('final_score');
         }
 
-        // Kirim semua data yang dibutuhkan ke view
         return view('admin.pelamar.ranking', compact('lowonganList', 'selectedLowongan', 'rankedPelamar'));
     }
+
+    /**
+     * Helper untuk mengubah level pendidikan menjadi nilai numerik untuk perbandingan.
+     */
+    private function getEducationValue($level)
+    {
+        if (!$level) return 0;
+        $levels = [
+            'SMP/Sederajat' => 1,
+            'SMA/SMK Sederajat' => 2,
+            'D1' => 3,
+            'D2' => 4,
+            'D3' => 5,
+            'S1' => 6,
+            'S2' => 7,
+            'S3 Profesor' => 8,
+        ];
+        return $levels[$level] ?? 0;
+    }
+
+    /**
+     * Helper untuk mengubah level pengalaman menjadi nilai numerik untuk perbandingan.
+     */
+    private function getExperienceValue($level)
+    {
+        if (!$level) return 0;
+        $levels = [
+            '< 1 Tahun' => 1,
+            'Fresh Graduate' => 1,
+            '1-3 tahun' => 2,
+            '1-3 Tahun' => 2,
+            '3-5 Tahun' => 3,
+            '5 tahun' => 4,
+            '>5 Tahun' => 5,
+        ];
+        return $levels[$level] ?? 0;
+    }
 }
+

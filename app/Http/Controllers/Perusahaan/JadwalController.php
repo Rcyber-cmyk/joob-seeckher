@@ -55,10 +55,12 @@ class JadwalController extends Controller
         public function view($id): View
     {
         $jadwal = JadwalWawancara::with(['pelamar.user', 'lowongan'])->findOrFail($id);
-
         return view('perusahaan.jadwal.view', compact('jadwal'));
     }
 
+    /**
+     * Menampilkan form edit jadwal.
+     */
     public function edit($id): View
     {
         $jadwal = JadwalWawancara::whereHas('lowongan', function($query) {
@@ -73,29 +75,35 @@ class JadwalController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Temukan jadwal berdasarkan ID dan pastikan itu milik perusahaan yang sedang login
         $jadwal = JadwalWawancara::whereHas('lowongan', function($query) {
             $query->where('perusahaan_id', Auth::user()->profilePerusahaan->id);
         })->findOrFail($id);
 
-        // Validasi input dari form
         $validatedData = $request->validate([
-            'metode_wawancara' => 'required|string',
-            // Gunakan nullable|string untuk memastikan field bisa kosong
-            'lokasi_interview' => 'nullable|string',
-            'link_zoom' => 'nullable|url',
+            'metode_wawancara' => 'required|string|in:Walk In Interview,Virtual Interview',
+            'lokasi_interview' => 'nullable|required_if:metode_wawancara,Walk In Interview|string|max:255',
+            'link_zoom' => 'nullable|required_if:metode_wawancara,Virtual Interview|url|max:255',
             'tanggal_interview' => 'required|date',
             'waktu_interview' => 'required|date_format:H:i',
         ]);
         
-        // Update data jadwal
-        $jadwal->update([
+        // --- LOGIKA UPDATE DIPERBAIKI DI SINI ---
+        $updateData = [
             'metode_wawancara' => $validatedData['metode_wawancara'],
-            'lokasi_interview' => $validatedData['lokasi_interview'],
-            'link_zoom' => $validatedData['link_zoom'],
             'tanggal_interview' => $validatedData['tanggal_interview'],
             'waktu_interview' => $validatedData['waktu_interview'],
-        ]);
+        ];
+
+        // Hanya tambahkan lokasi atau link zoom berdasarkan metode yang dipilih
+        if ($validatedData['metode_wawancara'] === 'Walk In Interview') {
+            $updateData['lokasi_interview'] = $validatedData['lokasi_interview'];
+            $updateData['link_zoom'] = null; // Kosongkan link zoom
+        } else { // Virtual Interview
+            $updateData['lokasi_interview'] = null; // Kosongkan lokasi
+            $updateData['link_zoom'] = $validatedData['link_zoom'];
+        }
+        // Update data jadwal
+        $jadwal->update($updateData);
 
         // Redirect kembali ke halaman detail jadwal dengan pesan sukses
         return redirect()->route('perusahaan.jadwal.view', $jadwal->id)

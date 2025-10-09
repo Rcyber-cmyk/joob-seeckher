@@ -28,44 +28,37 @@
     {{-- Daftar Notifikasi --}}
     <div class="dashboard-section p-0">
         <div class="notifikasi-list">
-            {{-- Loop data notifikasi di sini --}}
-            <div class="notifikasi-item d-flex align-items-start p-3 border-bottom">
-                <i class="bi bi-bell-fill me-3 fs-5 text-secondary"></i>
-                <div class="flex-grow-1">
-                    <span class="fw-bold d-block">Pelamar Baru untuk UI/UX Designer</span>
-                    <small class="text-muted d-block">Jhon Doe Telah Melamar Untuk Posisi UI/UX Designer.</small>
-                    <small class="text-muted d-block">Tanggal : 20 Juni 2025</small>
+            @forelse ($notifications as $notification)
+                @php
+                    // Logika untuk menentukan tampilan notifikasi
+                    $isUnread = is_null($notification->read_at);
+                    $itemClass = $isUnread ? 'bg-light fw-bold' : '';
+                    $statusText = $isUnread ? 'Belum Terbaca' : 'Sudah Terbaca';
+                    $statusClass = $isUnread ? 'text-primary' : 'text-muted';
+                @endphp
+                <div class="notifikasi-item d-flex align-items-start p-3 border-bottom {{ $itemClass }}">
+                    <i class="bi bi-bell-fill me-3 fs-5 text-secondary"></i>
+                    <div class="flex-grow-1">
+                        {{-- Buat notifikasi bisa diklik untuk menuju halaman detail pelamar --}}
+                        <a href="{{ route('perusahaan.lowongan.pelamar.index', ['lowongan_id' => $notification->data['lowongan_id']]) }}" class="text-decoration-none text-dark">
+                            <span class="d-block">Pelamar Baru untuk: {{ $notification->data['judul_lowongan'] }}</span>
+                            <small class="text-muted d-block">{{ $notification->data['message'] }}</small>
+                            <small class="text-muted d-block">{{ $notification->created_at->diffForHumans() }}</small>
+                        </a>
+                    </div>
+                    <small class="{{ $statusClass }} text-end ms-auto">{{ $statusText }}</small>
                 </div>
-                <small class="text-primary fw-bold text-end ms-auto">Belum Terbaca</small>
-            </div>
-            <div class="notifikasi-item d-flex align-items-start p-3 border-bottom">
-                <i class="bi bi-bell-fill me-3 fs-5 text-secondary"></i>
-                <div class="flex-grow-1">
-                    <span class="fw-bold d-block">Pelamar Baru untuk UI/UX Designer</span>
-                    <small class="text-muted d-block">Jhon Doe Telah Melamar Untuk Posisi UI/UX Designer.</small>
-                    <small class="text-muted d-block">Tanggal : 20 Juni 2025</small>
+            @empty
+                <div class="notifikasi-item text-center p-4">
+                    <i class="bi bi-bell-slash fs-3"></i>
+                    <p class="mt-2 text-muted">Tidak ada notifikasi untuk Anda.</p>
                 </div>
-                <small class="text-primary fw-bold text-end ms-auto">Belum Terbaca</small>
-            </div>
-            <div class="notifikasi-item d-flex align-items-start p-3 border-bottom">
-                <i class="bi bi-bell-fill me-3 fs-5 text-secondary"></i>
-                <div class="flex-grow-1">
-                    <span class="fw-bold d-block">Pelamar Baru untuk UI/UX Designer</span>
-                    <small class="text-muted d-block">Jhon Doe Telah Melamar Untuk Posisi UI/UX Designer.</small>
-                    <small class="text-muted d-block">Tanggal : 20 Juni 2025</small>
-                </div>
-                <small class="text-primary fw-bold text-end ms-auto">Belum Terbaca</small>
-            </div>
-            <div class="notifikasi-item d-flex align-items-start p-3">
-                <i class="bi bi-bell-fill me-3 fs-5 text-secondary"></i>
-                <div class="flex-grow-1">
-                    <span class="fw-bold d-block">Pelamar Baru untuk UI/UX Designer</span>
-                    <small class="text-muted d-block">Jhon Doe Telah Melamar Untuk Posisi UI/UX Designer.</small>
-                    <small class="text-muted d-block">Tanggal : 20 Juni 2025</small>
-                </div>
-                <small class="text-primary fw-bold text-end ms-auto">Belum Terbaca</small>
-            </div>
-            {{-- Akhir dari loop --}}
+            @endforelse
         </div>
+    </div>
+
+    {{-- Tambahkan link pagination --}}
+    <div class="d-flex justify-content-center mt-4">
+        {{ $notifications->links() }}
     </div>
 @endsection

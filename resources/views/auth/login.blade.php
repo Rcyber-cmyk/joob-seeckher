@@ -225,7 +225,7 @@
                         <!-- Social Login -->
                         <div class="row g-2 mb-4">
                             <div class="col">
-                                <a href="#" class="social-btn"><i class="bi bi-google"></i></a>
+                                <a href="{{ route('login.google') }}" class="social-btn"><i class="bi bi-google"></i></a>
                             </div>
                             <div class="col">
                                 <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
