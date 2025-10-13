@@ -217,6 +217,10 @@
                 <a class="nav-link {{ Request::routeIs('admin.homepage') ? 'active' : '' }}" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
                 <a class="nav-link {{ Request::routeIs('admin.pelamar.index') ? 'active' : '' }}" href="{{ route('admin.pelamar.index') }}"><i class="bi bi-people-fill"></i> Pelamar</a>
                 <a class="nav-link {{ Request::routeIs('admin.perusahaan.index') ? 'active' : '' }}" href="{{ route('admin.perusahaan.index') }}"><i class="bi bi-building-fill"></i> Perusahaan</a>
+<<<<<<< HEAD
+=======
+                {{-- [BARU] Tambahkan link untuk UMKM --}}
+>>>>>>> 6483f8f7fa256146f9b952666d6b42aa23d3f2b3
                 <a class="nav-link" href="#"><i class="bi bi-shop"></i> UMKM</a>
                 <a class="nav-link {{ Request::routeIs('admin.pelamar.ranking') ? 'active' : '' }}" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
                 <a class="nav-link" href="#"><i class="bi bi-bell-fill"></i> Notifikasi</a>
