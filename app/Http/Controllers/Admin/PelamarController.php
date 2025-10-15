@@ -27,13 +27,13 @@ class PelamarController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->input('search');
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
-        $query->whereHas('profilePelamar', function($profileQuery) use ($request) {
+        $query->whereHas('profilePelamar', function ($profileQuery) use ($request) {
             if ($request->filled('domisili')) {
                 $profileQuery->where('domisili', $request->input('domisili'));
             }
@@ -44,9 +44,9 @@ class PelamarController extends Controller
                 $profileQuery->where('pengalaman_kerja', $request->input('pengalaman_kerja'));
             }
         });
-        
+
         if ($request->filled('keahlian_id')) {
-            $query->whereHas('profilePelamar.keahlian', function($keahlianQuery) use ($request) {
+            $query->whereHas('profilePelamar.keahlian', function ($keahlianQuery) use ($request) {
                 $keahlianQuery->where('keahlian.id', $request->input('keahlian_id'));
             });
         }
@@ -54,9 +54,9 @@ class PelamarController extends Controller
         $pelamar = $query->latest()->paginate(6)->appends($request->all());
 
         return view('admin.pelamar.index', compact(
-            'pelamar', 
-            'opsiDomisili', 
-            'opsiLulusan', 
+            'pelamar',
+            'opsiDomisili',
+            'opsiLulusan',
             'opsiPengalaman',
             'opsiKeahlian'
         ));
@@ -68,6 +68,7 @@ class PelamarController extends Controller
      */
     public function showAutoRanking(Request $request): View
     {
+<<<<<<< HEAD
         $lowonganList = LowonganPekerjaan::orderBy('judul_lowongan')->get();
         $rankedPelamar = collect();
         $selectedLowongan = null;
@@ -78,6 +79,30 @@ class PelamarController extends Controller
 
             $scoredPelamar = $allPelamar->map(function ($pelamar) use ($selectedLowongan) {
                 if (!$pelamar->profilePelamar || !$selectedLowongan) {
+=======
+        // 1. Ambil semua lowongan, urutkan dari yang terbaru sebagai prioritas
+        $lowonganList = LowonganPekerjaan::with('perusahaan')->latest()->get();
+
+        $rankedPelamar = collect();
+        $selectedLowongan = null;
+
+        // 2. Tentukan lowongan yang akan dianalisis
+        if ($request->filled('lowongan_id')) {
+            // Jika user memilih dari dropdown, cari lowongan tersebut
+            $selectedLowongan = LowonganPekerjaan::with('keahlianDibutuhkan')->find($request->input('lowongan_id'));
+        } elseif ($lowonganList->isNotEmpty()) {
+            // Jika tidak ada pilihan, ambil lowongan pertama (terbaru) sebagai default
+            $selectedLowongan = $lowonganList->first();
+            $selectedLowongan->load('keahlianDibutuhkan'); // Pastikan relasi untuk default juga dimuat
+        }
+
+        // 3. Jika ada lowongan terpilih (dari dropdown atau default), jalankan proses ranking
+        if ($selectedLowongan) {
+            $allPelamar = User::where('role', 'pelamar')->with('profilePelamar.keahlian')->get();
+
+            $scoredPelamar = $allPelamar->map(function ($pelamar) use ($selectedLowongan) {
+                if (!$pelamar->profilePelamar) {
+>>>>>>> eff3c20
                     $pelamar->final_score = 0;
                     $pelamar->match_details = [
                         'pengalaman' => ['text' => 'Profil tidak lengkap', 'score' => 0],
@@ -89,7 +114,11 @@ class PelamarController extends Controller
 
                 $profile = $pelamar->profilePelamar;
 
+<<<<<<< HEAD
                 // 1. Skor Kecocokan Keahlian (Bobot: 50%) - Logika tetap sama
+=======
+                // Skor Kecocokan Keahlian (Bobot: 50%)
+>>>>>>> eff3c20
                 $requiredSkills = $selectedLowongan->keahlianDibutuhkan->pluck('id');
                 $pelamarSkills = $profile->keahlian->pluck('id');
                 $matchedSkillsCount = $pelamarSkills->intersect($requiredSkills)->count();
@@ -97,15 +126,23 @@ class PelamarController extends Controller
                 $keahlianScore = ($matchedSkillsCount / $totalRequired) * 100;
                 $keahlianText = "{$matchedSkillsCount}/{$requiredSkills->count()} Cocok";
 
+<<<<<<< HEAD
                 // 2. Skor Kecocokan Pengalaman (Bobot: 30%) - [LOGIKA DISEMPURNAKAN]
+=======
+                // Skor Kecocokan Pengalaman (Bobot: 30%)
+>>>>>>> eff3c20
                 $requiredExpValue = $this->getExperienceValue($selectedLowongan->pengalaman_kerja);
                 $pelamarExpValue = $this->getExperienceValue($profile->pengalaman_kerja);
                 $pengalamanScore = ($pelamarExpValue >= $requiredExpValue) ? 100 : 0;
                 $pengalamanText = ($pelamarExpValue >= $requiredExpValue) ? "Sesuai ({$profile->pengalaman_kerja})" : "Tidak Sesuai ({$profile->pengalaman_kerja})";
                 if (!$profile->pengalaman_kerja) $pengalamanText = "Tidak ada data";
 
+<<<<<<< HEAD
 
                 // 3. Skor Kecocokan Edukasi (Bobot: 20%) - [LOGIKA DISEMPURNAKAN]
+=======
+                // Skor Kecocokan Edukasi (Bobot: 20%)
+>>>>>>> eff3c20
                 $requiredEduValue = $this->getEducationValue($selectedLowongan->pendidikan_terakhir);
                 $pelamarEduValue = $this->getEducationValue($profile->lulusan);
                 $edukasiScore = ($pelamarEduValue >= $requiredEduValue) ? 100 : 0;
@@ -114,7 +151,11 @@ class PelamarController extends Controller
 
                 // Hitung Skor Akhir berdasarkan bobot
                 $pelamar->final_score = ($keahlianScore * 0.5) + ($pengalamanScore * 0.3) + ($edukasiScore * 0.2);
+<<<<<<< HEAD
                 
+=======
+
+>>>>>>> eff3c20
                 $pelamar->match_details = [
                     'pengalaman' => ['text' => $pengalamanText, 'score' => $pengalamanScore],
                     'keahlian'   => ['text' => $keahlianText, 'score' => $keahlianScore],
@@ -166,5 +207,9 @@ class PelamarController extends Controller
         ];
         return $levels[$level] ?? 0;
     }
+<<<<<<< HEAD
 }
 
+=======
+}
+>>>>>>> eff3c20
