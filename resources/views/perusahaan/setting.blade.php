@@ -155,16 +155,6 @@
                             <i class="bi bi-lock"></i>Email & Password
                         </a>
                     </li>
-                    <li class="nav-item mb-2">
-                        <a class="nav-link" href="#">
-                            <i class="bi bi-shield-check"></i>Keamanan
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            <i class="bi bi-credit-card"></i>Pembayaran
-                        </a>
-                    </li>
                 </ul>
             </div>
         </div>
@@ -182,24 +172,11 @@
                             <div class="mb-4">
                                 <label for="email" class="form-label visually-hidden">Alamat Email</label>
                                 <input type="email" class="form-control" id="email" name="email" value="{{ Auth::user()->email ?? 'contact@perusahaan.com' }}">
-                                <div class="form-text">Email utama untuk notifikasi dan komunikasi</div>
                             </div>
-
-                            <h5 class="mb-3 mt-5">Ubah Password</h5>
                             <div class="mb-4">
-                                <label for="password" class="form-label visually-hidden">Password Baru</label>
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password baru">
+                                <input type="password" class="form-control" id="password" name="password" placeholder="********">
                             </div>
-                            <div class="mb-5">
-                                <label for="password_confirmation" class="form-label visually-hidden">Konfirmasi Password</label>
-                                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Konfirmasi password baru">
-                            </div>
-
-                            <div class="d-flex justify-content-start"> {{-- Tombol Simpan di kiri --}}
-                                <button type="submit" class="btn btn-simpan">
-                                    <i class="bi bi-floppy-fill me-2"></i> Simpan Perubahan
-                                </button>
-                            </div>
+                            <div class="form-text">Email utama untuk notifikasi dan komunikasi</div>
                         </div>
 
                         {{-- Kolom Kanan untuk Bantuan --}}

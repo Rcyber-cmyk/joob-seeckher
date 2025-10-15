@@ -50,27 +50,32 @@
         margin-bottom: 1rem;
     }
 
-    .lowongan-content ul {
-        list-style: decimal;
-        padding-left: 1.25rem;
+    .lowongan-content p {
+        line-height: 1.8;
     }
 
-    .lowongan-content ul li {
-        margin-bottom: 0.75rem;
-        line-height: 1.6;
-    }
-
-    .kualifikasi-table {
+    .detail-table {
         margin-top: 1rem;
     }
 
-    .kualifikasi-table .row {
-        margin-bottom: 0.5rem;
+    .detail-table .row {
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px dashed #e9ecef;
+    }
+    
+    .detail-table .row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
     }
 
-    .kualifikasi-table .col-4 {
+    .detail-table .col-4 {
         font-weight: 600;
         color: #555;
+    }
+    
+    .detail-table .col-8 .badge {
+        font-size: 1rem;
     }
 
     .btn-kembali {
@@ -93,44 +98,74 @@
     {{-- Header Logo dan Judul --}}
     <div class="lowongan-header">
         <img src="{{ Auth::user()->profilePerusahaan->logo_perusahaan ? asset('storage/' . Auth::user()->profilePerusahaan->logo_perusahaan) : asset('images/default-company-profile.png') }}"
-                     alt="Logo Perusahaan" class="rounded-circle me-3" style="width: 45px; height: 45px; object-fit: cover;">
+                     alt="Logo Perusahaan" class="rounded-circle">
         <div class="lowongan-header-title">
             <div class="badge-lowongan">Lowongan Kerja</div>
             <h1>{{ $lowongan->judul_lowongan }}</h1>
         </div>
     </div>
 
-    {{-- Lokasi --}}
-    <p class="text-muted mb-3"><i class="bi bi-geo-alt-fill me-2"></i>{{ $lowongan->domisili ?? 'Lokasi tidak tersedia' }}</p>
+    {{-- Lokasi & Tipe Pekerjaan --}}
+    <p class="text-muted mb-3">
+        <i class="bi bi-geo-alt-fill me-2"></i>{{ $lowongan->domisili ?? 'Lokasi tidak tersedia' }} 
+        <span class="mx-2">|</span> 
+        <i class="bi bi-clock-fill me-2"></i>{{ $lowongan->tipe_pekerjaan ?? 'Tipe tidak tersedia' }}
+    </p>
 
-    {{-- Kualifikasi --}}
-    <div class="section-title">Persyaratan:</div>
-    <div class="kualifikasi-table">
+    {{-- Deskripsi Pekerjaan --}}
+    <div class="section-title">Jobdesk:</div>
+    <div class="lowongan-content">
+        <p>{{ $lowongan->deskripsi_pekerjaan }}</p>
+    </div>
+
+    {{-- Kualifikasi (Disesuaikan) --}}
+    <div class="section-title">Persyaratan Kualifikasi:</div>
+    <div class="detail-table">
         <div class="row">
             <div class="col-4">Gender</div>
             <div class="col-8">: {{ $lowongan->gender ?? 'Tidak ditentukan' }}</div>
         </div>
         <div class="row">
             <div class="col-4">Pendidikan</div>
-            <div class="col-8">: {{ $lowongan->pendidikan_terakhir ?? 'Tidak ditentukan' }}</div>
+            <div class="col-8">: Minimal {{ $lowongan->pendidikan_terakhir ?? 'Tidak ditentukan' }}</div>
         </div>
         <div class="row">
-            <div class="col-4">Usia</div>
-            <div class="col-8">: {{ $lowongan->usia ?? 'Tidak ditentukan' }}</div>
+            <div class="col-4">Rentang Usia</div>
+            <div class="col-8">: {{ $lowongan->usia_min ?? 'Tidak ada batas' }} - {{ $lowongan->usia ?? 'Tidak ada batas' }} Tahun</div>
         </div>
         <div class="row">
-            <div class="col-4">Pengalaman</div>
-            <div class="col-8">: {{ $lowongan->pengalaman_kerja ?? 'Tidak ditentukan' }}</div>
-        </div>
-        <div class="row">
-            <div class="col-4">Keahlian</div>
-            <div class="col-8">: {{ $lowongan->keahlian_bidang_pekerjaan ?? 'Tidak ditentukan' }}</div>
+            <div class="col-4">Rentang Pengalaman</div>
+            <div class="col-8">: {{ $lowongan->pengalaman_kerja ?? '0' }} - {{ $lowongan->pengalaman_kerja_maks ?? 'Tidak ada batas' }} Tahun</div>
         </div>
     </div>
-    {{-- Deskripsi Pekerjaan --}}
-    <div class="section-title">Jobdesk:</div>
-    <div class="lowongan-content">
-        <p>{{ $lowongan->deskripsi_pekerjaan }}</p>
+    
+    {{-- Kriteria Penilaian (E-Ranking) --}}
+    <div class="section-title">Kriteria Penilaian (E-Ranking):</div>
+    <div class="detail-table">
+        <div class="row align-items-center">
+            <div class="col-4">Pengalaman</div>
+            <div class="col-8">: <span class="badge bg-primary">{{ $lowongan->bobot_pengalaman }}%</span></div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-4">Pendidikan</div>
+            <div class="col-8">: <span class="badge bg-primary">{{ $lowongan->bobot_pendidikan }}%</span></div>
+        </div>
+         <div class="row align-items-center">
+            <div class="col-4">Nilai Akhir</div>
+            <div class="col-8">: <span class="badge bg-primary">{{ $lowongan->bobot_nilai }}%</span></div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-4">Domisili</div>
+            <div class="col-8">: <span class="badge bg-primary">{{ $lowongan->bobot_domisili }}%</span></div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-4">Usia</div>
+            <div class="col-8">: <span class="badge bg-primary">{{ $lowongan->bobot_usia }}%</span></div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-4">Gender</div>
+            <div class="col-8">: <span class="badge bg-primary">{{ $lowongan->bobot_gender }}%</span></div>
+        </div>
     </div>
 
     {{-- Tombol Kembali --}}

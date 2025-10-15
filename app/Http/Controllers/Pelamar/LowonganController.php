@@ -8,11 +8,14 @@ use App\Models\LowonganPekerjaan;
 use App\Models\ProfilePerusahaan;
 use App\Models\BidangPekerjaan;
 use App\Models\Keahlian;
+use App\Models\Lamaran; // <-- [PENYESUAIAN] Import model Lamaran
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\PelamarBaruNotification; // <-- [PENYESUAIAN] Import kelas Notifikasi
 
 class LowonganController extends Controller
 {
+    // ... (method index, showDetailPartial, dan toggleSimpan tidak berubah) ...
     public function index(Request $request)
     {
         $query = LowonganPekerjaan::query()->with('perusahaan');
@@ -111,6 +114,17 @@ class LowonganController extends Controller
     {
         $pelamar = Auth::user()->profilePelamar;
 
+        // --- [PENYESUAIAN 1] CEK APAKAH PELAMAR SUDAH PERNAH MELAMAR ---
+        $sudahMelamar = Lamaran::where('pelamar_id', $pelamar->id)
+                                ->where('lowongan_id', $lowongan->id)
+                                ->exists();
+
+        if ($sudahMelamar) {
+            // Jika sudah, kembalikan dengan pesan error
+            return redirect()->route('pelamar.lowongan.index')->with('error', 'Anda sudah pernah melamar di posisi ini sebelumnya.');
+        }
+        // ----------------------------------------------------------------
+
         $request->validate([
             'nama_depan' => 'required|string',
             'gaji_diharapkan' => 'required|string',
@@ -123,11 +137,12 @@ class LowonganController extends Controller
         }
 
         $resumePath = null;
-        if ($request->hasFile('unggah_resume')) {
+        if ($request->hasFile('ungah_resume')) {
             $resumePath = $request->file('unggah_resume')->store('resume', 'public');
         }
 
-        $pelamar->lamaran()->create([
+        // Simpan record lamaran ke dalam variabel `$lamaran`
+        $lamaran = $pelamar->lamaran()->create([
             'lowongan_id' => $lowongan->id,
             'status' => 'pending',
             'surat_lamaran_path' => $suratLamaranPath,
@@ -142,6 +157,18 @@ class LowonganController extends Controller
                 'berakhir' => $request->berakhir,
             ]),
         ]);
+
+        // --- [PENYESUAIAN 2] MENGIRIM NOTIFIKASI KE PERUSAHAAN ---
+        try {
+            $perusahaanUser = $lamaran->lowongan->perusahaan->user;
+            if ($perusahaanUser) {
+                $perusahaanUser->notify(new PelamarBaruNotification($lamaran));
+            }
+        } catch (\Exception $e) {
+            // Opsional: catat error jika notifikasi gagal dikirim, tapi jangan hentikan proses
+            // \Log::error('Gagal mengirim notifikasi lamaran baru: ' . $e->getMessage());
+        }
+        // -----------------------------------------------------------
 
         return redirect()->route('lowongan.lamar.success');
     }
