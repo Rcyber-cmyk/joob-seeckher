@@ -111,28 +111,20 @@
                             @foreach($chartData as $status => $count)
                                 <div class="chart-legend-item d-flex justify-content-between align-items-center mb-2">
                                     <div class="d-flex align-items-center">
-<<<<<<< HEAD
-                                        <div class="chart-legend-color me-2" style="background-color: {s{ $colors[$colorIndex++ % count($colors)] }};"></div>
-                                        <span class="fw-semibold">{{ ucfirst($status) }}</span>
-                                    </div>
-                                    
-                                    <span class="ms-auto text-muted">
-                                        @if ($total > 0)
-                                            {{-- Hanya hitung jika total lebih dari 0 --}}
-                                            {{ round(($count / $total) * 100) }}%
-                                        @else
-                                            {{-- Jika tidak, tampilkan 0% --}}
-                                            0%
-                                        @endif
-                                    </span>
-=======
                                         <div class="chart-legend-color me-2" style="background-color: {{ $colors[$colorIndex++ % count($colors)] }};"></div>
                                         <span class="fw-semibold">{{ ucfirst($status) }}</span>
                                     </div>
-                                    <span class="ms-auto text-muted">{{ round(($count / $total) * 100) }}%</span>
->>>>>>> 6483f8f7fa256146f9b952666d6b42aa23d3f2b3
+
+                                    <span class="ms-auto text-muted">
+                                        @if ($total > 0)
+                                            {{ round(($count / $total) * 100) }}%
+                                        @else
+                                            0%
+                                        @endif
+                                    </span>
                                 </div>
                             @endforeach
+
                         </div>
                     </div>
                 @else
