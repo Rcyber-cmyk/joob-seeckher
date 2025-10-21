@@ -90,6 +90,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        
+        // ================= KODE DIPERBAIKI =================
+        // Menggunakan alias AdminPelamarController yang sudah di-import
+        Route::get('/pelamar/{id}/detail', [AdminPelamarController::class, 'show'])->name('pelamar.show');
+        // ===================================================
     });
 
     // Rute khusus Pelamar
@@ -148,7 +153,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         // Rute untuk menampilkan form pasang iklan
         Route::get('/iklan/pasang-baru', [IklanController::class, 'create'])
-            ->name('iklan.create');
+             ->name('iklan.create');
 
         Route::get('/pengaturan', [PengaturanController::class, 'edit'])->name('settings.edit');
     
@@ -187,3 +192,4 @@ Route::get('/login/google/callback', [SocialLoginController::class, 'handleGoogl
 
 // Memuat semua rute otentikasi bawaan Laravel
 require __DIR__.'/auth.php';
+

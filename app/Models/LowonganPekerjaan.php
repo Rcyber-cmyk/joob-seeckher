@@ -13,6 +13,12 @@ class LowonganPekerjaan extends Model
     
     protected $table = 'lowongan_pekerjaan';
 
+    /**
+     * The attributes that are mass assignable.
+     * Pastikan semua field dari form dan database ada di sini.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'perusahaan_id',
         'judul_lowongan',
@@ -22,12 +28,14 @@ class LowonganPekerjaan extends Model
         'tipe_pekerjaan',
         'gender',
         'pendidikan_terakhir',
-        'usia', // Ini akan menjadi usia_maks
-        'usia_min', // BARU
+        'usia_maks', // [DIUBAH] Mengganti 'usia' menjadi 'usia_maks' agar konsisten
+        'usia_min',
         'nilai_pendidikan_terakhir',
-        'pengalaman_kerja', // Ini akan menjadi pengalaman_kerja_min
-        'pengalaman_kerja_maks', // BARU
+        'pengalaman_kerja', // Ini adalah min
+        'pengalaman_kerja_maks',
         'keahlian_bidang_pekerjaan',
+
+        // Semua bobot harus ada di sini
         'bobot_domisili',
         'bobot_usia',
         'bobot_gender',
@@ -41,7 +49,7 @@ class LowonganPekerjaan extends Model
         return $this->belongsTo(ProfilePerusahaan::class, 'perusahaan_id');
     }
     
-    public function keahlianDibutuhkan() // NAMA FUNGSI SUDAH DIUBAH
+    public function keahlianDibutuhkan()
     {
         return $this->belongsToMany(Keahlian::class, 'lowongan_keahlian_dibutuhkan', 'lowongan_id', 'keahlian_id');
     }
@@ -52,3 +60,4 @@ class LowonganPekerjaan extends Model
         return $this->hasMany(Lamaran::class, 'lowongan_id');
     }
 }
+

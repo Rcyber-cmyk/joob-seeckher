@@ -137,6 +137,39 @@
         .progress-bar {
             width: var(--progress-width, 0%);
         }
+        .criteria-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+        }
+        .criteria-item i {
+            font-size: 1.1rem;
+        }
+        
+        /* Popover Styling */
+        .popover-header {
+            font-weight: 600;
+            background-color: #f8f9fa;
+        }
+        .popover-body ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.85rem;
+        }
+        .popover-body li {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        .popover-body li:last-child {
+            border-bottom: none;
+        }
+        .popover-body .point-value {
+            font-weight: 600;
+            color: var(--orange-dark);
+        }
     </style>
 </head>
 <body>
@@ -203,11 +236,36 @@
 
         @if($selectedLowongan)
             <div class="criteria-card mb-4">
-                <h5 class="mb-3">Kriteria Penilaian Utama</h5>
+                <h5 class="mb-3"><i class="bi bi-card-checklist me-2"></i> Kriteria Lowongan & Bobot Penilaian</h5>
                 <div class="row g-3">
-                    <div class="col-md-4"><i class="bi bi-briefcase-fill me-2 text-primary"></i><strong>Pengalaman Kerja:</strong> {{ $selectedLowongan->pengalaman_kerja ?? 'Tidak ditentukan' }}</div>
-                    <div class="col-md-4"><i class="bi bi-mortarboard-fill me-2 text-primary"></i><strong>Edukasi:</strong> {{ $selectedLowongan->pendidikan_terakhir ?? 'Tidak ditentukan' }}</div>
-                    <div class="col-md-4"><i class="bi bi-tools me-2 text-primary"></i><strong>Keahlian Wajib:</strong> {{ optional($selectedLowongan->keahlianDibutuhkan)->pluck('nama_keahlian')->join(', ') ?: 'Tidak ada' }}</div>
+                    <div class="col-sm-6 col-lg-4 criteria-item">
+                        <i class="bi bi-geo-alt-fill me-2 text-primary"></i>
+                        <strong>Domisili:</strong>&nbsp;{{ $selectedLowongan->domisili ?? 'N/A' }} <span class="badge bg-secondary ms-auto">{{ $selectedLowongan->bobot_domisili }}%</span>
+                    </div>
+                    <div class="col-sm-6 col-lg-4 criteria-item">
+                        <i class="bi bi-person-bounding-box me-2 text-primary"></i>
+                        <strong>Usia:</strong>&nbsp;{{ $selectedLowongan->usia_min ?? 'N/A' }} - {{ $selectedLowongan->usia_maks ?? 'N/A' }} tahun <span class="badge bg-secondary ms-auto">{{ $selectedLowongan->bobot_usia }}%</span>
+                    </div>
+                    <div class="col-sm-6 col-lg-4 criteria-item">
+                        <i class="bi bi-gender-ambiguous me-2 text-primary"></i>
+                        <strong>Gender:</strong>&nbsp;{{ $selectedLowongan->gender ?? 'N/A' }} <span class="badge bg-secondary ms-auto">{{ $selectedLowongan->bobot_gender }}%</span>
+                    </div>
+                    <div class="col-sm-6 col-lg-4 criteria-item">
+                        <i class="bi bi-mortarboard-fill me-2 text-primary"></i>
+                        <strong>Pendidikan:</strong>&nbsp;{{ $selectedLowongan->pendidikan_terakhir ?? 'N/A' }} <span class="badge bg-secondary ms-auto">{{ $selectedLowongan->bobot_pendidikan }}%</span>
+                    </div>
+                     <div class="col-sm-6 col-lg-4 criteria-item">
+                        <i class="bi bi-journal-check me-2 text-primary"></i>
+                        <strong>Nilai Min:</strong>&nbsp;{{ $selectedLowongan->nilai_pendidikan_terakhir ?? 'N/A' }} <span class="badge bg-secondary ms-auto">{{ $selectedLowongan->bobot_nilai }}%</span>
+                    </div>
+                    <div class="col-sm-6 col-lg-4 criteria-item">
+                        <i class="bi bi-briefcase-fill me-2 text-primary"></i>
+                        <strong>Pengalaman:</strong>&nbsp;{{ $selectedLowongan->pengalaman_kerja ?? 'N/A' }} - {{ $selectedLowongan->pengalaman_kerja_maks ?? 'N/A' }} tahun <span class="badge bg-secondary ms-auto">{{ $selectedLowongan->bobot_pengalaman }}%</span>
+                    </div>
+                    <div class="col-12 criteria-item">
+                        <i class="bi bi-tools me-2 text-primary"></i>
+                        <strong>Keahlian Wajib:</strong>&nbsp;{{ optional($selectedLowongan->keahlianDibutuhkan)->pluck('nama_keahlian')->join(', ') ?: 'Tidak ada' }}
+                    </div>
                 </div>
             </div>
 
@@ -220,9 +278,7 @@
                                 <th>Peringkat</th>
                                 <th>Nama Pelamar</th>
                                 <th>Skor Akhir</th>
-                                <th>Kecocokan Pengalaman</th>
-                                <th>Kecocokan Keahlian</th>
-                                <th>Kecocokan Edukasi</th>
+                                <th class="text-center">Rincian Skor Kriteria</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -232,7 +288,7 @@
                                     <td><span class="badge bg-dark fs-6">#{{ $index + 1 }}</span></td>
                                     <td>
                                         <div class="d-flex align-items-center">
-                                            <img src="https://placehold.co/40x40/f1f5f9/1e293b?text={{ substr($pelamar->name, 0, 1) }}" class="rounded-circle me-3" alt="Avatar">
+                                            <img src="{{ $pelamar->profilePelamar && $pelamar->profilePelamar->foto_profil ? asset('storage/' . $pelamar->profilePelamar->foto_profil) : 'https://placehold.co/40x40/f1f5f9/1e293b?text=' . substr($pelamar->name, 0, 1) }}" class="rounded-circle me-3" alt="Avatar" style="width: 40px; height: 40px; object-fit: cover;">
                                             <div>
                                                 <div class="fw-bold">{{ $pelamar->name }}</div>
                                                 <small class="text-muted">{{ $pelamar->email }}</small>
@@ -245,17 +301,36 @@
                                             <div class="progress-bar bg-success" style="--progress-width: {{ round($pelamar->final_score) }}%;"></div>
                                         </div>
                                     </td>
-                                    <td><span class="badge {{ $pelamar->match_details['pengalaman']['score'] > 50 ? 'text-bg-success' : 'text-bg-danger' }}">{{ $pelamar->match_details['pengalaman']['text'] }}</span></td>
-                                    <td><span class="badge {{ $pelamar->match_details['keahlian']['score'] > 50 ? 'text-bg-success' : 'text-bg-warning' }}">{{ $pelamar->match_details['keahlian']['text'] }}</span></td>
-                                    <td><span class="badge {{ $pelamar->match_details['edukasi']['score'] > 50 ? 'text-bg-success' : 'text-bg-danger' }}">{{ $pelamar->match_details['edukasi']['text'] }}</span></td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" 
+                                            data-bs-toggle="popover" 
+                                            data-bs-trigger="hover focus"
+                                            data-bs-placement="left"
+                                            data-bs-html="true"
+                                            title="Rincian Poin E-Ranking"
+                                            data-bs-content="
+                                                <ul>
+                                                    <li>Pendidikan <span>({{ round($pelamar->match_details['edukasi']['score']) }}/100)</span><span class='point-value'>+{{ number_format($pelamar->match_details['edukasi']['points'], 2) }}</span></li>
+                                                    <li>Pengalaman <span>({{ round($pelamar->match_details['pengalaman']['score']) }}/100)</span><span class='point-value'>+{{ number_format($pelamar->match_details['pengalaman']['points'], 2) }}</span></li>
+                                                    <li>Usia <span>({{ round($pelamar->match_details['usia']['score']) }}/100)</span><span class='point-value'>+{{ number_format($pelamar->match_details['usia']['points'], 2) }}</span></li>
+                                                    <li>Domisili <span>({{ round($pelamar->match_details['domisili']['score']) }}/100)</span><span class='point-value'>+{{ number_format($pelamar->match_details['domisili']['points'], 2) }}</span></li>
+                                                    <li>Gender <span>({{ round($pelamar->match_details['gender']['score']) }}/100)</span><span class='point-value'>+{{ number_format($pelamar->match_details['gender']['points'], 2) }}</span></li>
+                                                    <li>Nilai <span>({{ round($pelamar->match_details['nilai']['score']) }}/100)</span><span class='point-value'>+{{ number_format($pelamar->match_details['nilai']['points'], 2) }}</span></li>
+                                                </ul>
+                                            ">
+                                            <i class="bi bi-info-circle"></i> Lihat Rincian
+                                        </button>
+                                    </td>
                                     <td>
-                                        <a href="#" class="btn btn-sm btn-outline-primary">Lihat Profil</a>
+                                        {{-- ======================= TOMBOL DIPERBARUI ======================= --}}
+                                        <a href="{{ route('admin.pelamar.show', $pelamar->id) }}" class="btn btn-sm btn-outline-primary">Lihat Profil</a>
+                                        {{-- ======================= AKHIR PERUBAHAN ======================= --}}
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7" class="text-center text-muted py-5">
-                                        <p>Tidak ada data pelamar untuk ditampilkan atau belum ada pelamar yang melamar.</p>
+                                    <td colspan="5" class="text-center text-muted py-5">
+                                        <p>Tidak ada data pelamar untuk ditampilkan.</p>
                                     </td>
                                 </tr>
                             @endforelse
@@ -296,5 +371,11 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Inisialisasi semua popover di halaman
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+    </script>
 </body>
 </html>
+
