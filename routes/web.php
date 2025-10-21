@@ -42,9 +42,8 @@ use App\Http\Controllers\Auth\SocialLoginController;
 Route::get('/cari-lowongan', [LowonganController::class, 'index'])->name('lowongan.index');
 Route::get('/jelajahi-perusahaan', [PerusahaanController::class, 'index'])->name('perusahaan.index');
 
-Route::get('/', function () {
-    return view('pelamar.homepage');
-})->name('home');
+// [DIUBAH] Arahkan rute utama ke PelamarDashboardController
+Route::get('/', [PelamarDashboardController::class, 'index'])->name('home');
 
 Route::get('/perusahaan', function () {
     return view('perusahaan.homepage');
@@ -54,8 +53,6 @@ Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::get('/berita/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 
 Route::get('/toko-umkm', [UmkmController::class, 'indexToko'])->name('toko-umkm.index');
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -104,6 +101,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/settings/delete-account', [App\Http\Controllers\Pelamar\SettingsController::class, 'destroy'])->name('settings.destroy');
         Route::put('/settings/update-email', [App\Http\Controllers\Pelamar\SettingsController::class, 'updateEmail'])->name('settings.updateEmail');
         Route::get('/aktivitas', [AktivitasController::class, 'index'])->name('aktivitas.index');
+        Route::get('/lowongan/{id}', [LowonganController::class, 'show'])->name('lowongan.show');
     });
 
     // Rute khusus untuk UMKM
