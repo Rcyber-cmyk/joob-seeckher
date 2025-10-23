@@ -79,6 +79,7 @@ class ProfileController
                 'pengalaman_kerja' => ['nullable', 'string', 'max:255'],
                 'tentang_saya' => ['nullable', 'string'],
                 'foto_ktp' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:2048'],
+                'foto_profil' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:2048'],
                 'keahlian' => ['nullable', 'array'],
                 'keahlian.*' => ['exists:keahlian,id'],
             ]);

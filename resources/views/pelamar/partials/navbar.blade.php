@@ -10,7 +10,7 @@
             {{-- PERUBAHAN: Menghapus 'mx-auto' dan menambahkan 'me-auto' untuk mendorong menu ke kiri --}}
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link {{ Request::routeIs('home') ? 'active fw-bold' : '' }}" href="{{ route('home') }}">Beranda</a>
+                    <a class="nav-link {{ Request::routeIs('home') ? 'active fw-bold' : '' }}" href="{{ route('home') }}"></a>
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('berita.index') }}" class="nav-link {{ Request::routeIs('berita.index') ? 'active fw-bold' : '' }}">Berita Terkini</a>
@@ -37,7 +37,19 @@
                     {{-- JIKA PENGGUNA SUDAH LOGIN --}}
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle me-2 fs-5"></i>
+    
+                            {{-- KITA GANTI IKON DENGAN LOGIKA FOTO INI --}}
+                            @if(Auth::user()->pelamar && Auth::user()->pelamar->foto_profil)
+                                {{-- Jika pelamar punya foto profil, tampilkan fotonya --}}
+                                <img src="{{ asset('storage/' . Auth::user()->pelamar->foto_profil) }}" 
+                                     alt="Foto" class="rounded-circle me-2" 
+                                     style="width: 32px; height: 32px; object-fit: cover;">
+                            @else
+                                {{-- Jika tidak punya, tampilkan ikon default --}}
+                                <i class="bi bi-person-circle me-2 fs-5"></i>
+                            @endif
+                            
+                            {{-- Ini nama penggunanya, biarkan saja --}}
                             {{ Auth::user()->name }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
@@ -91,14 +103,45 @@
                 {{-- Tombol Dinamis untuk Offcanvas --}}
                 <div class="mt-auto">
                     @auth
-                        <div class="d-grid gap-2">
-                            <a href="{{ Auth::user()->role === 'pelamar' ? route('pelamar.profile.edit') : '#' }}" class="btn btn-light">Profil Saya</a>
-                            <a href="{{ route('pelamar.settings.index') }}" class="btn btn-light">Pengaturan</a>
-                            <form method="POST" action="{{ route('logout') }}">
+                        {{-- ================================================ --}}
+                        {{-- KODE BARU ANDA MULAI DARI SINI (UNTUK MOBILE) --}}
+                        {{-- ================================================ --}}
+                        <div class="user-profile d-flex align-items-center">
+                            {{-- Logika untuk menampilkan foto profil pelamar --}}
+                            @if (Auth::user()->pelamar && Auth::user()->pelamar->foto_profil)
+                                {{-- Tampilkan foto jika ada --}}
+                                <img src="{{ asset('storage/' . Auth::user()->pelamar->foto_profil) }}"
+                                     alt="Foto Profil" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                            @else
+                                {{-- Tampilkan gambar default jika tidak ada foto --}}
+                                <img src="{{ asset('images/default-profile.png') }}" {{-- Ganti ini jika nama file Anda beda --}}
+                                     alt="Foto Default" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                            @endif
+                            
+                            {{-- Bagian Nama dan Email --}}
+                            <div class="d-flex flex-column me-auto">
+                                <span class="text-white fw-bold">{{ Auth::user()->name }}</span>
+                                {{-- Anda bisa tambahkan email jika mau, tapi mungkin terlalu penuh --}}
+                                {{-- <span class="text-small">{{ Auth::user()->email }}</span> --}}
+                            </div>
+                            
+                            {{-- Tombol Logout --}}
+                            <form method="POST" action="{{ route('logout') }}" class="d-inline">
                                 @csrf
-                                <button type="submit" class="btn btn-danger w-100">Log Out</button>
+                                <button type="submit" class="bg-transparent border-0 log-out text-white">
+                                    <i class="bi bi-box-arrow-right fs-4"></i>
+                                </button>
                             </form>
                         </div>
+
+                        {{-- Tombol link di bawahnya --}}
+                        <div class="d-grid gap-2 mt-3">
+                            <a href="{{ Auth::user()->role === 'pelamar' ? route('pelamar.profile.edit') : '#' }}" class="btn btn-outline-light btn-sm">Edit Profil</a>
+                            <a href="{{ route('pelamar.settings.index') }}" class="btn btn-outline-light btn-sm">Pengaturan</a>
+                        </div>
+                        {{-- ================================================ --}}
+                        {{-- BATAS AKHIR KODE BARU --}}
+                        {{-- ================================================ --}}
                     @else
                         <div class="d-grid gap-2">
                             <a href="{{ route('login') }}" class="btn btn-outline-light">MASUK</a>

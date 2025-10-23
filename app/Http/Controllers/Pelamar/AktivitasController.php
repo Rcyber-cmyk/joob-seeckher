@@ -46,4 +46,31 @@ class AktivitasController extends Controller
             'dilihatPerusahaan'
         ));
     }
+    public function destroyLamaran(Lamaran $lamaran) // Laravel otomatis mencari Lamaran berdasarkan ID di URL
+    {
+        // 1. Dapatkan profil pelamar yang sedang login
+        $pelamar = Auth::user()->profilePelamar;
+        if (!$pelamar) {
+            // Seharusnya tidak terjadi jika user sudah login, tapi untuk keamanan
+            return redirect()->route('pelamar.aktivitas.index')->with('error', 'Profil tidak ditemukan.');
+        }
+
+        // 2. [PENTING] Pastikan pelamar yang login adalah pemilik lamaran ini
+        if ($lamaran->pelamar_id !== $pelamar->id) {
+            // Jika bukan pemiliknya, jangan izinkan hapus!
+            return redirect()->route('pelamar.aktivitas.index')->with('error', 'Anda tidak berhak membatalkan lamaran ini.');
+        }
+        
+        // 3. [OPSIONAL] Hanya izinkan hapus jika status masih pending/dilihat
+        if (!in_array($lamaran->status, ['pending', 'dilihat'])) {
+             return redirect()->route('pelamar.aktivitas.index')->with('error', 'Lamaran dengan status ini tidak dapat dibatalkan.');
+        }
+
+
+        // 4. Hapus lamaran dari database
+        $lamaran->delete();
+
+        // 5. Redirect kembali ke halaman aktivitas dengan pesan sukses
+        return redirect()->route('pelamar.aktivitas.index')->with('success', 'Lamaran berhasil dibatalkan.');
+    }
 }

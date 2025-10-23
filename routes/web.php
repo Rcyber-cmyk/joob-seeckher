@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Pelamar\AktivitasController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Pelamar\DashboardController as PelamarDashboardController;
@@ -25,7 +26,6 @@ use App\Http\Controllers\Pelamar\BeritaController;
 use App\Http\Controllers\Pelamar\HomepageController;
 use App\Http\Controllers\Pelamar\LowonganController;
 use App\Http\Controllers\Pelamar\PerusahaanController;
-use App\Http\Controllers\Pelamar\AktivitasController;
 use App\Http\Controllers\Pelamar\ProfilePelamarController;
 // Ganti nama alias controller UMKM agar lebih jelas
 use App\Http\Controllers\umkm\UmkmController; 
@@ -101,13 +101,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::middleware('role:pelamar')->prefix('pelamar')->name('pelamar.')->group(function () {
         Route::get('/dashboard', [PelamarDashboardController::class, 'index'])->name('dashboard');
         Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+        // INI SOLUSINYA
+        Route::post('/pelamar/profile/update', [ProfileController::class, 'update'])->name('profile.update');
         Route::get('/settings', [App\Http\Controllers\Pelamar\SettingsController::class, 'index'])->name('settings.index');
         Route::delete('/settings/delete-account', [App\Http\Controllers\Pelamar\SettingsController::class, 'destroy'])->name('settings.destroy');
         Route::put('/settings/update-email', [App\Http\Controllers\Pelamar\SettingsController::class, 'updateEmail'])->name('settings.updateEmail');
         Route::get('/aktivitas', [AktivitasController::class, 'index'])->name('aktivitas.index');
         Route::get('/lowongan/{id}', [LowonganController::class, 'show'])->name('lowongan.show');
     });
+    Route::delete('/lamaran/{lamaran}', [AktivitasController::class, 'destroyLamaran'])
+         // Middleware 'auth' sudah otomatis dari grup luar
+         ->middleware('role:pelamar') // Pastikan hanya pelamar yang bisa
+         ->name('pelamar.lamaran.destroy');
 
     // Rute khusus untuk UMKM
     Route::middleware('role:umkm')->prefix('umkm')->name('umkm.')->group(function () {

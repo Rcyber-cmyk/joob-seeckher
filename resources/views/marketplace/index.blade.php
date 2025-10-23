@@ -147,7 +147,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-marketplace">
         <div class="container">
-            <a class="navbar-brand" href="#">MESSARI</a>
+            <a class="nav-link {{ Request::routeIs('home') ? 'active fw-bold' : '' }}" href="{{ route('home') }}">MESSARI</a>
             <div>
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">

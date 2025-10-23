@@ -9,7 +9,6 @@
     <div class="container py-4">
         <form action="{{ route('pelamar.profile.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            @method('PUT')
 
             <div class="page-header mb-4">
                 <h1 class="page-title">Pengaturan Profil</h1>

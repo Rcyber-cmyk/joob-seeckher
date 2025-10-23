@@ -8,14 +8,14 @@
 <div class="container my-5">
     <div class="lamar-card">
         <div class="lamar-header">
-            <img src="{{ $lowongan->perusahaan->logo ? asset('storage/' . $lowongan->perusahaan->logo) : 'https://placehold.co/60x60' }}" alt="Logo" class="company-logo">
+            {{-- [FIX BUG 2] Menggunakan ->logo_perusahaan --}}
+            <img src="{{ $lowongan->perusahaan->logo_perusahaan ? asset('storage/' . $lowongan->perusahaan->logo_perusahaan) : 'https://placehold.co/60x60' }}" alt="Logo" class="company-logo">
             <div>
                 <h4 class="job-title">{{ $lowongan->judul_lowongan }}</h4>
                 <p class="company-name text-muted mb-0">PT {{ $lowongan->perusahaan->nama_perusahaan }}</p>
             </div>
         </div>
 
-        <!-- Progress Bar -->
         <div class="progress-container">
             <div class="progress-step active" data-step="1">1</div>
             <div class="progress-line"></div>
@@ -26,7 +26,6 @@
 
         <form action="{{ route('lowongan.lamar.store', $lowongan->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <!-- STEP 1: INFORMASI PRIBADI -->
             <div class="form-step active" id="step-1">
                 <h5 class="step-title">Informasi Pribadi</h5>
                 <div class="row g-3">
@@ -57,18 +56,33 @@
                 </div>
             </div>
 
-            <!-- STEP 2: PERTANYAAN PERUSAHAAN -->
             <div class="form-step" id="step-2">
                 <h5 class="step-title">Jawab Pertanyaan Perusahaan</h5>
-                <div class="mb-3"><label class="form-label">Berapa gaji pokok bulanan yang Anda inginkan?</label><input type="text" name="gaji_diharapkan" class="form-control" required></div>
+                
+                {{-- ========================================================== --}}
+                {{-- [MODIFIKASI 1] Input Gaji Dihapus --}}
+                {{-- ========================================================== --}}
+                {{-- <div class="mb-3"><label class="form-label">Berapa gaji pokok bulanan yang Anda inginkan?</label><input type="text" name="gaji_diharapkan" class="form-control" required></div> --}}
+                
                 <div class="mb-3"><label class="form-label">Apa Pendidikan terakhir yang Anda tempuh?</label>
                     <select name="pendidikan_terakhir" class="form-select">
-                        <option>SMA/SMK Sederajat</option><option>D3</option><option>S1</option><option>S2</option>
+                        <option value="SMA/SMK Sederajat" {{ $pelamar->lulusan == 'SMA/SMK Sederajat' ? 'selected' : '' }}>SMA/SMK Sederajat</option>
+                        <option value="D1/D2/D3" {{ in_array($pelamar->lulusan, ['D1', 'D2', 'D3']) ? 'selected' : '' }}>D1/D2/D3</option>
+                        <option value="S1" {{ $pelamar->lulusan == 'S1' ? 'selected' : '' }}>S1</option>
+                        <option value="S2" {{ $pelamar->lulusan == 'S2' ? 'selected' : '' }}>S2</option>
+                        <option value="S3" {{ $pelamar->lulusan == 'S3' ? 'selected' : '' }}>S3</option>
                     </select>
                 </div>
-                <div class="mb-3"><label class="form-label">Berapa tahun pengalaman Anda mendalami peran ini?</label><input type="text" name="pengalaman_tahun" class="form-control"></div>
+                
+                {{-- ========================================================== --}}
+                {{-- [MODIFIKASI 2] Placeholder Ditambahkan --}}
+                {{-- ========================================================== --}}
+                <div class="mb-3"><label class="form-label">Berapa tahun pengalaman Anda mendalami peran ini?</label>
+                    <input type="number" name="pengalaman_tahun" class="form-control" placeholder="Contoh: 3 tahun"> {{-- Placeholder ditambahkan --}}
+                </div>
                 
                 <h6 class="form-section-title mt-4">Pilih bidang keahlian yang Anda kuasai!</h6>
+                {{-- Logika untuk Keahlian (mungkin perlu disesuaikan jika ingin checkbox) --}}
                 @foreach($semuaKeahlian->take(7) as $keahlian)
                 <div class="form-check"><input class="form-check-input" type="radio" name="keahlian_utama" id="keahlian{{$keahlian->id}}"><label class="form-check-label" for="keahlian{{$keahlian->id}}">{{$keahlian->nama_keahlian}}</label></div>
                 @endforeach
@@ -80,12 +94,18 @@
                 </div>
             </div>
 
-            <!-- STEP 3: RIWAYAT KARIR -->
             <div class="form-step" id="step-3">
                 <h5 class="step-title">Riwayat Karir</h5>
                 <div class="row g-3">
-                    <div class="col-12"><label class="form-label">Posisi Pekerjaan</label><input type="text" name="posisi_pekerjaan" class="form-control" required></div>
-                    <div class="col-12"><label class="form-label">Nama Perusahaan</label><input type="text" name="nama_perusahaan" class="form-control"></div>
+                    {{-- ========================================================== --}}
+                    {{-- [MODIFIKASI 2] Placeholder Ditambahkan --}}
+                    {{-- ========================================================== --}}
+                    <div class="col-12"><label class="form-label">Posisi Pekerjaan</label>
+                        <input type="text" name="posisi_pekerjaan" class="form-control" placeholder="Contoh: Staff Administrasi" required> {{-- Placeholder ditambahkan --}}
+                    </div>
+                    <div class="col-12"><label class="form-label">Nama Perusahaan</label>
+                        <input type="text" name="nama_perusahaan" class="form-control" placeholder="Contoh: PT Sejahtera Abadi"> {{-- Placeholder ditambahkan --}}
+                    </div>
                     <div class="col-md-6"><label class="form-label">Mulai</label><input type="date" name="mulai" class="form-control"></div>
                     <div class="col-md-6"><label class="form-label">Berakhir</label><input type="date" name="berakhir" class="form-control"></div>
                 </div>

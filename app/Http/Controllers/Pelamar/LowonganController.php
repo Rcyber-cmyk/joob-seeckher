@@ -8,10 +8,11 @@ use App\Models\LowonganPekerjaan;
 use App\Models\ProfilePerusahaan;
 use App\Models\BidangPekerjaan;
 use App\Models\Keahlian;
-use App\Models\Lamaran; // <-- [PENYESUAIAN] Import model Lamaran
+use App\Models\Lamaran; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Notifications\PelamarBaruNotification; // <-- [PENYESUAIAN] Import kelas Notifikasi
+use App\Notifications\PelamarBaruNotification; 
+use App\Models\Lowongan;
 
 class LowonganController extends Controller
 {
@@ -33,6 +34,11 @@ class LowonganController extends Controller
             return $q->whereHas('perusahaan', function ($subQ) use ($lokasi) {
                 $subQ->where('alamat_kota', $lokasi);
             });
+        });
+        
+        // [FIX YANG KITA TAMBAHKAN TADI] Filter Paket Iklan
+        $query->when($request->paket_iklan, function ($q, $paket) {
+            return $q->where('paket_iklan', $paket);
         });
 
         $detailLowongan = null;
@@ -67,18 +73,35 @@ class LowonganController extends Controller
         if (Auth::check() && Auth::user()->role === 'pelamar' && Auth::user()->profilePelamar) {
             $saved_lowongan_ids = Auth::user()->profilePelamar->lowonganTersimpan()->pluck('lowongan_pekerjaan.id')->toArray();
         }
+        $sudahMelamar = false; // Defaultnya false
+        if (Auth::check() && Auth::user()->role === 'pelamar' && Auth::user()->profilePelamar && $detailLowongan) {
+            $sudahMelamar = Lamaran::where('pelamar_id', Auth::user()->profilePelamar->id)
+                                    ->where('lowongan_id', $detailLowongan->id)
+                                    ->exists();
+        }
 
-        return view('pelamar.lowongan.index', compact('lowonganList', 'detailLowongan', 'saved_lowongan_ids', 'lokasiOptions'));
+        return view('pelamar.lowongan.index', compact('lowonganList', 'detailLowongan', 'saved_lowongan_ids', 'lokasiOptions', 'sudahMelamar'));
     }
 
     public function showDetailPartial(LowonganPekerjaan $lowongan)
     {
         $detailLowongan = $lowongan->load('perusahaan');
+        
         $saved_lowongan_ids = [];
+        // --- TAMBAHAN BARU: Cek status lamaran ---
+        $sudahMelamar = false; 
         if (Auth::check() && Auth::user()->role === 'pelamar' && Auth::user()->profilePelamar) {
             $saved_lowongan_ids = Auth::user()->profilePelamar->lowonganTersimpan()->pluck('lowongan_pekerjaan.id')->toArray();
+            
+            // Cek apakah sudah melamar lowongan ini
+            $sudahMelamar = Lamaran::where('pelamar_id', Auth::user()->profilePelamar->id)
+                                    ->where('lowongan_id', $detailLowongan->id)
+                                    ->exists();
         }
-        return view('pelamar.lowongan.partials._job-detail', compact('detailLowongan', 'saved_lowongan_ids'))->render();
+        // --- AKHIR TAMBAHAN ---
+
+        // Ubah return view agar menyertakan $sudahMelamar
+        return view('pelamar.lowongan.partials._job-detail', compact('detailLowongan', 'saved_lowongan_ids', 'sudahMelamar'))->render(); // <-- Tambahkan 'sudahMelamar'
     }
 
     public function toggleSimpan(LowonganPekerjaan $lowongan)
@@ -120,14 +143,15 @@ class LowonganController extends Controller
                                 ->exists();
 
         if ($sudahMelamar) {
-            // Jika sudah, kembalikan dengan pesan error
-            return redirect()->route('pelamar.lowongan.index')->with('error', 'Anda sudah pernah melamar di posisi ini sebelumnya.');
+            // ==========================================================
+            // [FIX BUG 1] Ganti 'pelamar.lowongan.index' menjadi 'lowongan.index'
+            // ==========================================================
+            return redirect()->route('lowongan.index')->with('error', 'Anda sudah pernah melamar di posisi ini sebelumnya.');
         }
         // ----------------------------------------------------------------
 
         $request->validate([
             'nama_depan' => 'required|string',
-            'gaji_diharapkan' => 'required|string',
             'posisi_pekerjaan' => 'required|string',
         ]);
 
@@ -137,7 +161,7 @@ class LowonganController extends Controller
         }
 
         $resumePath = null;
-        if ($request->hasFile('ungah_resume')) {
+        if ($request->hasFile('ungah_resume')) { // <-- Typo di sini, tapi kita ikuti form Anda
             $resumePath = $request->file('unggah_resume')->store('resume', 'public');
         }
 
@@ -165,7 +189,6 @@ class LowonganController extends Controller
                 $perusahaanUser->notify(new PelamarBaruNotification($lamaran));
             }
         } catch (\Exception $e) {
-            // Opsional: catat error jika notifikasi gagal dikirim, tapi jangan hentikan proses
             // \Log::error('Gagal mengirim notifikasi lamaran baru: ' . $e->getMessage());
         }
         // -----------------------------------------------------------
@@ -180,4 +203,28 @@ class LowonganController extends Controller
     {
         return view('pelamar.lowongan.success');
     }
+
+    public function show($id)
+{
+    // 1. Ambil data detail lowongan, kita ganti nama variabelnya agar konsisten
+    $detailLowongan = LowonganPekerjaan::with('perusahaan')->findOrFail($id);
+
+    // 2. Ambil ID lowongan yang sudah disimpan oleh pengguna (logika ini sama seperti di method index)
+    $saved_lowongan_ids = [];
+    if (Auth::check() && Auth::user()->role === 'pelamar' && Auth::user()->profilePelamar) {
+        $saved_lowongan_ids = Auth::user()->profilePelamar->lowonganTersimpan()->pluck('lowongan_pekerjaan.id')->toArray();
+    }
+    $sudahMelamar = false; 
+        if (Auth::check() && Auth::user()->role === 'pelamar' && Auth::user()->profilePelamar) {
+            $saved_lowongan_ids = Auth::user()->profilePelamar->lowonganTersimpan()->pluck('lowongan_pekerjaan.id')->toArray();
+            
+            // Cek apakah sudah melamar lowongan ini
+            $sudahMelamar = Lamaran::where('pelamar_id', Auth::user()->profilePelamar->id)
+                                    ->where('lowongan_id', $detailLowongan->id)
+                                    ->exists();
+        }
+
+    // 3. Kirim KEDUA variabel ke view
+    return view('pelamar.lowongan.show', compact('detailLowongan', 'saved_lowongan_ids', 'sudahMelamar'));
+}
 }
