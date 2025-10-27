@@ -24,13 +24,12 @@ class DashboardController extends Controller
             ->take(3) // Ambil 3 perusahaan
             ->get();
 
-        // 2. (DIUBAH) Mengambil lowongan 'standar' untuk slider
-        // Ini untuk bagian "Rekomendasi Pekerjaan"
+        // 2. (DIUBAH) Mengambil SEMUA lowongan (premium & standar) untuk slider
         $lowonganPekerjaan = LowonganPekerjaan::with('perusahaan')
-            ->where('paket_iklan', 'standar') // <-- HANYA AMBIL YANG 'standar'
             ->where('is_active', 1)
-            ->orderBy('created_at', 'DESC')
-            ->take(12)
+            ->orderByRaw("CASE WHEN paket_iklan = 'premium' THEN 0 ELSE 1 END") // Prioritaskan premium
+            ->orderBy('created_at', 'DESC') // Lalu urutkan berdasarkan terbaru
+            ->take(12) // Ambil 12 terbaru (campuran)
             ->get();
 
         // 3. Mengambil 3 berita terbaru (ini tetap sama)

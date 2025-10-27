@@ -199,12 +199,47 @@
     }
 
     /* --- Card Premium (Korporat) --- */
+    /* --- Card Premium (Dibuat Lebih Menonjol) --- */
     .job-listing-card-premium {
-        border-left: 4px solid #F39C12; /* Aksen border biru di kiri */
-        background-color: #f8f9fa; /* Background abu muda */
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+        border: 1px solid #FFEBCD; /* Border oranye sangat muda */
+        border-left: 5px solid #F39C12; /* Border kiri oranye tebal */
+        background-color: #FFFBF5; /* Background krem/oranye sangat muda */
+        box-shadow: 0 6px 20px rgba(243, 156, 18, 0.15); /* Shadow oranye halus */
+        position: relative; /* Diperlukan untuk badge absolut */
+        /* Hapus transform scale jika tidak mau terlalu besar */
+        /* transform: scale(1.02); */
     }
-    .job-listing-card-premium .company-details h6 { color: #F39C12; } /* Judul lowongan biru */
+    .job-listing-card-premium .company-details h6 {
+        color: #B9770E; /* Judul lowongan warna oranye tua */
+        font-weight: 700; /* Lebih tebal */
+    }
+    .job-listing-card-premium .btn-lihat-detail {
+        background-color: #F39C12; /* Tombol jadi solid oranye */
+        color: white;
+        border: none;
+    }
+     .job-listing-card-premium .btn-lihat-detail:hover {
+        background-color: #d8890b; /* Hover oranye gelap */
+        color: white;
+    }
+    /* Style untuk Badge Premium */
+    .premium-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: #F39C12;
+        color: white;
+        font-size: 0.7rem;
+        font-weight: bold;
+        padding: 3px 8px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .premium-badge i {
+        font-size: 0.6rem; /* Ukuran bintang sedikit lebih kecil */
+        margin-right: 3px;
+    }
 
     /* --- Swiper Slider (Korporat) --- */
     .job-swiper-container { padding-bottom: 40px; }
@@ -232,6 +267,28 @@
         border-color: #F39C12; color: #F39C12;
     }
     #loginRequiredModal .modal-footer .btn-outline-primary-custom:hover { background-color: #F39C12; color: white; }
+    footer.footer { 
+            background-color: #071b2f; 
+            color: white; 
+            width: 100%; 
+            padding: 4rem 0; 
+            flex-shrink: 0;
+        }
+        footer.footer ul { 
+            list-style-type: none; 
+            padding-left: 0; 
+        }
+        footer.footer .text-white-50 { 
+            color: rgba(255, 255, 255, 0.5); 
+        }
+        footer.footer a { 
+            color: #ff7b00; 
+            text-decoration: none; 
+            transition: text-decoration 0.3s ease; 
+        }
+        footer.footer a:hover { 
+            text-decoration: underline; 
+        }
 
 </style>
 </head>
@@ -309,7 +366,7 @@
 
     <div class="main-content">
         <div class="container">
-            <h4 class="fw-bold mb-4 mt-5 d-flex align-items-center">JELAJAHI PERUSAHAAN</h4>
+            <h4 class="fw-bold mb-4 mt-5 d-flex align-items-center">Perusahaan Unggulan</h4>
             <div class="row g-4 section-perusahaan-partner">
 
                 @forelse($perusahaanPremium as $perusahaan)
@@ -344,7 +401,7 @@
             </div>
 
             <br><br>
-            <h4 class="fw-bold mb-4 mt-5">Rekomendasi Pekerjaan Untukmu</h4>
+            <h4 class="fw-bold mb-4 mt-5">Lowongan Terbaru Untukmu</h4>
             <div class="swiper-container job-swiper-container overflow-hidden">
                 <div class="swiper-wrapper">
                     
@@ -357,6 +414,9 @@
                             @endphp
 
                             <div class="{{ $cardClass }}">
+                                @if($lowongan->paket_iklan == 'premium')
+                                <span class="premium-badge"><i class="bi bi-star-fill"></i></span>
+                                @endif
                                 <div class="company-info">
                                     {{-- Tampilkan logo perusahaan, dengan fallback jika tidak ada --}}
                                     <img src="{{ $lowongan->perusahaan && $lowongan->perusahaan->logo_perusahaan ? asset('storage/' . $lowongan->perusahaan->logo_perusahaan) : asset('images/default-logo.png') }}" 
@@ -391,54 +451,6 @@
         </div>
     </div>
 
-    <footer class="footer text-white">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-8">
-                    <h3 class="fw-bold mb-4">SEGERA TEMUKAN <br>PEKERJAAN MU</h3>
-                    <div class="row">
-                        <div class="col-4 mb-3">
-                            <h6 class="fw-semibold">Tentang website</h6>
-                            <ul class="list-unstyled">
-                                <li><a href="#" class="text-white-50 text-decoration-none">Tentang Kami</a></li>
-                                <li><a href="#" class="text-white-50 text-decoration-none">Kontak Kami</a></li>
-                                <li><a href="#" class="text-white-50 text-decoration-none">Bergabung Sebagai Konsultan</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-4 mb-3">
-                            <h6 class="fw-semibold">Untuk Pencari Kerja</h6>
-                            <ul class="list-unstyled">
-                                <li><a href="#" class="text-white-50 text-decoration-none">Lowongan</a></li>
-                                <li><a href="#" class="text-white-50 text-decoration-none">Pameran Lowongan</a></li>
-                                <li><a href="#" class="text-white-50 text-decoration-none">Pameran Lowongan Disabilitas</a></li>
-                                <li><a href="#" class="text-white-50 text-decoration-none">Rekomendasi Lowongan</a></li>
-                                <li><a href="#" class="text-white-50 text-decoration-none">FAQ untuk Pencari Kerja</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-4 mb-3">
-                            <h6 class="fw-semibold">Untuk Perusahaan</h6>
-                            <ul class="list-unstyled">
-                                <li><a href="#" class="text-white-50 text-decoration-none">Daftar Gratis</a></li>
-                                <li><a href="#" class="text-white-50 text-decoration-none">Pasang Iklan Lowongan</a></li>
-                                <li><a href="#" class="text-white-50 text-decoration-none">Produk & Harga</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="mt-4">
-                        <span class="me-3 text-white-50">Ikuti kami:</span>
-                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-youtube"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-linkedin"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-facebook"></i></a>
-                    </div>
-                </div>
-                <div class="col-4 text-center">
-                    <img src="{{ asset('images/footer.png') }}" alt="Karakter" class="img-fluid" style="max-height: 300px;">
-                </div>
-            </div>
-        </div>
-    </footer>
 
     <div class="modal fade" id="loginRequiredModal" tabindex="-1" aria-labelledby="loginRequiredModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -460,6 +472,7 @@
             </div>
         </div>
     </div>
+    @include('pelamar.partials.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
