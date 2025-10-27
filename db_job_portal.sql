@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 16, 2025 at 07:11 PM
+-- Generation Time: Oct 27, 2025 at 06:56 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -110,7 +110,8 @@ INSERT INTO `activity_logs` (`id`, `user_id`, `activity_type`, `description`, `c
 (67, 77, 'Pendaftaran Pelamar', 'Rizqi Aditia Maulana mendaftar sebagai pelamar baru.', '2025-08-28 09:23:18', '2025-08-28 09:23:18'),
 (68, 78, 'Pendaftaran Pelamar', 'mahasiswa mendaftar sebagai pelamar baru.', '2025-09-03 19:29:03', '2025-09-03 19:29:03'),
 (69, 79, 'Pendaftaran Pelamar', 'akmal mendaftar sebagai pelamar baru.', '2025-09-18 00:38:10', '2025-09-18 00:38:10'),
-(70, 80, 'Pendaftaran Pelamar', 'duti mendaftar sebagai pelamar baru.', '2025-09-18 00:42:43', '2025-09-18 00:42:43');
+(70, 80, 'Pendaftaran Pelamar', 'duti mendaftar sebagai pelamar baru.', '2025-09-18 00:42:43', '2025-09-18 00:42:43'),
+(71, 82, 'Pendaftaran Perusahaan', 'Reinforce Speed mendaftar sebagai perusahaan baru.', '2025-10-22 14:36:21', '2025-10-22 14:36:21');
 
 -- --------------------------------------------------------
 
@@ -204,16 +205,6 @@ CREATE TABLE `cache` (
   `value` mediumtext NOT NULL,
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `cache`
---
-
-INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('branzz@gmail.com|127.0.0.1', 'i:3;', 1760632958),
-('branzz@gmail.com|127.0.0.1:timer', 'i:1760632958;', 1760632958),
-('dutaarryaduta98@gmail.com|127.0.0.1', 'i:2;', 1758198481),
-('dutaarryaduta98@gmail.com|127.0.0.1:timer', 'i:1758198481;', 1758198481);
 
 -- --------------------------------------------------------
 
@@ -375,9 +366,8 @@ INSERT INTO `lamaran` (`id`, `pelamar_id`, `lowongan_id`, `status`, `created_at`
 (6, 51, 9, 'pending', '2025-09-03 19:24:34', '2025-09-03 19:24:34'),
 (7, 53, 8, 'pending', '2025-09-04 05:45:07', '2025-09-04 05:45:07'),
 (8, 55, 9, 'pending', '2025-09-18 00:47:16', '2025-09-18 00:47:16'),
-(9, 10, 9, 'pending', '2025-09-18 05:31:53', '2025-09-18 05:31:53'),
-(10, 10, 9, 'pending', '2025-09-18 05:32:32', '2025-09-18 05:32:32'),
-(11, 10, 10, 'pending', '2025-10-16 09:43:21', '2025-10-16 09:43:21');
+(10, 49, 8, 'pending', '2025-10-22 16:26:56', '2025-10-22 16:26:56'),
+(11, 49, 6, 'pending', '2025-10-22 16:49:10', '2025-10-22 16:49:10');
 
 -- --------------------------------------------------------
 
@@ -405,18 +395,11 @@ CREATE TABLE `lowongan_pekerjaan` (
   `deskripsi_pekerjaan` text NOT NULL,
   `gender` varchar(255) DEFAULT NULL,
   `pendidikan_terakhir` varchar(255) DEFAULT NULL,
-  `usia_maks` varchar(255) DEFAULT NULL,
-  `usia_min` varchar(255) DEFAULT NULL,
+  `usia` varchar(255) DEFAULT NULL,
   `nilai_pendidikan_terakhir` varchar(255) DEFAULT NULL,
   `pengalaman_kerja` varchar(255) DEFAULT NULL,
-  `pengalaman_kerja_maks` varchar(255) DEFAULT NULL,
   `keahlian_bidang_pekerjaan` varchar(255) DEFAULT NULL,
-  `bobot_domisili` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
-  `bobot_usia` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
-  `bobot_gender` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
-  `bobot_pendidikan` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
-  `bobot_nilai` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
-  `bobot_pengalaman` tinyint(3) UNSIGNED NOT NULL DEFAULT 0,
+  `paket_iklan` enum('standar','premium') NOT NULL DEFAULT 'standar',
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -426,12 +409,11 @@ CREATE TABLE `lowongan_pekerjaan` (
 -- Dumping data for table `lowongan_pekerjaan`
 --
 
-INSERT INTO `lowongan_pekerjaan` (`id`, `perusahaan_id`, `judul_lowongan`, `domisili`, `tipe_pekerjaan`, `deskripsi_pekerjaan`, `gender`, `pendidikan_terakhir`, `usia_maks`, `usia_min`, `nilai_pendidikan_terakhir`, `pengalaman_kerja`, `pengalaman_kerja_maks`, `keahlian_bidang_pekerjaan`, `bobot_domisili`, `bobot_usia`, `bobot_gender`, `bobot_pendidikan`, `bobot_nilai`, `bobot_pengalaman`, `is_active`, `created_at`, `updated_at`) VALUES
-(5, 7, 'Manager Developmen', 'Semarang', NULL, 'Mampu salto belakang', 'Laki-laki', 'SMK/SMA', '21', NULL, '85,6', '1-3 tahun', NULL, 'Menguasai 5 elemen', 0, 0, 0, 0, 0, 0, 1, '2025-08-06 05:29:00', '2025-08-21 10:51:42'),
-(6, 9, 'Service Area', 'Semarang', NULL, 'Mampu Smash kepala sekolah', 'Semua', 'S3 Profesor', '25', NULL, '3.7', '5 tahun', NULL, 'asasa', 0, 0, 0, 0, 0, 0, 1, '2025-08-06 05:40:43', '2025-08-06 05:41:07'),
-(8, 7, 'Manager Kayu aja', 'Semarang', 'Full-time', 'asasasa', 'Laki-laki', 'SMK', '23', NULL, '85,9', '1-3 tahun', NULL, 'asasa', 0, 0, 0, 0, 0, 0, 1, '2025-08-21 11:03:47', '2025-08-21 11:13:42'),
-(9, 12, 'Karyawan Administrasi', 'Semarang', 'Full-time', 'bisa menghitung uang', 'Semua', 'SMK/SMA', '20', NULL, '80', '<1 tahun', NULL, 'Jago excel, dan microsoft', 0, 0, 0, 0, 0, 0, 1, '2025-09-03 18:47:26', '2025-09-03 18:48:17'),
-(10, 12, 'AKUNTANSI DASAR', 'lamongan', 'Part-time', 'hallo', 'Laki-laki', 'SMA', NULL, '20', '3.00', '2', '3', NULL, 10, 30, 20, 10, 10, 20, 1, '2025-10-16 09:40:23', '2025-10-16 09:40:23');
+INSERT INTO `lowongan_pekerjaan` (`id`, `perusahaan_id`, `judul_lowongan`, `domisili`, `tipe_pekerjaan`, `deskripsi_pekerjaan`, `gender`, `pendidikan_terakhir`, `usia`, `nilai_pendidikan_terakhir`, `pengalaman_kerja`, `keahlian_bidang_pekerjaan`, `paket_iklan`, `is_active`, `created_at`, `updated_at`) VALUES
+(5, 7, 'Manager Developmen', 'Semarang', NULL, 'Mampu salto belakang', 'Laki-laki', 'SMK/SMA', '21', '85,6', '1-3 tahun', 'Menguasai 5 elemen', 'premium', 1, '2025-08-06 05:29:00', '2025-08-21 10:51:42'),
+(6, 9, 'Service Area', 'Semarang', NULL, 'Mampu Smash kepala sekolah', 'Semua', 'S3 Profesor', '25', '3.7', '5 tahun', 'asasa', 'premium', 1, '2025-08-06 05:40:43', '2025-08-06 05:41:07'),
+(8, 7, 'Manager Kayu aja', 'Semarang', 'Full-time', 'asasasa', 'Laki-laki', 'SMK', '23', '85,9', '1-3 tahun', 'asasa', 'standar', 1, '2025-08-21 11:03:47', '2025-08-21 11:13:42'),
+(9, 12, 'Karyawan Administrasi', 'Semarang', 'Full-time', 'bisa menghitung uang', 'Semua', 'SMK/SMA', '20', '80', '<1 tahun', 'Jago excel, dan microsoft', 'standar', 1, '2025-09-03 18:47:26', '2025-09-03 18:48:17');
 
 -- --------------------------------------------------------
 
@@ -461,7 +443,8 @@ INSERT INTO `lowongan_tersimpan` (`id`, `pelamar_id`, `lowongan_id`, `created_at
 (15, 38, 6, NULL, NULL),
 (16, 38, 7, NULL, NULL),
 (17, 51, 8, '2025-08-21 11:28:12', '2025-08-21 11:28:12'),
-(18, 51, 5, '2025-08-21 11:28:28', '2025-08-21 11:28:28');
+(18, 51, 5, '2025-08-21 11:28:28', '2025-08-21 11:28:28'),
+(20, 49, 9, '2025-10-22 16:00:03', '2025-10-22 16:00:03');
 
 -- --------------------------------------------------------
 
@@ -524,7 +507,6 @@ CREATE TABLE `pelamar_keahlian` (
 --
 
 INSERT INTO `pelamar_keahlian` (`pelamar_id`, `keahlian_id`) VALUES
-(10, 34),
 (13, 1),
 (13, 24),
 (13, 31),
@@ -654,7 +636,7 @@ INSERT INTO `profiles_pelamar` (`id`, `user_id`, `nama_lengkap`, `foto_profil`, 
 (6, 11, 'lia', NULL, '2345671829384790', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-18', 'Perempuan', '2021', NULL, NULL, NULL, NULL, '2025-07-29 12:58:19', '2025-07-29 12:58:19'),
 (7, 12, 'branzz', NULL, '2345671829384780', 'lamongan', 'lamongan', 'S1', '082328872084', '2025-07-18', 'Laki-laki', '2016', NULL, NULL, NULL, NULL, '2025-07-29 13:33:24', '2025-07-29 13:33:24'),
 (8, 13, 'abdul', NULL, '2345671829384798', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-03', 'Laki-laki', '2022', NULL, NULL, NULL, NULL, '2025-07-29 13:49:23', '2025-07-29 13:49:23'),
-(10, 15, 'akmal', NULL, '2345671829384777', 'semarang', 'semarang', 'SMA/SMK Sederajat', '082328872084', '2003-10-16', 'Laki-laki', '2009', NULL, 'Fresh Graduate', NULL, NULL, '2025-07-29 13:52:54', '2025-10-16 10:09:50'),
+(10, 15, 'akmal', NULL, '2345671829384777', 'semarang', 'semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-24', 'Laki-laki', '2009', NULL, NULL, NULL, NULL, '2025-07-29 13:52:54', '2025-07-29 13:52:54'),
 (11, 16, 'tegar', NULL, '2345671829384708', 'semarang', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-17', 'Laki-laki', '1986', NULL, NULL, NULL, NULL, '2025-07-29 13:53:53', '2025-07-29 13:53:53'),
 (12, 17, 'abel', NULL, '2345671829363539', 'banyumanik', 'Semarang', 'D3', '082328872084', '2025-07-15', 'Laki-laki', '2011', NULL, NULL, NULL, NULL, '2025-07-30 03:08:38', '2025-07-30 03:08:38'),
 (13, 18, 'merlin', NULL, '2345671829384705', 'lamongan', 'lamongan', 'S1', '082328872084', '2025-07-01', 'Perempuan', '2013', NULL, NULL, NULL, NULL, '2025-07-30 03:16:37', '2025-07-30 08:21:03'),
@@ -689,7 +671,7 @@ INSERT INTO `profiles_pelamar` (`id`, `user_id`, `nama_lengkap`, `foto_profil`, 
 (45, 66, 'mimo', NULL, '2345671829384433', 'Girikusumo', 'Demak', 'SMA/SMK Sederajat', '082328872084', '2025-08-07', 'Laki-laki', '1991', 85.50, '3-5 Tahun', NULL, NULL, '2025-08-13 12:57:21', '2025-08-13 12:57:21'),
 (46, 68, 'mumi', NULL, '2345671829384862', 'Girikusumo', 'Demak', 'SMA/SMK Sederajat', '082328872077', '2008-05-20', 'Laki-laki', '1991', 85.50, '1-3 Tahun', NULL, NULL, '2025-08-18 21:51:51', '2025-08-18 21:51:51'),
 (48, 70, 'merlina', NULL, '2345671829384444', 'Lamongan', 'Lamongan', 'S1', '082328872084', '2003-02-20', 'Perempuan', '2025', 3.78, '1-3 Tahun', NULL, NULL, '2025-08-19 03:54:54', '2025-08-19 03:54:54'),
-(49, 71, 'dutaedan', NULL, '2345671829384666', 'Girikusumo', 'Demak', 'SMA/SMK Sederajat', '082328872084', '2004-03-20', 'Laki-laki', '2023', 85.50, '1-3 Tahun', NULL, NULL, '2025-08-19 03:59:57', '2025-08-19 03:59:57'),
+(49, 71, 'dutaedan arrya', 'avatars/gtpzFQOOz2UwOcy0jnpLVjsk3ZDuOTXxNHB28MPZ.jpg', '2345671829384666', 'jalan lanan 1465', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2004-03-20', 'Laki-laki', '2022', 85.50, '1-3 Tahun', 'jago bulutangkis', 'ktp/uB0GAqcpk2Rv0OLkNwNlQsAvWQs98uHW3H6rl0Xw.jpg', '2025-08-19 03:59:57', '2025-10-27 10:48:27'),
 (50, 74, 'swardi', NULL, '3321219873816422', 'Jl.Kretek', 'Demak', 'SMA/SMK Sederajat', '081342648421', '2000-02-21', 'Laki-laki', '2024', 88.00, '1-3 Tahun', NULL, NULL, '2025-08-21 09:59:08', '2025-08-21 09:59:08'),
 (51, 75, 'Rizqi Aditia Maulana', 'avatars/hBvnmojBTpfwtjr8FsvvMRSoT5d2dQsNZne1RJjX.jpg', '3321219873816222', 'BENGKAH', 'Demak', 'SMA/SMK Sederajat', '081342648421', '2000-02-21', 'Laki-laki', '2023', 88.00, '1-3 Tahun', NULL, NULL, '2025-08-21 11:19:22', '2025-09-01 13:08:31'),
 (52, 77, 'Rizqi Aditia Maulana', NULL, '3321219873816638', 'Jalan Lanan 1465, Plamongansari', 'Semarang', 'S1', '081342648421', '2000-02-21', 'Laki-laki', '2025', 3.60, '3-5 Tahun', NULL, NULL, '2025-08-28 09:23:18', '2025-08-28 09:23:18'),
@@ -734,7 +716,8 @@ INSERT INTO `profiles_perusahaan` (`id`, `user_id`, `nama_perusahaan`, `alamat_j
 (9, 53, 'PT.VictorRacket', 'Jl.Pandansari IV', 'Semarang Utara', '50199', '088342648414', '11.345.678.8-012.102', NULL, NULL, 'logos/YjvDGNHHnmZHUYcRHNhybKCD22Ez1aAovGuQSMwN.jpg', '2025-08-06 05:37:44', '2025-08-06 05:39:00'),
 (10, 64, 'branzzstudio', 'Girikusumo', 'Demak', '59567', '08123456789', '12345', NULL, NULL, NULL, '2025-08-13 12:36:53', '2025-08-13 12:36:53'),
 (11, 72, 'RAquatic', 'Desa.krajan', 'Demak', '50199', '088342648429', '11.345.678.9-012.789', NULL, NULL, 'logos/qNkDhtMOi4DrPu9fD9qL0k2Bn8Ay5puNSsJTZpfK.jpg', '2025-08-20 15:00:48', '2025-08-25 14:22:36'),
-(12, 76, 'RAquaticus', 'Desa.krajan', 'Demak', '50199', '088342648429', '11.345.678.9-012.897', NULL, NULL, 'logos/RzmSTHavbjucOXOTpktxJWl4kNmrCagMIKutMN8w.png', '2025-08-25 14:09:04', '2025-09-03 18:48:43');
+(12, 76, 'RAquaticus', 'Desa.krajan', 'Demak', '50199', '088342648429', '11.345.678.9-012.897', NULL, NULL, 'logos/RzmSTHavbjucOXOTpktxJWl4kNmrCagMIKutMN8w.png', '2025-08-25 14:09:04', '2025-09-03 18:48:43'),
+(13, 82, 'Reinforce Speed', 'Jalan Kauman Timur Raya 12', 'Semarang', '50193', '02434543', '3374060504040000', NULL, NULL, 'logos/6snBJEioZQispPBss5V5BGA6jo78fkYBywL0k1Y3.png', '2025-10-22 14:36:21', '2025-10-22 14:40:21');
 
 -- --------------------------------------------------------
 
@@ -790,7 +773,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('NPil3rTcqsG4WZYDzRmYSRYSKx7gacpooXa8MAW3', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiS2ZrUzdrc2NZS2l1aUpvZmdVN0c5TVVoem1GNTlPbkpFOVZudEJjciI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9yYW5raW5nP2xvd29uZ2FuX2lkPTEwIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mjt9', 1760634638);
+('LvkXxgRKv6pCx0WPxOhq9Yia9n4BXX5rBU2FcWLf', 71, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36 Edg/141.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoielMzZENGc0FYcDBycnU0eHdaNnd6Z2lrRWFjYWdQZlpNSkN1M2YzTiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjcxO30=', 1761587523);
 
 -- --------------------------------------------------------
 
@@ -875,7 +858,7 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `ot
 (67, 'angkringan', 'angkringan@gmail.com', NULL, '$2y$12$ffCo0AdlwZEOKMFHMV2KUOvvS4DD6OIFUZYQkwa6OGitLr31Lj6Ty', NULL, NULL, 'umkm', NULL, '2025-08-15 07:09:18', '2025-08-15 07:09:18'),
 (68, 'mumi', 'mumi@gmail.com', NULL, '$2y$12$d.cTw8eRFLZz8xxb5d0HJuAvjA9VhosAyVrH9IaBx8QQCLvAOu6LO', NULL, NULL, 'pelamar', NULL, '2025-08-18 21:51:51', '2025-08-18 21:51:51'),
 (70, 'merlina', 'branzzgaming94@gmail.com', '2025-08-19 03:55:23', '$2y$12$An46m0T2Oa0ZGUVSc574ZurfoqFhdiwOOWNgBg0zhv0veouxAYoii', NULL, NULL, 'pelamar', NULL, '2025-08-19 03:54:54', '2025-08-19 03:55:23'),
-(71, 'dutaedan', 'dutaarryaduta98@gmail.com', '2025-08-19 04:00:15', '$2y$12$VBIAINovZLk4JsYskK0.9OBr3fFcl0sfS9U4lt0y7pyKCUaSrT59i', NULL, NULL, 'pelamar', NULL, '2025-08-19 03:59:57', '2025-08-19 04:00:15'),
+(71, 'dutaedan arrya', 'dutaarryaduta98@gmail.com', '2025-08-19 04:00:15', '$2y$12$NTFgFRxyMnnOjIVBXl03Ze8w5P94RWy9T2SisKE1oDq4W4VADjQe2', NULL, NULL, 'pelamar', NULL, '2025-08-19 03:59:57', '2025-10-22 14:27:00'),
 (72, 'RAquatic', 'ramproject02@gmail.com', NULL, '$2y$12$3BDVQRppV2eyRHIo2wYPEOYzWAWCCVWz3Owv49mMPk6qUrcZVIO06', '4604', '2025-08-20 15:10:48', 'perusahaan', NULL, '2025-08-20 15:00:48', '2025-08-20 15:00:48'),
 (73, 'Angkringan Swardi', 'swardi@gmail.com', NULL, '$2y$12$SLHjDgj5f1eBOgTmrgAilO/OYk2wHU2taCMcaHm40QwIDUT0R4Vgi', '3711', '2025-08-20 15:15:44', 'umkm', NULL, '2025-08-20 15:05:44', '2025-08-20 15:05:44'),
 (74, 'swardi', 'swardi1@gmail.com', NULL, '$2y$12$692eSHgE9mdwWNjgoXSnmO1fGDq8PzsngrGsMMgGY4OVMxeLJzfv2', '5573', '2025-08-21 10:09:08', 'pelamar', NULL, '2025-08-21 09:59:08', '2025-08-21 09:59:08'),
@@ -884,7 +867,9 @@ INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `ot
 (77, 'Rizqi Aditia Maulana', 'rizqirizqi@gmail.com', NULL, '$2y$12$lxiFT8PW7dCj.rVI0QmiyuD8Ea25yu8Ceijn0ZfTxcIAc6ZWVUrL2', '6868', '2025-08-28 09:33:18', 'pelamar', NULL, '2025-08-28 09:23:18', '2025-08-28 09:23:18'),
 (78, 'mahasiswa Aditia Maulana', 'ramtech2@gmail.com', NULL, '$2y$12$3bUyXYXrQSP31oIECvm8suMOQl0updFC5UAzuy/QkMrPToTd1/WIy', '1845', '2025-09-03 19:39:03', 'pelamar', NULL, '2025-09-03 19:29:03', '2025-09-03 19:30:08'),
 (79, 'akmal', '223220034@student.unaki.ac.id', '2025-09-18 00:38:33', '$2y$12$/.6sL/lRZt17lSEJgPWxtempiYcBKwX2wamZiuyaUj8yMdnhTCBeW', NULL, NULL, 'pelamar', NULL, '2025-09-18 00:38:10', '2025-09-18 00:38:33'),
-(80, 'duti', '223220017@student.unaki.ac.id', '2025-09-18 00:43:04', '$2y$12$niz0jZvfLTaaFdpN4rjkauRe2jGtL5aa7N8/yxrAyWkzl9V/jOpDy', NULL, NULL, 'pelamar', NULL, '2025-09-18 00:42:43', '2025-09-18 00:44:31');
+(80, 'duti', '223220017@student.unaki.ac.id', '2025-09-18 00:43:04', '$2y$12$niz0jZvfLTaaFdpN4rjkauRe2jGtL5aa7N8/yxrAyWkzl9V/jOpDy', NULL, NULL, 'pelamar', NULL, '2025-09-18 00:42:43', '2025-09-18 00:44:31'),
+(81, 'si Rodriguez', 'dutarodriguez202@gmail.com', NULL, '$2y$12$3krz3uZ/fPX5.ocXDuPA1.g8R.B/IVrZzttJdzf2x7RpdWi4Q5r4m', NULL, NULL, 'pelamar', NULL, '2025-10-21 10:35:50', '2025-10-21 10:35:50'),
+(82, 'Reinforce Speed', '223220030@student.unaki.ac.id', NULL, '$2y$12$rGW7c0Jk9wBKKZT15.RNeOZWQJhyKk1lhEu2RGUpSQ0O.Yc.6b1NG', '1357', '2025-10-22 14:46:21', 'perusahaan', NULL, '2025-10-22 14:36:21', '2025-10-22 14:36:21');
 
 --
 -- Indexes for dumped tables
@@ -1047,7 +1032,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `activity_logs`
 --
 ALTER TABLE `activity_logs`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `berita`
@@ -1095,13 +1080,13 @@ ALTER TABLE `lamaran`
 -- AUTO_INCREMENT for table `lowongan_pekerjaan`
 --
 ALTER TABLE `lowongan_pekerjaan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `lowongan_tersimpan`
 --
 ALTER TABLE `lowongan_tersimpan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -1125,7 +1110,7 @@ ALTER TABLE `profiles_pelamar`
 -- AUTO_INCREMENT for table `profiles_perusahaan`
 --
 ALTER TABLE `profiles_perusahaan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `profiles_umkm`
@@ -1137,7 +1122,7 @@ ALTER TABLE `profiles_umkm`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- Constraints for dumped tables
