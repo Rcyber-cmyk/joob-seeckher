@@ -83,49 +83,87 @@
         .hero-section .btn { padding: 0.7rem 1.4rem; font-size: 0.9rem; }
     }
 
-    /* === Carousel Berita (Lebih Simpel) === */
+    /* === Carousel Berita (Style Tema 2 + Tinggi Tetap + Bingkai Biru Muda + Konten Tengah) === */
     #beritaTerkiniLandingPage {
         position: relative;
-        height: auto; /* Tinggi otomatis */
-        min-height: 0;
-        background-color: #e9ecef; /* Background abu muda */
+        height: 55vh; /* TINGGI TETAP (sesuaikan jika perlu) */
+        min-height: 450px; /* TINGGI MINIMUM (sesuaikan jika perlu) */
+        background-color: #e9ecef; /* Background abu-abu muda luar */
         color: #343a40;
-        padding: 4rem 0; /* Padding atas bawah */
+        overflow: hidden;
+    }
+    #beritaTerkiniLandingPage .carousel-inner {
+         height: 100%;
     }
     #beritaTerkiniLandingPage .carousel-item {
+        height: 100%;
+        background-color: #E0F2F7; /* WARNA BINGKAI BIRU MUDA */
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Tengah Horizontal */
+        justify-content: center; /* Tengah Vertikal */
+        padding: 2rem;
         text-align: center;
+        /* Hapus style yang tidak perlu dipindah ke anak */
     }
+    #beritaTerkiniLandingPage .carousel-item img {
+        /* Hapus position absolute */
+        width: auto; /* Lebar otomatis */
+        max-width: 90%; /* Maksimal 90% lebar biar tidak mepet */
+        height: auto; /* Tinggi otomatis */
+        max-height: 60%; /* BATASI TINGGI GAMBAR (misal 60%) */
+        object-fit: contain; /* TAMPILKAN SELURUH GAMBAR */
+        display: block;
+        margin-left: auto; /* Paksa tengah H */
+        margin-right: auto; /* Paksa tengah H */
+        margin-bottom: 1rem; /* Jarak ke teks */
+        /* z-index: 2; */ /* Tidak perlu Z index jika static */
+    }
+
+    /* Konten teks di bawah gambar */
     #beritaTerkiniLandingPage .berita-content-landing {
-        position: static; /* Hapus posisi absolut */
-        z-index: 1; text-align: center; max-width: 800px;
-        padding: 1rem; display: block; /* Display block biasa */
-        height: auto; margin: auto;
+        /* position: static; */ /* Tidak perlu */
+        /* z-index: 3; */ /* Tidak perlu */
+        text-align: center;
+        max-width: 90%; /* Batasi lebar teks */
+        /* padding: 0; */ /* Sudah ada di parent */
+        /* height: auto; */ /* Tidak perlu */
+        margin: 0 auto; /* Tengah H (sebenarnya sudah oleh parent flex) */
+        color: #343a40;
     }
-    #beritaTerkiniLandingPage .berita-content-landing h2 {
-        font-size: 2rem; /* Ukuran font disesuaikan */ font-weight: 600; line-height: 1.3; margin-bottom: 0.5rem;
-        color: #22374e; /* Warna biru tua */
-        text-shadow: none; /* Hapus shadow */
+     #beritaTerkiniLandingPage .berita-content-landing h2 {
+        color: #22374e;
+        font-size: 1.8rem;
+        font-weight: 600;
+        text-shadow: none;
+        margin-bottom: 0.5rem;
     }
     #beritaTerkiniLandingPage .berita-content-landing p {
-        font-size: 1.1rem; margin-bottom: 1.5rem; color: #6c757d; /* Warna abu */
+        color: #495057;
+        font-size: 1rem;
         text-shadow: none;
+        margin-bottom: 1rem;
     }
+    /* Tombol Outline Biru dari Tema 2 */
     #beritaTerkiniLandingPage .berita-content-landing .btn-berita-landing {
-        background-color: transparent; color: #22374e; /* Tombol outline biru */
-        border: 2px solid #22374e; padding: 0.6rem 1.5rem; border-radius: 6px;
-        font-size: 0.9rem; font-weight: 500; transition: all 0.3s;
-        text-decoration: none; box-shadow: none; /* Hapus shadow */
+        background-color: transparent; color: #22374e;
+        border: 2px solid #22374e; padding: 0.5rem 1.2rem;
+        border-radius: 6px;
+        font-size: 0.85rem; font-weight: 500; transition: all 0.3s;
+        text-decoration: none; box-shadow: none;
+        display: inline-block; /* Pastikan tombol tidak full width */
     }
     #beritaTerkiniLandingPage .berita-content-landing .btn-berita-landing:hover {
-        background-color: #22374e; color: white; /* Hover jadi biru solid */
+        background-color: #22374e; color: white;
     }
-    /* Indikator & Kontrol Carousel */
+     /* Indikator & Kontrol (Style Tema 2) */
+    #beritaTerkiniLandingPage .carousel-indicators { z-index: 5; }
     #beritaTerkiniLandingPage .carousel-indicators button { background-color: rgba(0,0,0,0.2); }
-    #beritaTerkiniLandingPage .carousel-indicators .active { background-color: #22374e; } /* Indikator aktif biru */
-    #beritaTerkiniLandingPage .carousel-control-prev-icon, #beritaTerkiniLandingPage .carousel-control-next-icon {
-        filter: invert(20%) sepia(20%) saturate(1000%) hue-rotate(180deg) brightness(80%) contrast(90%);
-    }
-    #beritaTerkiniLandingPage .carousel-control-prev-icon, #beritaTerkiniLandingPage .carousel-control-next-icon {
+    #beritaTerkiniLandingPage .carousel-indicators .active { background-color: #22374e; }
+    #beritaTerkiniLandingPage .carousel-control-prev, #beritaTerkiniLandingPage .carousel-control-next { z-index: 5; }
+    #beritaTerkiniLandingPage .carousel-control-prev-icon,
+    #beritaTerkiniLandingPage .carousel-control-next-icon {
+        filter: invert(20%) sepia(20%) saturate(1000%) hue-rotate(180deg) brightness(80%) contrast(90%); /* Ikon gelap */
         background-color: transparent; border-radius: 0; padding: 0; box-shadow: none;
     }
 
@@ -318,42 +356,33 @@
 
     <div id="beritaTerkiniLandingPage" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3000">
         <div class="carousel-inner h-100">
-            <div class="carousel-item active">
-                <img src="{{ asset('images/gojek.png') }}" alt="Prospek Pekerjaan GOJEK">
-                <div class="berita-content-landing">
-                    <h2>Prospek Pekerjaan GOJEK<br>Beserta Gajinya</h2>
-                    <p>Temukan peluang karir menarik di ekosistem Gojek yang dinamis, mulai dari teknologi hingga operasional.</p>
-                    @auth
-                        <a href="{{ route('berita.index') }}" class="btn-berita-landing">Cari Tau Selengkapnya</a>
-                    @else
-                        <a href="{{ route('berita.index') }}" class="btn-berita-landing" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Cari Tau Selengkapnya</a>
-                    @endauth
+            @forelse ($beritaTerkini as $berita)
+                <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                    {{-- Gambar dinamis --}}
+                    <img src="{{ $berita->gambar ? asset('storage/' . $berita->gambar) : asset('images/default-news.png') }}" alt="{{ $berita->judul }}">
+                    
+                    {{-- Konten dinamis --}}
+                    <div class="berita-content-landing">
+                        <h2>{{ $berita->judul }}</h2>
+                        <p>{{ $berita->kutipan }}</p> {{-- Gunakan kutipan --}}
+                        
+                        {{-- Link tombol dinamis --}}
+                        @auth
+                            <a href="{{ route('berita.show', $berita->slug) }}" class="btn-berita-landing">Cari Tau Selengkapnya</a>
+                        @else
+                            {{-- Tetap pakai modal jika belum login --}}
+                            <a href="#" class="btn-berita-landing" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Cari Tau Selengkapnya</a>
+                        @endauth
+                    </div>
                 </div>
-            </div>
-            <div class="carousel-item">
-                <img src="{{ asset('images/event.jpg') }}" alt="Mari Bekerja Event">
-                <div class="berita-content-landing">
-                    <h2>Mari Bekerja <br>Dapatkan Sebuah Keseruan dengan para pengusaha</h2>
-                    <p>Jelajahi berbagai event dan pameran karir untuk bertemu langsung dengan calon atasan Anda.</p>
-                    @auth
-                        <a href="{{ route('berita.index') }}" class="btn-berita-landing">Cari Tahu Selengkapnya</a>
-                    @else
-                        <a href="{{ route('berita.index') }}" class="btn-berita-landing" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Cari Tahu Selengkapnya</a>
-                    @endauth
-                </div>
-            </div>
-            <div class="carousel-item">
-                <img src="{{ asset('images/webinar.jpg') }}" alt="Webinar Inovasi Digital">
-                <div class="berita-content-landing">
-                    <h2>Inovasi Digital <br>Membuka Peluang Karir Baru</h2>
-                    <p>Ikuti webinar terbaru kami untuk menambah wawasan di dunia ekonomi digital dan temukan jalur karir yang inovatif.</p>
-                    @auth
-                        <a href="{{ route('berita.index') }}" class="btn-berita-landing">Baca Selengkapnya</a>
-                    @else
-                        <a href="{{ route('berita.index') }}" class="btn-berita-landing" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Baca Selengkapnya</a>
-                    @endauth
-                </div>
-            </div>
+            @empty
+                {{-- Tampilan jika tidak ada berita sama sekali --}}
+                 <div class="carousel-item active">
+                     <div class="berita-content-landing d-flex justify-content-center align-items-center h-100">
+                         <p class="text-muted">Belum ada berita terkini.</p>
+                     </div>
+                 </div>
+            @endforelse
         </div>
         <button class="carousel-control-prev" type="button" data-bs-target="#beritaTerkiniLandingPage" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Previous</span></button>
         <button class="carousel-control-next" type="button" data-bs-target="#beritaTerkiniLandingPage" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next</span></button>

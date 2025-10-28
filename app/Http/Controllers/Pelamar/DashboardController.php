@@ -14,14 +14,13 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $pelamar = $user ? $user->profilePelamar : null;
-
-        // 1. (BARU) Mengambil 3 Perusahaan yang punya lowongan 'premium'
-        // Ini untuk bagian "Jelajahi Perusahaan"
+        // 1. Mengambil 3 Perusahaan yang punya lowongan 'premium'
         $perusahaanPremium = ProfilePerusahaan::whereHas('lowonganPekerjaan', function ($query) {
-                $query->where('paket_iklan', 'premium') // Pastikan nama kolom 'paket_iklan'
+                $query->where('paket_iklan', 'premium')
                       ->where('is_active', true);
             })
-            ->take(3) // Ambil 3 perusahaan
+            // Tidak perlu ->with() lagi
+            ->take(3) 
             ->get();
 
         // 2. (DIUBAH) Mengambil SEMUA lowongan (premium & standar) untuk slider
