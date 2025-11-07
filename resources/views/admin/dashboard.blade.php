@@ -130,8 +130,8 @@
             <a class="nav-link" href="{{ route('admin.perusahaan.index') }}"><i class="bi bi-building-fill"></i> Perusahaan</a>
             <a class="nav-link" href="#"><i class="bi bi-shop"></i> UMKM</a>
             <a class="nav-link" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
-            <a class="nav-link" href="#"><i class="bi bi-bell-fill"></i> Notifikasi</a>
-            <a class="nav-link" href="#"><i class="bi bi-gear-fill"></i> Pengaturan</a>
+            <a class="nav-link {{ Request::routeIs('admin.notifikasi.*') ? 'active' : '' }}" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a>
+            <a class="nav-link {{ Request::routeIs('admin.pengaturan.index') ? 'active' : '' }}" href="{{ route('admin.pengaturan.index') }}"><i class="bi bi-gear-fill"></i> Pengaturan</a>
         </nav>
         <div class="user-profile">
             <div class="d-flex align-items-center">

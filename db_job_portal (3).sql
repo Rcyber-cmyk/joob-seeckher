@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 16, 2025 at 07:11 PM
+-- Generation Time: Oct 27, 2025 at 01:16 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -204,16 +204,6 @@ CREATE TABLE `cache` (
   `value` mediumtext NOT NULL,
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `cache`
---
-
-INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('branzz@gmail.com|127.0.0.1', 'i:3;', 1760632958),
-('branzz@gmail.com|127.0.0.1:timer', 'i:1760632958;', 1760632958),
-('dutaarryaduta98@gmail.com|127.0.0.1', 'i:2;', 1758198481),
-('dutaarryaduta98@gmail.com|127.0.0.1:timer', 'i:1758198481;', 1758198481);
 
 -- --------------------------------------------------------
 
@@ -431,7 +421,7 @@ INSERT INTO `lowongan_pekerjaan` (`id`, `perusahaan_id`, `judul_lowongan`, `domi
 (6, 9, 'Service Area', 'Semarang', NULL, 'Mampu Smash kepala sekolah', 'Semua', 'S3 Profesor', '25', NULL, '3.7', '5 tahun', NULL, 'asasa', 0, 0, 0, 0, 0, 0, 1, '2025-08-06 05:40:43', '2025-08-06 05:41:07'),
 (8, 7, 'Manager Kayu aja', 'Semarang', 'Full-time', 'asasasa', 'Laki-laki', 'SMK', '23', NULL, '85,9', '1-3 tahun', NULL, 'asasa', 0, 0, 0, 0, 0, 0, 1, '2025-08-21 11:03:47', '2025-08-21 11:13:42'),
 (9, 12, 'Karyawan Administrasi', 'Semarang', 'Full-time', 'bisa menghitung uang', 'Semua', 'SMK/SMA', '20', NULL, '80', '<1 tahun', NULL, 'Jago excel, dan microsoft', 0, 0, 0, 0, 0, 0, 1, '2025-09-03 18:47:26', '2025-09-03 18:48:17'),
-(10, 12, 'AKUNTANSI DASAR', 'lamongan', 'Part-time', 'hallo', 'Laki-laki', 'SMA', NULL, '20', '3.00', '2', '3', NULL, 10, 30, 20, 10, 10, 20, 1, '2025-10-16 09:40:23', '2025-10-16 09:40:23');
+(10, 12, 'AKUNTANSI DASAR', 'lamongan', 'Part-time', 'hallo', 'Laki-laki', 'SMA', NULL, '21', '3.00', '2', '3', NULL, 10, 30, 20, 10, 10, 20, 1, '2025-10-16 09:40:23', '2025-10-16 10:24:00');
 
 -- --------------------------------------------------------
 
@@ -525,6 +515,7 @@ CREATE TABLE `pelamar_keahlian` (
 
 INSERT INTO `pelamar_keahlian` (`pelamar_id`, `keahlian_id`) VALUES
 (10, 34),
+(10, 48),
 (13, 1),
 (13, 24),
 (13, 31),
@@ -654,7 +645,7 @@ INSERT INTO `profiles_pelamar` (`id`, `user_id`, `nama_lengkap`, `foto_profil`, 
 (6, 11, 'lia', NULL, '2345671829384790', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-18', 'Perempuan', '2021', NULL, NULL, NULL, NULL, '2025-07-29 12:58:19', '2025-07-29 12:58:19'),
 (7, 12, 'branzz', NULL, '2345671829384780', 'lamongan', 'lamongan', 'S1', '082328872084', '2025-07-18', 'Laki-laki', '2016', NULL, NULL, NULL, NULL, '2025-07-29 13:33:24', '2025-07-29 13:33:24'),
 (8, 13, 'abdul', NULL, '2345671829384798', 'lamongan', 'lamongan', 'SMP/Sederajat', '082328872084', '2025-07-03', 'Laki-laki', '2022', NULL, NULL, NULL, NULL, '2025-07-29 13:49:23', '2025-07-29 13:49:23'),
-(10, 15, 'akmal', NULL, '2345671829384777', 'semarang', 'semarang', 'SMA/SMK Sederajat', '082328872084', '2003-10-16', 'Laki-laki', '2009', NULL, 'Fresh Graduate', NULL, NULL, '2025-07-29 13:52:54', '2025-10-16 10:09:50'),
+(10, 15, 'akmal', 'avatars/IwQt1AAGyNcg6rdRjNKT8ifr21Tn8N54ANsfqKlU.png', '2345671829384777', 'semarang', 'semarang', 'SMA/SMK Sederajat', '082328872084', '2003-10-16', 'Laki-laki', '2009', NULL, 'Fresh Graduate', NULL, NULL, '2025-07-29 13:52:54', '2025-10-16 19:49:41'),
 (11, 16, 'tegar', NULL, '2345671829384708', 'semarang', 'Semarang', 'SMA/SMK Sederajat', '082328872084', '2025-07-17', 'Laki-laki', '1986', NULL, NULL, NULL, NULL, '2025-07-29 13:53:53', '2025-07-29 13:53:53'),
 (12, 17, 'abel', NULL, '2345671829363539', 'banyumanik', 'Semarang', 'D3', '082328872084', '2025-07-15', 'Laki-laki', '2011', NULL, NULL, NULL, NULL, '2025-07-30 03:08:38', '2025-07-30 03:08:38'),
 (13, 18, 'merlin', NULL, '2345671829384705', 'lamongan', 'lamongan', 'S1', '082328872084', '2025-07-01', 'Perempuan', '2013', NULL, NULL, NULL, NULL, '2025-07-30 03:16:37', '2025-07-30 08:21:03'),
@@ -790,7 +781,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('NPil3rTcqsG4WZYDzRmYSRYSKx7gacpooXa8MAW3', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiS2ZrUzdrc2NZS2l1aUpvZmdVN0c5TVVoem1GNTlPbkpFOVZudEJjciI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NTA6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9yYW5raW5nP2xvd29uZ2FuX2lkPTEwIjt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Mjt9', 1760634638);
+('bburO0uzkfxNeo2YawiR3whcTC9sJCpBbWLGpNQd', 15, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiZ3RWU1puM09tUDV1dXJyTXZkek42c3Y0amxoNG9HTHA1R0NsOXI4UCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzQ1OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvbG9naW4vZ29vZ2xlL2NhbGxiYWNrP2F1dGh1c2VyPTAmY29kZT00JTJGMEFWR3pSMUFxMUhLWUZ5OVdwNHJ2SmV6WjFIUWRBWmZ3al94amN4M1dlV3JiR0xRYmxJUmR0MVZmeGlmaVVpTUVoWEpJNFEmcHJvbXB0PW5vbmUmc2NvcGU9ZW1haWwlMjBwcm9maWxlJTIwaHR0cHMlM0ElMkYlMkZ3d3cuZ29vZ2xlYXBpcy5jb20lMkZhdXRoJTJGdXNlcmluZm8ucHJvZmlsZSUyMG9wZW5pZCUyMGh0dHBzJTNBJTJGJTJGd3d3Lmdvb2dsZWFwaXMuY29tJTJGYXV0aCUyRnVzZXJpbmZvLmVtYWlsJnN0YXRlPU5iRUdxTm40MlE3bzJ0c1hQTURGVWZxWExNRktUYm5LNGpPaXM4bmYiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aToxNTt9', 1760669234),
+('WsDWLhu1SkvbyJ4PjBVQkWmGKD5Gcp7p9EfP6NGe', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiOXR1MzB4ZllJaWU4MGp2dDF6aEtwSU9KSjlGZGZiWGpsRnJDd0E1WSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMCI7fX0=', 1760669574);
 
 -- --------------------------------------------------------
 

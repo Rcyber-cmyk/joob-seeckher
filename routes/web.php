@@ -33,6 +33,9 @@ use App\Http\Controllers\Auth\OtpVerificationController;
 use App\Http\Controllers\MarketplaceController;
 use App\Http\Controllers\Admin\PerusahaanController as AdminPerusahaanController;
 use App\Http\Controllers\Auth\SocialLoginController; 
+use App\Http\Controllers\Admin\NotifikasiAdminController;
+use App\Http\Controllers\Admin\LowonganAdminController;
+use App\Http\Controllers\Admin\PengaturanAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -93,6 +96,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        Route::get('/notifikasi', [NotifikasiAdminController::class, 'index'])
+        ->name('notifikasi.index');
+        Route::get('/lowongan/{lowongan}', [LowonganAdminController::class, 'show'])->name('lowongan.show');
+        // INI ROUTE BARUNYA:
+        Route::get('/pengaturan', [PengaturanAdminController::class, 'index'])->name('pengaturan.index');
+        
         
         // ================= KODE DIPERBAIKI =================
         // Menggunakan alias AdminPelamarController yang sudah di-import
