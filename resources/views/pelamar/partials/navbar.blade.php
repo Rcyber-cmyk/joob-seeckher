@@ -226,11 +226,7 @@
                     {{-- JIKA PENGGUNA SUDAH LOGIN --}}
                     <div class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    
-<<<<<<< HEAD
                             {{-- KITA GANTI IKON DENGAN LOGIKA FOTO INI --}}
-=======
->>>>>>> 84dfe7a94f8eb4fdf0ff728c5d55c0dcec2315d4
                             @php
                             $profile = Auth::user()->profilePelamar; // Ambil modelnya (atau null)
                         @endphp
@@ -241,10 +237,6 @@
                         @else
                             <i class="bi bi-person-circle me-2 fs-5"></i>
                         @endif
-<<<<<<< HEAD
-=======
-                            
->>>>>>> 84dfe7a94f8eb4fdf0ff728c5d55c0dcec2315d4
                             {{-- Ini nama penggunanya, biarkan saja --}}
                             {{ Auth::user()->name }}
                         </a>
@@ -311,17 +303,11 @@
                             <img src="{{ asset('storage/' . $profileMobile->foto_profil) }}" {{-- Gunakan variabel $profileMobile --}}
                                  alt="Foto Profil" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover; border: 2px solid rgba(255, 255, 255, 0.5);">
                         @else
-<<<<<<< HEAD
-                            {{-- ... ikon fallback ... --}}
-                        @endif
-=======
                                 {{-- Tampilkan gambar default jika tidak ada foto --}}
                                 <div class="me-3" style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
                                     <i class="bi bi-person-circle text-white" style="font-size: 2.5rem;"></i> {{-- Ukuran ikon disesuaikan --}}
                                 </div>
                             @endif
->>>>>>> 84dfe7a94f8eb4fdf0ff728c5d55c0dcec2315d4
-                            
                             {{-- Bagian Nama dan Email --}}
                             <div class="d-flex flex-column me-auto">
                                 <span class="text-white fw-bold">{{ Auth::user()->name }}</span>
