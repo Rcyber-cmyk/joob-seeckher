@@ -117,17 +117,30 @@
         margin-left: auto; /* Paksa tengah H */
         margin-right: auto; /* Paksa tengah H */
         margin-bottom: 1rem; /* Jarak ke teks */
+<<<<<<< HEAD
         /* z-index: 2; / / Tidak perlu Z index jika static */
+=======
+        /* z-index: 2; */ /* Tidak perlu Z index jika static */
+>>>>>>> 84dfe7a94f8eb4fdf0ff728c5d55c0dcec2315d4
     }
 
     /* Konten teks di bawah gambar */
     #beritaTerkiniLandingPage .berita-content-landing {
+<<<<<<< HEAD
         /* position: static; / / Tidak perlu */
         /* z-index: 3; / / Tidak perlu */
         text-align: center;
         max-width: 90%; /* Batasi lebar teks */
         /* padding: 0; / / Sudah ada di parent */
         /* height: auto; / / Tidak perlu */
+=======
+        /* position: static; */ /* Tidak perlu */
+        /* z-index: 3; */ /* Tidak perlu */
+        text-align: center;
+        max-width: 90%; /* Batasi lebar teks */
+        /* padding: 0; */ /* Sudah ada di parent */
+        /* height: auto; */ /* Tidak perlu */
+>>>>>>> 84dfe7a94f8eb4fdf0ff728c5d55c0dcec2315d4
         margin: 0 auto; /* Tengah H (sebenarnya sudah oleh parent flex) */
         color: #343a40;
     }
