@@ -187,18 +187,6 @@
                 @endforeach
             </ul>
         </div>
-        {{-- ======================= AKHIR BLOK DETAIL E-RANKING ======================= --}}
-
-        <div class="dashboard-section p-4 h-100">
-            <h5 class="fw-bold mb-3"><i class="bi bi-star me-2"></i> Keahlian</h5>
-             <div class="d-flex flex-wrap gap-2 mb-4">
-                @forelse ($pelamar->keahlian as $keahlian)
-                    <span class="badge-skill">{{ $keahlian->nama_keahlian }}</span>
-                @empty
-                    <span class="text-muted">Tidak ada keahlian yang dicantumkan.</span>
-                @endforelse
-            </div>
-        </div>
     </div>
 </div>
 @endsection

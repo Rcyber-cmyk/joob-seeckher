@@ -39,16 +39,16 @@
                         <a class="nav-link dropdown-toggle text-white d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     
                             {{-- KITA GANTI IKON DENGAN LOGIKA FOTO INI --}}
-                            @if(Auth::user()->pelamar && Auth::user()->pelamar->foto_profil)
-                                {{-- Jika pelamar punya foto profil, tampilkan fotonya --}}
-                                <img src="{{ asset('storage/' . Auth::user()->pelamar->foto_profil) }}" 
-                                     alt="Foto" class="rounded-circle me-2" 
-                                     style="width: 32px; height: 32px; object-fit: cover;">
-                            @else
-                                {{-- Jika tidak punya, tampilkan ikon default --}}
-                                <i class="bi bi-person-circle me-2 fs-5"></i>
-                            @endif
-                            
+                            @php
+                            $profile = Auth::user()->profilePelamar; // Ambil modelnya (atau null)
+                        @endphp
+                        @if($profile && $profile->foto_profil) {{-- Gunakan variabel $profile --}}
+                            <img src="{{ asset('storage/' . $profile->foto_profil) }}" {{-- Gunakan variabel $profile --}}
+                                 alt="Foto" class="rounded-circle me-2" 
+                                 style="width: 32px; height: 32px; object-fit: cover;">
+                        @else
+                            <i class="bi bi-person-circle me-2 fs-5"></i>
+                        @endif
                             {{-- Ini nama penggunanya, biarkan saja --}}
                             {{ Auth::user()->name }}
                         </a>
@@ -108,15 +108,15 @@
                         {{-- ================================================ --}}
                         <div class="user-profile d-flex align-items-center">
                             {{-- Logika untuk menampilkan foto profil pelamar --}}
-                            @if (Auth::user()->pelamar && Auth::user()->pelamar->foto_profil)
-                                {{-- Tampilkan foto jika ada --}}
-                                <img src="{{ asset('storage/' . Auth::user()->pelamar->foto_profil) }}"
-                                     alt="Foto Profil" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
-                            @else
-                                {{-- Tampilkan gambar default jika tidak ada foto --}}
-                                <img src="{{ asset('images/default-profile.png') }}" {{-- Ganti ini jika nama file Anda beda --}}
-                                     alt="Foto Default" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover;">
-                            @endif
+                            @php
+                            $profileMobile = Auth::user()->profilePelamar; // Ambil modelnya (atau null)
+                        @endphp
+                        @if ($profileMobile && $profileMobile->foto_profil) {{-- Gunakan variabel $profileMobile --}}
+                            <img src="{{ asset('storage/' . $profileMobile->foto_profil) }}" {{-- Gunakan variabel $profileMobile --}}
+                                 alt="Foto Profil" class="rounded-circle me-3" style="width: 50px; height: 50px; object-fit: cover; border: 2px solid rgba(255, 255, 255, 0.5);">
+                        @else
+                            {{-- ... ikon fallback ... --}}
+                        @endif
                             
                             {{-- Bagian Nama dan Email --}}
                             <div class="d-flex flex-column me-auto">

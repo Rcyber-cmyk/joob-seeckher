@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Beranda Perusahaan - Messari</title>
 
     <!-- Bootstrap & Icon -->
@@ -18,6 +18,8 @@
             background: #f0f2f5;
             color: #333;
             overflow-x: hidden;
+            background-color: #f0f2f5;
+            -webkit-tap-highlight-color: transparent;
         }
 
         /* --- Navbar Styles --- */
@@ -358,6 +360,36 @@
                 margin-bottom: 0 !important;
                 padding-right: 1rem;
                 padding-left: 1rem;
+            }
+            /* --- iOS Safari Fixes --- */
+
+            /* 1️⃣ Pastikan layout tidak terpotong oleh notch (safe area) */
+            body {
+                padding-top: env(safe-area-inset-top);
+                padding-left: env(safe-area-inset-left);
+                padding-right: env(safe-area-inset-right);
+            }
+
+            /* 2️⃣ Perbaiki scroll bouncing di iOS */
+            html, body {
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
+            }
+
+            /* 3️⃣ Perbaiki tampilan font & ukuran pada Safari */
+            body, button, input, select, textarea {
+                -webkit-text-size-adjust: 100%;
+            }
+
+            /* 4️⃣ Perbaiki bug border-radius dan shadow Safari */
+            img, video {
+                -webkit-mask-image: -webkit-radial-gradient(white, black);
+            }
+
+            /* 5️⃣ Perbaiki posisi hero image di Safari */
+            .hero-section img {
+                transform: translateZ(0);
+                will-change: transform;
             }
         }
     </style>
