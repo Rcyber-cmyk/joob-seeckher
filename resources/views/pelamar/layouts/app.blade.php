@@ -17,6 +17,12 @@
             background-color: #f0f2f5; 
             color: #333;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        main {
+            flex: 1 0 auto;
         }
 
         /* --- Navbar Styles --- */
@@ -64,6 +70,7 @@
             color: white; 
             width: 100%; 
             padding: 4rem 0; 
+            flex-shrink: 0;
         }
         footer.footer ul { 
             list-style-type: none; 
