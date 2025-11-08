@@ -30,6 +30,9 @@
         .navbar-nav .highlight-text { color: #071b2f !important; font-weight: bold; }
          #offcanvasNavbar.offcanvas {
             background-color: #ff7a00 !important;
+            width: 70% !important;
+            max-width: 320px;
+            box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
         }
         #offcanvasNavbar .offcanvas-header {
             background-color: #ff7a00 !important;
@@ -96,6 +99,9 @@
         #offcanvasNavbar .offcanvas-buttons .btn-dark:hover {
             background-color: #0A2C4FFF !important;
         }
+        #offcanvas-backdrop.show {
+            opacity: 0.3 !important; /* agar tetap bisa lihat konten di belakang */
+        }
 
         @media (max-width: 768px) {
             .navbar .ms-auto { display: none !important; }
@@ -120,16 +126,18 @@
             background-color: #ff7a00;
             color: white;
         }
-        .hero-section h1 { font-size: 3rem; font-weight: 800; line-height: 1.3; }
-        .hero-section p { font-size: 1.2rem; }
+        .hero-section h1 { font-size: 2.5rem; font-weight: 800; line-height: 1.3; }
+        .hero-section p { font-size: 1.4rem; line-height: 1.3;}
         .hero-img { max-width: 350px; height: auto; filter: drop-shadow(0 0 15px rgba(0,0,0,0.3)); }
 
         /* --- Main Content Wrapper --- */
         .main-content { background: white; color: black; padding-top: 4rem; padding-bottom: 4rem; }
         .main-content h4 { color: #ff7b00; font-weight: bold; margin-bottom: 2rem; }
         .main-content h4 img { vertical-align: middle; height: 50px; margin-right: 10px; }
+        .main-content h1 { color: #ff7b00; font-weight: bold; margin-bottom: 1rem; font-size: 1.5rem }
+        .main-content p { color: #000000FF; margin-bottom: 1rem; font-size: 1rem }
         .info-section .card { border: none; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 1.5rem; text-align: center; background-color: #f8f9fa; color: #333; height: 100%; }
-        .info-section h2 { color: #001f3f; font-weight: bold; }
+        .info-section h6 { color: #001f3f; font-weight: bold; }
         .info-section p.fw-semibold { color: #ff7b00; font-size: 1.1rem; }
         .info-section .rounded-circle { background-color: #ff7b00 !important; color: white !important; width: 50px; height: 50px; font-weight: bold; font-size: 1.5rem; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; }
         .info-section .fa-hands-helping { color: #ff7b00 !important; font-size: 2.5rem; margin-bottom: 10px;}
@@ -196,8 +204,8 @@
 
             /* Gaya untuk kolom teks/tombol (kolom pertama) */
             .hero-section .col-md-6:first-child {
-                flex: 0 0 60% !important; /* Memaksa lebar 50% */
-                max-width: 60% !important;
+                flex: 0 0 50% !important; /* Memaksa lebar 50% */
+                max-width: 50% !important;
                 text-align: left !important; /* Teks rata kiri */
                 display: flex;
                 flex-direction: column;
@@ -220,13 +228,13 @@
             }
 
             .hero-section h1 {
-                font-size: 1rem;
-            }
-            .hero-section p {
                 font-size: 0.5rem;
             }
+            .hero-section p {
+                font-size: 0.4rem;
+            }
             .hero-img {
-                max-width: 80%;
+                max-width: 150%;
             }
             .hero-section .mt-3 { /* Div yang berisi tombol-tombol */
                 display: flex;
@@ -238,21 +246,42 @@
             .hero-section .mt-3 .btn {
                 width: 40% !important; /* Tombol mengambil lebar sesuai kontennya */
             }
+            .hero-section .btn-navy {
+                width: 80%;          /* tombol lebih lebar agar nyaman di-sentuh */
+                font-size: 0.4rem;   /* sedikit lebih kecil */
+                padding: 0.4rem 0.8rem;
+                border-radius: 5px;
+            }
         }
 
         /* Penyesuaian Main Content untuk Mobile */
-        @media (max-width: 767.98px) {
+        @media (max-width: 700.98px) {
             .main-content .container {
                 padding-left: 1rem;
                 padding-right: 1rem;
             }
             .main-content h4 {
-                font-size: 1.4rem;
+                font-size: 1rem;
                 text-align: center;
                 justify-content: center !important;
             }
             .main-content h4 img {
-                height: 40px !important;
+                height: 30px !important;
+            }
+            .main-content h1 {
+                font-size: 0.75rem;
+                text-align: center;
+                justify-content: center !important;
+            }
+            .main-content p {
+                font-size: 0.5rem;
+                text-align: center;
+                justify-content: center !important;
+            }
+            .main-content h6 {
+                font-size: 0.75rem;
+                text-align: center;
+                justify-content: center !important;
             }
         }
 
@@ -453,15 +482,12 @@
                 </div>
                 <div class="offcanvas-body">
                     <ul class="navbar-nav justify-content-start flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a class="nav-link {{ Request::is('/') || Request::is('perusahaan') ? 'highlight-text' : '' }}" href="#">Beranda</a>
-                        </li>
                         @auth
                         <li class="nav-item">
                             <a class="nav-link {{ Request::is('/') || Request::is('perusahaan') ? 'highlight-text' : '' }}" href="{{ Auth::user()->role === 'pelamar' ? route('pelamar.profile.edit') : (Auth::user()->role === 'perusahaan' ? route('perusahaan.profile.edit') : route('admin.profile.edit')) }}">Profile Perusahaan</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('marketplace.index') }}" class="nav-link">MarketPlace</a>
+                            <a class="nav-link {{ Request::is('/') || Request::is('perusahaan') ? 'highlight-text' : '' }}" href="{{ route('marketplace.index') }}" class="nav-link">MarketPlace</a>
                         </li>
                     </ul>
                     <div class="mt-auto">
@@ -496,7 +522,7 @@
                                 YANG TEPAT UNTUK <br>
                                 PERUSAHAAN ANDA
                             </h1>
-                            <p class="text-light mb-2" style="font-size: 12px;">Dapatkan akses ke ribuan pelamar berkualitas yang siap bergabung dengan tim Anda.</p>
+                            <p class="text-light mb-2">Dapatkan akses ke ribuan pelamar berkualitas yang siap bergabung dengan tim Anda.</p>
                             <div class="mt-1">
                             <a href="{{ route('perusahaan.kandidat-pelamar.index') }}" class="btn btn-navy">Dashboard Perusahaan</a>
                             </div>
@@ -517,7 +543,7 @@
                                 YANG TEPAT UNTUK <br>
                                 PERUSAHAAN ANDA
                             </h1>
-                            <p class="text-light mb-2" style="font-size: 14px;">Daftarkan Perusahaan Anda Disini</p>
+                            <p class="text-light mb-2">Daftarkan Perusahaan Anda Disini</p>
                             <div class="mt-3">
                                 <a href="{{ route('login') }}" class="btn btn-outline-light me-3">MASUK</a>
                                 <a href="{{ route('register') }}" class="btn btn-navy">DAFTAR</a>
@@ -538,19 +564,19 @@
                     <div class="row justify-content-center align-items-center mb-5 g-4" data-aos="zoom-in" data-aos-delay="200">
                         <div class="col-md-4">
                             <h2 class="fw-bold text-primary">250+</h2>
-                            <p class="fw-semibold">Perusahaan Terdaftar</p>
+                            <h1 class="fw-semibold">Perusahaan Terdaftar</h1>
                             <p class="text-muted small">Lebih dari 250 perusahaan telah bergabung di platform kami.</p>
                         </div>
                         <div class="col-md-4">
                             <div class="rounded-circle bg-warning text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px; font-weight: bold;">1</div>
-                            <p class="fw-semibold">Pilihan no.1 untuk pencari kerja</p>
+                            <h1 class="fw-semibold">Pilihan no.1 untuk pencari kerja</h1>
                             <p class="text-muted small">Dikenal sebagai platform pilihan utama bagi para pencari kerja untuk menemukan peluang terbaik.</p>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-2">
                                 <i class="fa-solid fa-hands-helping fa-2x text-warning"></i>
                             </div>
-                            <p class="fw-semibold">Siap membantu</p>
+                            <h1 class="fw-semibold">Siap membantu</h1>
                             <p class="text-muted small">Hubungi kontak tertera untuk mengajukan pertanyaan</p>
                         </div>
                     </div>

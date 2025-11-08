@@ -224,7 +224,7 @@
                     </p>
                 </div>
                 <div class="mt-auto w-100">
-                    <a href="{{ route('perusahaan') }}" class="btn btn-outline-primary w-100">Kembali ke Dashboard</a>
+                    <a href="{{ route('perusahaan') }}" class="btn btn-outline-primary w-100">Kembali</a>
                 </div>
             </div>
 
