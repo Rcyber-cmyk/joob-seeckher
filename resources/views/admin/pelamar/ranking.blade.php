@@ -92,8 +92,29 @@
         .sidebar-overlay.active { display: block; }
         
         /* === Header & Components === */
-        .main-content { padding: 2.5rem; }
-        .page-header { margin-bottom: 2.5rem; }
+        
+        /* ========================================
+         == PERUBAHAN CSS UNTUK HEADER STICKY ===
+         ========================================
+        */
+        .main-content { 
+            padding: 2.5rem; 
+            padding-top: 0; /* Hapus padding atas */
+        }
+        
+        .page-header { 
+            margin-bottom: 0; /* Hapus margin-bottom */
+            position: sticky; /* BUAT HEADER STICKY */
+            top: 0;
+            z-index: 1050; 
+            background-color: var(--bg-main); 
+            padding: 2.5rem; /* Pindahkan padding dari main-content ke sini */
+            border-bottom: 1px solid #e2e8f0;
+        }
+        /* ========================================
+         == AKHIR PERUBAHAN CSS 
+         ========================================
+        */
          
         /* === PAGE-SPECIFIC STYLING (Tetap Sama) === */
         .table-card, .criteria-card, .selection-card {
@@ -182,12 +203,17 @@
         /* ==   STYLE RESPONSIVE MOBILE BARU   == */
         /* ================================== */
         @media (max-width: 767.98px) {
+            /* PERUBAHAN CSS MOBILE (HEADER STICKY) */
             .main-content {
-                padding: 1rem; 
+                padding: 1.5rem; 
+                padding-top: 0;
             }
             .page-header {
-                margin-bottom: 1.5rem;
+                padding: 1.5rem 1rem; 
+                margin-bottom: 0;
             }
+            /* AKHIR PERUBAHAN CSS MOBILE */
+
             .page-header h2 {
                 font-size: 1.25rem;
             }
@@ -197,36 +223,35 @@
                 padding: 1rem;
             }
             
-            /* --- INI ADALAH STYLE TABEL RESPONSIf BARU (STACKED) --- */
+            /* --- STYLE TABEL "STACKED CARD" (SUDAH BENAR) --- */
             .table-card .table thead {
-                display: none; /* 1. Sembunyikan header tabel */
+                display: none; 
             }
             .table-card .table tbody,
             .table-card .table tr,
             .table-card .table td {
-                display: block; /* 2. Buat menumpuk */
+                display: block; 
                 width: 100%;
             }
             .table-card .table tr {
-                margin-bottom: 1rem; /* 3. Beri jarak antar kartu */
+                margin-bottom: 1rem; 
                 border: 1px solid #e2e8f0;
                 border-radius: var(--default-border-radius);
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             }
             .table-card .table tbody tr:nth-of-type(even) {
-                background-color: var(--white); /* Hilangkan zebra di mobile */
+                background-color: var(--white); 
             }
             
             .table-card .table td {
-                padding: 1rem 1.25rem; /* Padding baru untuk 'sel' kartu */
+                padding: 1rem 1.25rem; 
                 border-bottom: 1px solid #f1f5f9;
-                text-align: left; /* Konten rata kiri */
+                text-align: left; 
             }
             .table-card .table td:last-child {
                 border-bottom: none;
             }
 
-            /* 4. Buat label dari data-label, tampilkan DI ATAS konten */
             .table-card .table td:before {
                 content: attr(data-label);
                 display: block;
@@ -234,34 +259,27 @@
                 font-size: 0.8rem;
                 color: var(--slate);
                 text-transform: uppercase;
-                margin-bottom: 0.25rem; /* Jarak antara label dan konten */
+                margin-bottom: 0.25rem; 
             }
             
-            /* --- Pengecualian & Perbaikan Tampilan --- */
-
-            /* Tombol Aksi: Rata Kanan */
+            /* --- Pengecualian & Perbaikan Tampilan (SUDAH BENAR) --- */
             .table-card .table td[data-label="Aksi"] {
                 text-align: right;
             }
-            /* Sembunyikan label untuk Aksi */
             .table-card .table td[data-label="Aksi"]:before {
                 display: none;
             }
-
-            /* Peringkat: Sembunyikan label, atur padding */
             .table-card .table td[data-label="Peringkat"]:before {
                 display: none;
             }
             .table-card .table td[data-label="Peringkat"] {
                  padding: 1rem 1.25rem 0 1.25rem; 
             }
-
-             /* Rincian Skor: Sembunyikan label, atur padding */
             .table-card .table td[data-label="Rincian Skor"]:before {
                  display: none;
             }
-             .table-card .table td[data-label="Rincian Skor"] {
-                text-align: center; /* Tombol "Lihat Rincian" bagus di tengah */
+            .table-card .table td[data-label="Rincian Skor"] {
+                text-align: center; 
             }
         }
     </style>
@@ -298,17 +316,17 @@
     </aside>
 
     <main class="main-wrapper">
+        
+        <header class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="h4 mb-0 fw-bold">Auto <span style="color: var(--orange);">Ranking</span></h2>
+                <p class="text-secondary small mb-0">Lihat pelamar dengan mudah berdasarkan kecocokan lowongan.</p>
+            </div>
+            <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
+                <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
+            </button>
+        </header>
         <div class="main-content">
-            <header class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2 class="h4 mb-0 fw-bold">Auto <span style="color: var(--orange);">Ranking</span></h2>
-                    <p class="text-secondary small mb-0">Lihat pelamar dengan mudah berdasarkan kecocokan lowongan.</p>
-                </div>
-                <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
-                    <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
-                </button>
-            </header>
-
             <div class="selection-card mb-4">
                 <form action="{{ route('admin.pelamar.ranking') }}" method="GET">
                     <div class="mb-0">

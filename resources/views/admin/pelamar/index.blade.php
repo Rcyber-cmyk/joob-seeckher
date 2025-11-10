@@ -28,7 +28,7 @@
             overflow-x: hidden;
         }
 
-        /* --- CSS Sidebar, Wrapper, Header (SAMA SEPERTI SEBELUMNYA) --- */
+        /* --- CSS Sidebar, Wrapper (SAMA) --- */
         .sidebar {
             width: var(--sidebar-width);
             background-image: linear-gradient(180deg, var(--orange-dark) 0%, var(--orange) 100%);
@@ -106,6 +106,8 @@
                 box-shadow: 0 0 40px rgba(0,0,0,0.3);
             }
         }
+        
+        /* --- Header --- */
         .main-header {
             background-color: var(--white);
             padding: 1.25rem 2.5rem;
@@ -113,6 +115,18 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+
+            /* ========================================
+             == PERUBAHAN CSS UNTUK HEADER STICKY ===
+             ========================================
+            */
+            position: sticky;
+            top: 0;
+            z-index: 1050; 
+            /* ========================================
+             == AKHIR PERUBAHAN CSS 
+             ========================================
+            */
         }
         .main-header .page-title h2 {
             font-size: 1.5rem;
@@ -123,6 +137,8 @@
             color: var(--slate);
             margin-bottom: 0;
         }
+        
+        /* --- Konten Lainnya (SAMA) --- */
         .table-card {
              background-color: var(--white);
              border-radius: var(--default-border-radius);
@@ -148,8 +164,6 @@
             background-color: #1e293b;
             border-color: #1e293b;
         }
-
-        /* --- CSS STYLING TABEL (SAMA SEPERTI SEBELUMNYA) --- */
         .table-custom {
             border-collapse: collapse;
             width: 100%;
@@ -195,8 +209,6 @@
             opacity: 1;
         }
         .progress { height: 0.5rem; background-color: #e9ecef; }
-
-        /* --- CSS MODAL (SAMA SEPERTI SEBELUMNYA) --- */
         .modal-profile .modal-content { border-radius: var(--default-border-radius); border: none; }
         .modal-profile-header {
             background-image: linear-gradient(135deg, var(--dark-blue) 0%, #1e293b 100%);
@@ -220,52 +232,52 @@
 
 
         /* ================================== */
-        /* ==   STYLE RESPONSIVE MOBILE BARU   == */
+        /* ==   STYLE RESPONSIVE MOBILE (SUDAH BENAR)   == */
         /* ================================== */
         @media (max-width: 767.98px) {
             .main-header {
-                padding: 1rem; /* Kurangi padding header */
+                padding: 1rem; 
+                /* Otomatis sticky karena sudah di-set di aturan .main-header utama */
             }
             .main-header .page-title h2 {
-                font-size: 1.25rem; /* Kecilkan font header */
+                font-size: 1.25rem; 
             }
             .main-wrapper main.p-4 {
-                padding: 1rem !important; /* Kurangi padding konten utama */
+                padding: 1rem !important; 
             }
             .table-card {
-                padding: 0.5rem; /* Kurangi padding kartu tabel */
+                padding: 0.5rem; 
             }
 
-            /* --- INI ADALAH STYLE TABEL RESPONSIf BARU (STACKED) --- */
+            /* --- STYLE TABEL "STACKED CARD" (SUDAH BENAR) --- */
             .table-custom thead {
-                display: none; /* 1. Sembunyikan header tabel */
+                display: none; 
             }
             .table-custom tbody,
             .table-custom tr,
             .table-custom td {
-                display: block; /* 2. Buat menumpuk */
+                display: block; 
                 width: 100%;
             }
             .table-custom tr {
-                margin-bottom: 1rem; /* 3. Beri jarak antar kartu */
+                margin-bottom: 1rem; 
                 border: 1px solid #e2e8f0;
                 border-radius: var(--default-border-radius);
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             }
             .table-custom tbody tr:nth-of-type(even) {
-                background-color: var(--white); /* Hilangkan zebra di mobile */
+                background-color: var(--white); 
             }
             
             .table-custom td {
-                padding: 1rem 1.25rem; /* Padding baru untuk 'sel' kartu */
+                padding: 1rem 1.25rem; 
                 border-bottom: 1px solid #f1f5f9;
-                text-align: left; /* Konten rata kiri */
+                text-align: left; 
             }
             .table-custom td:last-child {
                 border-bottom: none;
             }
 
-            /* 4. Buat label dari data-label, tampilkan DI ATAS konten */
             .table-custom td:before {
                 content: attr(data-label);
                 display: block;
@@ -273,12 +285,10 @@
                 font-size: 0.8rem;
                 color: var(--slate);
                 text-transform: uppercase;
-                margin-bottom: 0.25rem; /* Jarak antara label dan konten */
+                margin-bottom: 0.25rem; 
             }
             
-            /* --- Pengecualian & Perbaikan Tampilan --- */
-
-            /* Tombol Aksi: Selalu terlihat & Rata Kanan */
+            /* --- Pengecualian & Perbaikan Tampilan (SUDAH BENAR) --- */
             .action-buttons {
                 opacity: 1;
                 text-align: right;
@@ -286,25 +296,18 @@
             .table-custom td[data-label="Aksi"] {
                 text-align: right;
             }
-            /* Sembunyikan label untuk Aksi */
             .table-custom td[data-label="Aksi"]:before {
                 display: none;
             }
-
-            /* Checkbox: Sembunyikan label & atur padding */
             .table-custom td[data-label="Pilih"]:before {
                 display: none;
             }
             .table-custom td[data-label="Pilih"] {
-                padding: 1rem 1.25rem 0 1.25rem; /* Padding di atas, hapus di bawah */
+                padding: 1rem 1.25rem 0 1.25rem; 
             }
-
-            /* Status: Buat rata kiri (karena kontennya badge) */
             .table-custom td[data-label="Status"] {
                 text-align: left;
             }
-            
-            /* Skor: Buat rata kiri (karena kontennya badge) */
             .table-custom td[data-label="Skor"] {
                 text-align: left;
             }

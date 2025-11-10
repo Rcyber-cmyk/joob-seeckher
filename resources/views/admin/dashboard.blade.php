@@ -30,7 +30,7 @@
             background-color: var(--bg-main);
             font-family: 'Poppins', sans-serif;
             color: var(--dark-blue);
-            overflow-x: hidden; /* Mencegah horizontal scroll secara paksa */
+            overflow-x: hidden; 
         }
 
         /* === Sidebar (Desktop & Mobile) === */
@@ -88,8 +88,30 @@
         .sidebar-overlay.active { display: block; }
         
         /* === Header & Components === */
-        .main-content { padding: 2.5rem; }
-        .page-header { margin-bottom: 2.5rem; }
+        
+        /* ========================================
+         == PERUBAHAN CSS UNTUK HEADER STICKY ===
+         ========================================
+        */
+        .main-content { 
+            padding: 2.5rem;
+            padding-top: 0; /* Hapus padding atas agar menempel */
+        }
+        
+        .page-header { 
+            margin-bottom: 0; /* Hapus margin-bottom */
+            position: sticky; /* BUAT HEADER STICKY */
+            top: 0;
+            z-index: 1050; /* Di bawah overlay (1099) tapi di atas konten */
+            background-color: var(--bg-main); /* Beri background agar konten tidak tembus */
+            padding: 2.5rem; /* Pindahkan padding dari main-content ke sini */
+            border-bottom: 1px solid #e2e8f0; /* Garis pemisah (opsional) */
+        }
+        /* ========================================
+         == AKHIR PERUBAHAN CSS 
+         ========================================
+        */
+        
         .card-base {
             background-color: var(--white);
             border-radius: var(--default-border-radius);
@@ -123,20 +145,25 @@
         /* ==   STYLE RESPONSIVE MOBILE   == */
         /* ================================== */
         @media (max-width: 767.98px) {
+            /* PERUBAHAN CSS MOBILE */
             .main-content {
-                padding: 1rem; /* Kurangi padding utama */
+                padding: 1rem; 
+                padding-top: 0; /* Hapus padding atas */
             }
             .page-header {
-                margin-bottom: 1.5rem;
+                padding: 1.5rem 1rem; /* Sesuaikan padding header mobile */
+                margin-bottom: 0;
             }
+            /* AKHIR PERUBAHAN CSS MOBILE */
+
             .page-header h2 {
-                font-size: 1.25rem; /* Kecilkan judul utama */
+                font-size: 1.25rem; 
             }
             .card-base {
-                padding: 1.25rem; /* Kurangi padding di semua kartu */
+                padding: 1.25rem; 
             }
             .stat-card h3 {
-                font-size: 1.8rem; /* Kecilkan angka statistik */
+                font-size: 1.8rem; 
             }
             .stat-card .icon {
                 width: 50px;
@@ -146,39 +173,38 @@
 
             /* --- Magic for Responsive Table --- */
             .table-custom thead {
-                display: none; /* 1. Sembunyikan header tabel asli */
+                display: none; 
             }
             .table-custom tbody,
             .table-custom tr,
             .table-custom td {
-                display: block; /* 2. Ubah semua elemen jadi block, agar menumpuk ke bawah */
+                display: block; 
                 width: 100%;
             }
             .table-custom tr {
-                margin-bottom: 1rem; /* 3. Beri jarak antar baris (yang sekarang jadi kartu) */
+                margin-bottom: 1rem; 
                 border-radius: var(--default-border-radius) !important;
                 box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07);
             }
             .table-custom td {
                 padding: 0.75rem 1rem;
-                text-align: right; /* 4. Rata kanan untuk data */
+                text-align: right; 
                 position: relative;
-                padding-left: 50%; /* 5. Beri ruang di kiri untuk label */
+                padding-left: 50%; 
                 border: none;
                 border-bottom: 1px solid #f1f5f9;
             }
             .table-custom td:last-child {
-                border-bottom: none; /* Hapus border di elemen terakhir */
+                border-bottom: none; 
             }
             .table-custom td:before {
-                /* 6. Tambahkan label menggunakan pseudo-element */
                 content: attr(data-label);
                 position: absolute;
                 left: 1rem;
                 width: 45%;
                 padding-right: 10px;
                 white-space: nowrap;
-                text-align: left; /* Rata kiri untuk label */
+                text-align: left; 
                 font-weight: 600;
                 color: var(--dark-blue);
             }
@@ -214,17 +240,17 @@
     </aside>
 
     <main class="main-wrapper">
-        <div class="main-content">
-            <div class="page-header d-flex justify-content-between align-items-center">
-                <div>
-                    <h2 class="h4 mb-0 fw-bold">Selamat Datang, <span style="color: var(--orange);">Admin</span>!</h2>
-                    <p class="text-secondary small mb-0">Kelola proses rekrutmen Anda dengan mudah.</p>
-                </div>
-                <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
-                    <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
-                </button>
+        
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="h4 mb-0 fw-bold">Selamat Datang, <span style="color: var(--orange);">Admin</span>!</h2>
+                <p class="text-secondary small mb-0">Kelola proses rekrutmen Anda dengan mudah.</p>
             </div>
-
+            <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
+                <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
+            </button>
+        </div>
+        <div class="main-content">
             {{-- Stat Cards --}}
             <div class="row g-4 mb-4">
                 {{-- Total Pelamar --}}

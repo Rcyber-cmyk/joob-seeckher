@@ -88,8 +88,30 @@
         .sidebar-overlay.active { display: block; }
         
         /* === Header & Components === */
-        .main-content { padding: 2.5rem; }
-        .page-header { margin-bottom: 2.5rem; }
+        
+        /* ========================================
+         == PERUBAHAN CSS UNTUK HEADER STICKY ===
+         ========================================
+        */
+        .main-content { 
+            padding: 2.5rem; 
+            padding-top: 0; /* Hapus padding atas */
+        }
+        
+        .page-header { 
+            margin-bottom: 0; /* Hapus margin-bottom */
+            position: sticky; /* BUAT HEADER STICKY */
+            top: 0;
+            z-index: 1050; 
+            background-color: var(--bg-main); 
+            padding: 2.5rem; /* Pindahkan padding dari main-content ke sini */
+            border-bottom: 1px solid #e2e8f0;
+        }
+        /* ========================================
+         == AKHIR PERUBAHAN CSS 
+         ========================================
+        */
+
         .card-base {
             background-color: var(--white);
             border-radius: var(--default-border-radius);
@@ -116,7 +138,6 @@
         .notifikasi-list .list-group-item:last-child {
             border-bottom: none;
         }
-        /* UBAH .list-group-item-action:hover menjadi .list-group-item:hover */
         .notifikasi-list .list-group-item:hover {
             background-color: var(--bg-main);
         }
@@ -187,6 +208,40 @@
         .notifikasi-list a.list-group-item .text-primary {
              color: var(--orange-dark) !important; /* Paksa warna oranye */
         }
+        
+        /* ================================== */
+        /* ==   STYLE RESPONSIVE MOBILE   == */
+        /* ================================== */
+        @media (max-width: 767.98px) {
+            /* PERUBAHAN CSS MOBILE (HEADER STICKY) */
+            .main-content {
+                padding: 1.5rem; 
+                padding-top: 0;
+            }
+            .page-header {
+                padding: 1.5rem 1rem; 
+                margin-bottom: 0;
+            }
+            /* AKHIR PERUBAHAN CSS MOBILE */
+            
+            .page-header h2 {
+                font-size: 1.25rem;
+            }
+            .card-base-no-hover {
+                padding: 1.25rem;
+            }
+            .stat-card-summary {
+                padding: 1rem;
+            }
+            .stat-card-summary h3 {
+                font-size: 1.5rem;
+            }
+            .stat-card-summary .icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.25rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -201,12 +256,12 @@
             <a class="nav-link" href="#"><i class="bi bi-shop"></i> UMKM</a>
             <a class="nav-link {{ Request::routeIs('admin.pelamar.ranking') ? 'active' : '' }}" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
             
-            <a class="nav-link {{ Request::routeIs('admin.notifikasi.*') ? 'active' : '' }}" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a>
+            <a class="nav-link active" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a>
             
             <a class="nav-link {{ Request::routeIs('admin.pengaturan.index') ? 'active' : '' }}" href="{{ route('admin.pengaturan.index') }}"><i class="bi bi-gear-fill"></i> Pengaturan</a>
         </nav>
         <div class="user-profile">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center text-white">
                 <img src="https://placehold.co/40x40/ffffff/f97316?text={{ substr(Auth::user()->name, 0, 1) }}" class="rounded-circle me-3" alt="User">
                 <div>
                     <div class="fw-bold">{{ Auth::user()->name }}</div>
@@ -221,19 +276,17 @@
     </aside>
 
     <main class="main-wrapper">
-        <div class="main-content">
-            
-            <div class="page-header d-flex justify-content-between align-items-center">
-                <div>
-                    <h2 class="h4 mb-0 fw-bold">Notifikasi</h2>
-                    <p class="text-secondary small mb-0">Semua pemberitahuan dan aktivitas terbaru.</p>
-                </div>
-                <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
-                    <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
-                </button>
+        
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="h4 mb-0 fw-bold">Notifikasi</h2>
+                <p class="text-secondary small mb-0">Semua pemberitahuan dan aktivitas terbaru.</p>
             </div>
-
-            <!-- BAGIAN 1: RINGKASAN (Tetap Sama) -->
+            <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
+                <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
+            </button>
+        </div>
+        <div class="main-content">
             <div class="row g-4 mb-4">
                 <div class="col-lg-4 col-md-6">
                     <div class="stat-card-summary h-100">
@@ -266,14 +319,12 @@
 
             
             <div class="row g-4">
-                <!-- BAGIAN 2: LOWONGAN PEKERJAAN TERBARU (DIPERBARUI) -->
                 <div class="col-lg-5">
                     <div class="card-base-no-hover h-100">
                         <h5 class="mb-4 fw-semibold">Lowongan Pekerjaan Terbaru</h5>
                         <ul class="list-group list-group-flush notifikasi-list">
                             
                             @forelse($recentVacancies as $lowongan)
-                                <!-- Ganti <li> dengan <a> -->
                                 <a href="{{ route('admin.lowongan.show', $lowongan->id) }}" class="list-group-item list-group-item-action d-flex align-items-start notifikasi-read">
                                     <div class="notifikasi-icon" style="--icon-bg: #f59e0b; --icon-color: #ffffff;">
                                         <i class="bi bi-briefcase-fill"></i>
@@ -286,7 +337,6 @@
                                         <span class="d-block">
                                             Diposting oleh <strong>{{ $lowongan->perusahaan->nama_perusahaan ?? 'Nama Perusahaan' }}</strong>
                                         </span>
-                                        <!-- Tombol 'Lihat Detail' dihapus karena seluruh item bisa diklik -->
                                     </div>
                                 </a>
                             @empty
@@ -300,7 +350,6 @@
                     </div>
                 </div>
 
-                <!-- BAGIAN 3: SEMUA AKTIVITAS (DIPERBARUI) -->
                 <div class="col-lg-7">
                     <div class="card-base-no-hover h-100">
                         <h5 class="mb-4 fw-semibold">Semua Aktivitas Pendaftaran</h5>
@@ -308,7 +357,6 @@
                         <ul class="list-group list-group-flush notifikasi-list">
                             
                             @forelse($allActivities as $activity)
-                                <!-- Logika untuk menentukan link -->
                                 @php
                                     $link = '#'; // Link default jika tidak ada user/profile
                                     if ($activity->user) {
@@ -325,7 +373,6 @@
                                     }
                                 @endphp
 
-                                <!-- Ganti <li> dengan <a> -->
                                 <a href="{{ $link }}" class="list-group-item list-group-item-action d-flex align-items-start notifikasi-read">
                                     
                                     @php

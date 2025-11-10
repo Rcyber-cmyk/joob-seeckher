@@ -37,8 +37,32 @@
         @media (max-width: 991.98px) { .sidebar { transform: translateX(-100%); } .sidebar.active { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,0.3); } }
         .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1099; }
         .sidebar-overlay.active { display: block; }
-        .main-content { padding: 2.5rem; }
-        .page-header { margin-bottom: 2.5rem; }
+        
+        /* === Header & Components === */
+        
+        /* ========================================
+         == PERUBAHAN CSS UNTUK HEADER STICKY ===
+         ========================================
+        */
+        .main-content { 
+            padding: 2.5rem; 
+            padding-top: 0; /* Hapus padding atas */
+        }
+        
+        .page-header { 
+            margin-bottom: 0; /* Hapus margin-bottom */
+            position: sticky; /* BUAT HEADER STICKY */
+            top: 0;
+            z-index: 1050; 
+            background-color: var(--bg-main); 
+            padding: 2.5rem; /* Pindahkan padding dari main-content ke sini */
+            border-bottom: 1px solid #e2e8f0;
+        }
+        /* ========================================
+         == AKHIR PERUBAHAN CSS 
+         ========================================
+        */
+
         .card-base {
             background-color: var(--white);
             border-radius: var(--default-border-radius);
@@ -64,6 +88,34 @@
             margin-left: 0;
             color: var(--dark-blue);
         }
+
+        /* ================================== */
+        /* ==   STYLE RESPONSIVE MOBILE   == */
+        /* ================================== */
+        @media (max-width: 767.98px) {
+            /* PERUBAHAN CSS MOBILE (HEADER STICKY) */
+            .main-content {
+                padding: 1.5rem; 
+                padding-top: 0;
+            }
+            .page-header {
+                padding: 1.5rem 1rem; 
+                margin-bottom: 0;
+            }
+            /* AKHIR PERUBAHAN CSS MOBILE */
+            
+            .page-header h2 {
+                font-size: 1.25rem;
+            }
+            .card-base {
+                padding: 1.5rem;
+            }
+            /* Buat kolom info jadi full-width di mobile */
+            .col-md-4 {
+                margin-top: 2rem;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -82,7 +134,7 @@
             <a class="nav-link" href="#"><i class="bi bi-gear-fill"></i> Pengaturan</a>
         </nav>
         <div class="user-profile">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center text-white">
                 <img src="https://placehold.co/40x40/ffffff/f97316?text={{ substr(Auth::user()->name, 0, 1) }}" class="rounded-circle me-3" alt="User">
                 <div>
                     <div class="fw-bold">{{ Auth::user()->name }}</div>
@@ -97,18 +149,17 @@
     </aside>
 
     <main class="main-wrapper">
-        <div class="main-content">
-            
-            <div class="page-header d-flex justify-content-between align-items-center">
-                <div>
-                    <h2 class="h4 mb-0 fw-bold">Detail Lowongan</h2>
-                    <p class="text-secondary small mb-0">{{ $lowongan->judul_lowongan }}</p>
-                </div>
-                <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
-                    <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
-                </button>
-            </div>
 
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="h4 mb-0 fw-bold">Detail Lowongan</h2>
+                <p class="text-secondary small mb-0">{{ $lowongan->judul_lowongan }}</p>
+            </div>
+            <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
+                <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
+            </button>
+        </div>
+        <div class="main-content">
             <div class="card-base">
                 <div class="row">
                     <div class="col-md-8">
@@ -118,7 +169,7 @@
                             {{ $lowongan->perusahaan->nama_perusahaan ?? 'Nama Perusahaan' }}
                         </p>
 
-                        <h5 class_="fw-semibold mt-5 mb-3">Deskripsi Pekerjaan</h5>
+                        <h5 class="fw-semibold mt-5 mb-3">Deskripsi Pekerjaan</h5>
                         <div class="deskripsi-content">
                             {!! $lowongan->deskripsi_pekerjaan !!}
                         </div>

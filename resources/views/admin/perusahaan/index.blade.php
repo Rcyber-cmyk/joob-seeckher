@@ -92,8 +92,29 @@
         .sidebar-overlay.active { display: block; }
         
         /* === Header & Components === */
-        .main-content { padding: 2.5rem; }
-        .page-header { margin-bottom: 2.5rem; }
+        
+        /* ========================================
+         == PERUBAHAN CSS UNTUK HEADER STICKY ===
+         ========================================
+        */
+        .main-content { 
+            padding: 2.5rem; 
+            padding-top: 0; /* Hapus padding atas */
+        }
+        
+        .page-header { 
+            margin-bottom: 0; /* Hapus margin-bottom */
+            position: sticky; /* BUAT HEADER STICKY */
+            top: 0;
+            z-index: 1050; 
+            background-color: var(--bg-main); 
+            padding: 2.5rem; /* Pindahkan padding dari main-content ke sini */
+            border-bottom: 1px solid #e2e8f0;
+        }
+        /* ========================================
+         == AKHIR PERUBAHAN CSS 
+         ========================================
+        */
         
         /* Style untuk card di halaman ini (bukan dari dashboard) */
         .card {
@@ -112,7 +133,6 @@
         }
 
         .table-card .table {
-            /* Perubahan: Menambahkan ini agar style responsif lebih konsisten */
             border-collapse: separate;
             border-spacing: 0 1rem;
             margin-top: -1rem;
@@ -126,11 +146,10 @@
         }
 
         .table-card tbody tr {
-            /* Perubahan: Menambahkan ini agar style responsif lebih konsisten */
             background-color: var(--white);
             box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             transition: var(--default-transition);
-            border-radius: 0.75rem; /* Tambahkan ini */
+            border-radius: 0.75rem; 
         }
         .table-card tbody tr:hover {
             transform: translateY(-4px);
@@ -138,10 +157,9 @@
         }
         .table-card tbody td {
             border: none;
-            padding: 1.25rem 1rem; /* Sesuaikan padding */
+            padding: 1.25rem 1rem; 
             vertical-align: middle;
         }
-        /* Tambahkan ini */
         .table-card tbody td:first-child { border-top-left-radius: 0.75rem; border-bottom-left-radius: 0.75rem; }
         .table-card tbody td:last-child { border-top-right-radius: 0.75rem; border-bottom-right-radius: 0.75rem; }
         
@@ -155,60 +173,76 @@
         /* ==   STYLE RESPONSIVE MOBILE BARU   == */
         /* ================================== */
         @media (max-width: 767.98px) {
+            /* PERUBAHAN CSS MOBILE (HEADER STICKY) */
             .main-content {
-                padding: 1rem; /* Kurangi padding utama */
+                padding: 1.5rem; 
+                padding-top: 0;
             }
             .page-header {
-                margin-bottom: 1.5rem;
+                padding: 1.5rem 1rem; 
+                margin-bottom: 0;
             }
+            /* AKHIR PERUBAHAN CSS MOBILE */
+
             .page-header h2 {
-                font-size: 1.25rem; /* Kecilkan judul utama */
+                font-size: 1.25rem; 
             }
             .card .card-body {
-                padding: 1rem; /* Perkecil padding di kartu filter */
+                padding: 1rem; 
             }
             .table-card {
-                padding: 0.5rem; /* Perkecil padding di kartu tabel */
+                padding: 0.5rem; 
             }
 
-            /* --- Magic for Responsive Table --- */
+            /* --- STYLE TABEL RESPONSIf BARU (STACKED) --- */
             .table-card .table thead {
-                display: none; /* 1. Sembunyikan header tabel asli */
+                display: none; 
             }
             .table-card .table tbody,
             .table-card .table tr,
             .table-card .table td {
-                display: block; /* 2. Ubah semua elemen jadi block */
+                display: block; 
                 width: 100%;
             }
             .table-card .table tr {
-                margin-bottom: 1rem; /* 3. Beri jarak antar baris (kartu) */
+                margin-bottom: 1rem; 
                 border-radius: var(--default-border-radius) !important;
                 box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07);
-                border: 1px solid #e2e8f0; /* Tambah border */
+                border: 1px solid #e2e8f0; 
             }
             .table-card .table td {
-                padding: 0.75rem 1rem;
-                text-align: right; /* 4. Rata kanan untuk data */
-                position: relative;
-                padding-left: 50%; /* 5. Beri ruang di kiri untuk label */
+                padding: 1rem 1.25rem; /* Padding baru */
+                text-align: left; /* Konten rata kiri */
                 border: none;
                 border-bottom: 1px solid #f1f5f9;
+                position: relative; /* Hapus padding-left */
             }
             .table-card .table td:last-child {
-                border-bottom: none; /* Hapus border di elemen terakhir */
+                border-bottom: none; 
             }
+            
+            /* Label-on-top */
             .table-card .table td:before {
-                /* 6. Tambahkan label menggunakan pseudo-element */
                 content: attr(data-label);
-                position: absolute;
-                left: 1rem;
-                width: 45%;
-                padding-right: 10px;
-                white-space: nowrap;
-                text-align: left; /* Rata kiri untuk label */
+                display: block; /* Tampilkan sbg block (di atas) */
                 font-weight: 600;
-                color: var(--dark-blue);
+                font-size: 0.8rem;
+                color: var(--slate);
+                text-transform: uppercase;
+                margin-bottom: 0.25rem; /* Jarak label ke value */
+                position: static; /* Hapus 'absolute' */
+                width: 100%;
+                text-align: left;
+                padding-right: 0;
+            }
+
+            /* Tombol Aksi: Rata Kanan */
+            .table-card .table td[data-label="Aksi"] {
+                text-align: right; 
+            }
+            /* Sembunyikan label "Aksi" */
+            .table-card .table td[data-label="Aksi"]:before {
+                display: none; 
             }
         }
     </style>
@@ -245,17 +279,17 @@
     </aside>
 
     <main class="main-wrapper">
+        
+        <header class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="h4 mb-0 fw-bold">Manajemen Perusahaan</h2>
+                <p class="text-secondary small mb-0">Daftar semua perusahaan yang terdaftar di sistem.</p>
+            </div>
+            <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
+                <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
+            </button>
+        </header>
         <div class="main-content">
-            <header class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2 class="h4 mb-0 fw-bold">Manajemen Perusahaan</h2>
-                    <p class="text-secondary small mb-0">Daftar semua perusahaan yang terdaftar di sistem.</p>
-                </div>
-                <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
-                    <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
-                </button>
-            </header>
-
             {{-- FORM FILTER & SEARCH --}}
             <div class="card mb-4">
                 <div class="card-body">
