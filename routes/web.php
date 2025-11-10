@@ -21,6 +21,7 @@ use App\Http\Controllers\Perusahaan\DetailPelamarController;
 use App\Http\Controllers\Perusahaan\IklanController;
 use App\Http\Controllers\Perusahaan\PengaturanController;
 use App\Http\Controllers\Perusahaan\CariKandidatController;
+use App\Http\Controllers\Perusahaan\LanggananController;
 use App\Http\Controllers\Perusahaan\UndanganController;
 use App\Http\Controllers\Pelamar\BeritaController;
 use App\Http\Controllers\Pelamar\HomepageController;
@@ -36,6 +37,7 @@ use App\Http\Controllers\Auth\SocialLoginController;
 use App\Http\Controllers\Admin\NotifikasiAdminController;
 use App\Http\Controllers\Admin\LowonganAdminController;
 use App\Http\Controllers\Admin\PengaturanAdminController;
+use App\Http\Controllers\Admin\KandidatAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -98,6 +100,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/lowongan/{lowongan}', [LowonganAdminController::class, 'show'])->name('lowongan.show');
         // INI ROUTE BARUNYA:
         Route::get('/pengaturan', [PengaturanAdminController::class, 'index'])->name('pengaturan.index');
+        Route::get('kandidat', [KandidatAdminController::class, 'index'])->name('kandidat.index');
+
+        Route::post('kandidat/{id}/setujui', [KandidatAdminController::class, 'approve'])->name('kandidat.approve');
+        Route::post('kandidat/{id}/tolak', [KandidatAdminController::class, 'reject'])->name('kandidat.reject');
         
         
         // ================= KODE DIPERBAIKI =================
@@ -183,6 +189,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/cari-kandidat', [CariKandidatController::class, 'index'])->name('cari-kandidat.index');
         Route::get('/kandidat/cari', [CariKandidatController::class, 'search'])->name('kandidat.search');
         Route::get('/kandidat/premium', [CariKandidatController::class, 'searchPremium'])->name('kandidat.search.premium');
+        Route::get('langganan', [LanggananController::class, 'index'])->name('langganan.index');
+        Route::post('langganan/process', [LanggananController::class, 'processPayment'])->name('langganan.process');
 
         // --- RUTE UNTUK FITUR UNDANG MELAMAR (BARU) ---
         Route::post('/kandidat/{pelamar}/undang', [UndanganController::class, 'store'])->name('kandidat.undang');

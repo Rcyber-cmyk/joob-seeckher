@@ -28,7 +28,7 @@
             overflow-x: hidden;
         }
 
-        /* --- CSS Sidebar, Wrapper (SAMA) --- */
+        /* --- CSS Sidebar --- */
         .sidebar {
             width: var(--sidebar-width);
             background-image: linear-gradient(180deg, var(--orange-dark) 0%, var(--orange) 100%);
@@ -48,16 +48,40 @@
             text-align: center;
             margin-bottom: 2rem;
             color: var(--white);
+            flex-shrink: 0; /* Mencegah logo ter-scroll */
         }
+        
+        /* ========================================
+         == PERUBAHAN CSS UNTUK SIDEBAR SCROLL ==
+         ========================================
+        */
+        .sidebar .nav {
+            overflow-y: auto; /* Membuat area link bisa di-scroll */
+            overflow-x: hidden;
+            flex-grow: 1; /* Memastikan nav mengambil sisa ruang */
+        }
+        .sidebar .user-profile { 
+            margin-top: 1rem; /* Beri jarak dari nav */
+            background-color: rgba(0,0,0,0.15); 
+            padding: 0.75rem; /* PERKECIL PADDING */
+            border-radius: var(--default-border-radius);
+            flex-shrink: 0; /* Mencegah user-profile ikut ter-scroll */
+        }
+        /* ========================================
+         == AKHIR PERUBAHAN CSS 
+         ========================================
+        */
+
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.85);
-            padding: 0.75rem 1.2rem;
-            margin-bottom: 0.3rem;
+            /* PERUBAHAN: Jarak diperkecil */
+            padding: 0.6rem 1.2rem; /* Diperkecil dari 0.75rem */
+            margin-bottom: 0.2rem; /* Diperkecil dari 0.3rem */
             border-radius: 0.75rem;
             display: flex;
             align-items: center;
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 0.9rem; /* Diperkecil dari 0.95rem */
             text-decoration: none;
             transition: var(--default-transition);
         }
@@ -74,12 +98,34 @@
             color: var(--orange-dark);
             font-weight: 600;
         }
-        .sidebar .user-profile {
-            margin-top: auto;
-            background-color: rgba(0,0,0,0.15);
-            padding: 1rem;
-            border-radius: var(--default-border-radius);
+
+        /* ========================================
+         == CSS BARU UNTUK MEMPERKECIL PROFIL ==
+         ========================================
+        */
+        .sidebar .user-profile .d-flex .fw-bold {
+            font-size: 0.9rem; /* Perkecil nama */
         }
+        .sidebar .user-profile .d-flex small {
+            font-size: 0.8rem; /* Perkecil "Admin" */
+        }
+        .sidebar .user-profile .d-flex img {
+            width: 32px; /* Perkecil avatar */
+            height: 32px;
+            margin-right: 0.75rem !important; /* Perkecil margin */
+        }
+        .sidebar .user-profile .nav-link.mt-2 {
+            /* Perkecil link logout */
+            margin-top: 0.5rem !important;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+            margin-bottom: 0 !important;
+        }
+        /* ========================================
+         == AKHIR PERUBAHAN CSS 
+         ========================================
+        */
+        
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -116,17 +162,10 @@
             align-items: center;
             justify-content: space-between;
 
-            /* ========================================
-             == PERUBAHAN CSS UNTUK HEADER STICKY ===
-             ========================================
-            */
+            /* CSS UNTUK HEADER STICKY */
             position: sticky;
             top: 0;
             z-index: 1050; 
-            /* ========================================
-             == AKHIR PERUBAHAN CSS 
-             ========================================
-            */
         }
         .main-header .page-title h2 {
             font-size: 1.5rem;
@@ -138,7 +177,7 @@
             margin-bottom: 0;
         }
         
-        /* --- Konten Lainnya (SAMA) --- */
+        /* --- Konten Lainnya --- */
         .table-card {
              background-color: var(--white);
              border-radius: var(--default-border-radius);
@@ -164,6 +203,8 @@
             background-color: #1e293b;
             border-color: #1e293b;
         }
+
+        /* --- CSS STYLING TABEL --- */
         .table-custom {
             border-collapse: collapse;
             width: 100%;
@@ -209,6 +250,8 @@
             opacity: 1;
         }
         .progress { height: 0.5rem; background-color: #e9ecef; }
+
+        /* --- CSS MODAL --- */
         .modal-profile .modal-content { border-radius: var(--default-border-radius); border: none; }
         .modal-profile-header {
             background-image: linear-gradient(135deg, var(--dark-blue) 0%, #1e293b 100%);
@@ -232,12 +275,11 @@
 
 
         /* ================================== */
-        /* ==   STYLE RESPONSIVE MOBILE (SUDAH BENAR)   == */
+        /* ==   STYLE RESPONSIVE MOBILE   == */
         /* ================================== */
         @media (max-width: 767.98px) {
             .main-header {
                 padding: 1rem; 
-                /* Otomatis sticky karena sudah di-set di aturan .main-header utama */
             }
             .main-header .page-title h2 {
                 font-size: 1.25rem; 
@@ -273,6 +315,8 @@
                 padding: 1rem 1.25rem; 
                 border-bottom: 1px solid #f1f5f9;
                 text-align: left; 
+                position: relative; /* Tambahkan ini */
+                padding-left: 1.25rem; /* Reset padding-left */
             }
             .table-custom td:last-child {
                 border-bottom: none;
@@ -286,6 +330,9 @@
                 color: var(--slate);
                 text-transform: uppercase;
                 margin-bottom: 0.25rem; 
+                position: static; /* Ganti ke static */
+                width: 100%; /* Lebar penuh */
+                text-align: left; /* Rata kiri */
             }
             
             /* --- Pengecualian & Perbaikan Tampilan (SUDAH BENAR) --- */
@@ -320,14 +367,20 @@
 
     <aside class="sidebar" id="sidebar">
         <div class="logo">JobRec</div>
-        <nav class="nav flex-column flex-grow-1">
-            <a class="nav-link" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
+        <nav class="nav flex-column"> <a class="nav-link" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
             <a class="nav-link active" href="{{ route('admin.pelamar.index') }}"><i class="bi bi-people-fill"></i> Pelamar</a>
+            
+            <a class="nav-link {{ Request::routeIs('admin.kandidat.index') ? 'active' : '' }}" href="{{ route('admin.kandidat.index') }}"><i class="bi bi-person-check-fill"></i> Kandidat</a>
+            
             <a class="nav-link" href="{{ route('admin.perusahaan.index') }}"><i class="bi bi-building-fill"></i> Perusahaan</a>
-            <a class="nav-link" href="#"><i class="bi bi-shop"></i> UMKM</a>
+
             <a class="nav-link" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
+            
+            <a class="nav-link" href="#"><i class="bi bi-megaphone-fill"></i> Iklan</a>
+            <a class="nav-link" href="#"><i class="bi bi-newspaper"></i> Berita</a>
+
             <a class="nav-link {{ Request::routeIs('admin.notifikasi.*') ? 'active' : '' }}" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a>
-            <a class="nav-link {{ Request::routeIs('admin.pengaturan.index') ? 'active' : '' }}" href="{{ route('admin.pengaturan.index') }}"><i class="bi bi-gear-fill"></i> Pengaturan</a>
+
         </nav>
         <div class="user-profile">
             <div class="d-flex align-items-center text-white">
