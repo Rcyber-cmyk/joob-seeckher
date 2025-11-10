@@ -180,7 +180,7 @@
         }
             @media (max-width: 767.98px) {
             .hero-section {
-                min-height: 60vh; /* Pastikan tinggi penuh untuk centering vertikal */
+                min-height: 40vh; /* Pastikan tinggi penuh untuk centering vertikal */
                 padding: 2rem 1rem;
                 display: flex; /* Aktifkan flexbox */
                 flex-direction: column; /* Susun item secara vertikal */
@@ -231,7 +231,7 @@
                 font-size: 0.5rem;
             }
             .hero-section p {
-                font-size: 0.4rem;
+                font-size: 0.5rem;
             }
             .hero-img {
                 max-width: 150%;
@@ -328,28 +328,28 @@
                 align-items: center;
             }
             .cta-section .col-md-7 {
-                flex: 0 0 60% !important;
-                max-width: 60% !important;
+                flex: 0 0 40% !important;
+                max-width: 40% !important;
                 padding-right: 1rem;
                 text-align: left;
             }
             .cta-section .col-md-5 {
-                flex: 0 0 30% !important;
-                max-width: 30% !important;
+                flex: 0 0 40% !important;
+                max-width: 40% !important;
             }
             .cta-section h2 {
-                font-size: 1.8rem;
+                font-size: 1.2rem;
                 margin-top: 0;
             }
             .cta-section p {
-                font-size: 0.9rem;
+                font-size: 0.6rem;
             }
             .cta-section .btn {
                 font-size: 0.8rem;
                 padding: 0.4rem 0.8rem;
             }
             .cta-section .cta-img {
-                max-width: 130%;
+                max-width: 140%;
                 margin-bottom: 0;
                 margin-left: auto;
                 margin-right: auto;
@@ -390,6 +390,7 @@
                 padding-right: 1rem;
                 padding-left: 1rem;
             }
+            
             /* --- iOS Safari Fixes --- */
 
             /* 1️⃣ Pastikan layout tidak terpotong oleh notch (safe area) */
@@ -545,7 +546,7 @@
                             </h1>
                             <p class="text-light mb-2">Daftarkan Perusahaan Anda Disini</p>
                             <div class="mt-3">
-                                <a href="{{ route('login') }}" class="btn btn-outline-light me-3">MASUK</a>
+                                <a href="{{ route('login') }}" class="btn btn-navy">MASUK</a>
                                 <a href="{{ route('register') }}" class="btn btn-navy">DAFTAR</a>
                             </div>
                         </div>

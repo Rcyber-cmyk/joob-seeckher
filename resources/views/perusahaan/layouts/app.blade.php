@@ -326,7 +326,10 @@
                 padding: 1rem;
             }
             .header-dashboard h1 {
-                font-size: 1.5rem;
+                font-size: 1.2rem;
+            }
+            .header-dashboard p {
+                font-size: 0.7rem;
             }
             .header-dashboard .btn-post {
                 width: 100%;
