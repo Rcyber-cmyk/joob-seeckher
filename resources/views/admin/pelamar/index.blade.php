@@ -28,7 +28,7 @@
             overflow-x: hidden;
         }
 
-        /* Sidebar */
+        /* --- CSS Sidebar, Wrapper, Header (SAMA SEPERTI SEBELUMNYA) --- */
         .sidebar {
             width: var(--sidebar-width);
             background-image: linear-gradient(180deg, var(--orange-dark) 0%, var(--orange) 100%);
@@ -42,7 +42,6 @@
             flex-direction: column;
             transition: var(--default-transition);
         }
-
         .sidebar .logo {
             font-weight: 700;
             font-size: 1.8rem;
@@ -50,7 +49,6 @@
             margin-bottom: 2rem;
             color: var(--white);
         }
-
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.85);
             padding: 0.75rem 1.2rem;
@@ -63,31 +61,25 @@
             text-decoration: none;
             transition: var(--default-transition);
         }
-
         .sidebar .nav-link i {
             margin-right: 1rem;
             font-size: 1.25rem;
         }
-
         .sidebar .nav-link:hover {
             background-color: rgba(255, 255, 255, 0.1);
             color: var(--white);
         }
-
         .sidebar .nav-link.active {
             background-color: var(--white);
             color: var(--orange-dark);
             font-weight: 600;
         }
-
         .sidebar .user-profile {
             margin-top: auto;
             background-color: rgba(0,0,0,0.15);
             padding: 1rem;
             border-radius: var(--default-border-radius);
         }
-
-        /* Overlay mobile */
         .sidebar-overlay {
             display: none;
             position: fixed;
@@ -96,32 +88,24 @@
             z-index: 1099;
             transition: var(--default-transition);
         }
-
         .sidebar-overlay.active { display: block; }
-
-        /* Main wrapper */
         .main-wrapper {
             transition: var(--default-transition);
         }
-
         @media (min-width: 992px) {
             .main-wrapper {
                 margin-left: var(--sidebar-width);
             }
         }
-
         @media (max-width: 991.98px) {
             .sidebar {
                 transform: translateX(-100%);
             }
-
             .sidebar.active {
                 transform: translateX(0);
                 box-shadow: 0 0 40px rgba(0,0,0,0.3);
             }
         }
-
-        /* Header */
         .main-header {
             background-color: var(--white);
             padding: 1.25rem 2.5rem;
@@ -130,26 +114,21 @@
             align-items: center;
             justify-content: space-between;
         }
-
         .main-header .page-title h2 {
             font-size: 1.5rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
         }
-
         .main-header .page-title p {
             color: var(--slate);
             margin-bottom: 0;
         }
-        
         .table-card {
              background-color: var(--white);
              border-radius: var(--default-border-radius);
              padding: 1.5rem;
              box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
-
-        /* Tombol Aksi & Filter */
         .btn-action {
             background-color: #f8f9fa;
             border: 1px solid #e2e8f0;
@@ -170,71 +149,54 @@
             border-color: #1e293b;
         }
 
-        /* ======================================================================
-           CSS v2: TAMPILAN TABEL YANG LEBIH ELEGAN & TERINTEGRASI
-           ====================================================================== */
+        /* --- CSS STYLING TABEL (SAMA SEPERTI SEBELUMNYA) --- */
         .table-custom {
-            border-collapse: collapse; /* Kembali ke mode default */
+            border-collapse: collapse;
             width: 100%;
         }
-
         .table-custom thead th {
             font-weight: 600;
             text-transform: uppercase;
             font-size: 0.75rem;
             letter-spacing: 0.5px;
             color: var(--slate);
-            background-color: #f8fafc; /* Latar header yang sangat terang */
+            background-color: #f8fafc;
             padding: 1rem 1.25rem;
-            border-bottom: 2px solid #e2e8f0; /* Garis bawah header yang tegas */
+            border-bottom: 2px solid #e2e8f0;
         }
-
         .table-custom tbody td {
             padding: 1rem 1.25rem;
             vertical-align: middle;
-            border-bottom: 1px solid #f1f5f9; /* Garis pemisah baris yang sangat halus */
+            border-bottom: 1px solid #f1f5f9;
         }
-
         .table-custom tbody tr {
             transition: background-color 0.2s ease-in-out;
         }
-
-        /* Zebra Stripping */
         .table-custom tbody tr:nth-of-type(even) {
-            background-color: #f8fafc; /* Warna striping yang lembut */
+            background-color: #f8fafc;
         }
-
-        /* Hover Effect */
         .table-custom tbody tr:hover {
-            background-color: #f0f9ff; /* Warna hover biru muda */
+            background-color: #f0f9ff;
         }
-
-        /* Style untuk baris yang di-checkbox */
         .table-custom tbody tr.tr-selected {
-            background-color: #fff7ed; /* Warna oranye muda, sesuai tema */
-            box-shadow: inset 3px 0 0 0 var(--orange); /* Indikator di sisi kiri */
+            background-color: #fff7ed;
+            box-shadow: inset 3px 0 0 0 var(--orange);
         }
-
         .user-info { display: flex; align-items: center; }
         .user-info img { width: 40px; height: 40px; margin-right: 1rem; }
         .user-info .name { font-weight: 600; color: var(--dark-blue); margin-bottom: 0; font-size: 0.95rem; }
         .user-info .email { font-size: 0.8rem; color: var(--slate); }
-
-        /* Menyembunyikan tombol aksi secara default */
         .action-buttons {
             opacity: 0;
             transition: opacity 0.2s ease-in-out;
-            text-align: right; /* Agar tombol rata kanan */
+            text-align: right;
         }
-
-        /* Menampilkan tombol aksi saat baris di-hover */
         .table-custom tbody tr:hover .action-buttons {
             opacity: 1;
         }
-        
         .progress { height: 0.5rem; background-color: #e9ecef; }
 
-        /* Kustomisasi Modal Detail */
+        /* --- CSS MODAL (SAMA SEPERTI SEBELUMNYA) --- */
         .modal-profile .modal-content { border-radius: var(--default-border-radius); border: none; }
         .modal-profile-header {
             background-image: linear-gradient(135deg, var(--dark-blue) 0%, #1e293b 100%);
@@ -255,6 +217,98 @@
         .detail-item-content .label { font-size: 0.8rem; color: var(--slate); margin-bottom: 0.1rem; display: block; }
         .detail-item-content .value { font-weight: 500; color: var(--dark-blue); }
         .keahlian-badge { background-color: #f1f5f9; color: var(--slate); font-weight: 500; border-radius: 999px; padding: 0.5em 1em; }
+
+
+        /* ================================== */
+        /* ==   STYLE RESPONSIVE MOBILE BARU   == */
+        /* ================================== */
+        @media (max-width: 767.98px) {
+            .main-header {
+                padding: 1rem; /* Kurangi padding header */
+            }
+            .main-header .page-title h2 {
+                font-size: 1.25rem; /* Kecilkan font header */
+            }
+            .main-wrapper main.p-4 {
+                padding: 1rem !important; /* Kurangi padding konten utama */
+            }
+            .table-card {
+                padding: 0.5rem; /* Kurangi padding kartu tabel */
+            }
+
+            /* --- INI ADALAH STYLE TABEL RESPONSIf BARU (STACKED) --- */
+            .table-custom thead {
+                display: none; /* 1. Sembunyikan header tabel */
+            }
+            .table-custom tbody,
+            .table-custom tr,
+            .table-custom td {
+                display: block; /* 2. Buat menumpuk */
+                width: 100%;
+            }
+            .table-custom tr {
+                margin-bottom: 1rem; /* 3. Beri jarak antar kartu */
+                border: 1px solid #e2e8f0;
+                border-radius: var(--default-border-radius);
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            }
+            .table-custom tbody tr:nth-of-type(even) {
+                background-color: var(--white); /* Hilangkan zebra di mobile */
+            }
+            
+            .table-custom td {
+                padding: 1rem 1.25rem; /* Padding baru untuk 'sel' kartu */
+                border-bottom: 1px solid #f1f5f9;
+                text-align: left; /* Konten rata kiri */
+            }
+            .table-custom td:last-child {
+                border-bottom: none;
+            }
+
+            /* 4. Buat label dari data-label, tampilkan DI ATAS konten */
+            .table-custom td:before {
+                content: attr(data-label);
+                display: block;
+                font-weight: 600;
+                font-size: 0.8rem;
+                color: var(--slate);
+                text-transform: uppercase;
+                margin-bottom: 0.25rem; /* Jarak antara label dan konten */
+            }
+            
+            /* --- Pengecualian & Perbaikan Tampilan --- */
+
+            /* Tombol Aksi: Selalu terlihat & Rata Kanan */
+            .action-buttons {
+                opacity: 1;
+                text-align: right;
+            }
+            .table-custom td[data-label="Aksi"] {
+                text-align: right;
+            }
+            /* Sembunyikan label untuk Aksi */
+            .table-custom td[data-label="Aksi"]:before {
+                display: none;
+            }
+
+            /* Checkbox: Sembunyikan label & atur padding */
+            .table-custom td[data-label="Pilih"]:before {
+                display: none;
+            }
+            .table-custom td[data-label="Pilih"] {
+                padding: 1rem 1.25rem 0 1.25rem; /* Padding di atas, hapus di bawah */
+            }
+
+            /* Status: Buat rata kiri (karena kontennya badge) */
+            .table-custom td[data-label="Status"] {
+                text-align: left;
+            }
+            
+            /* Skor: Buat rata kiri (karena kontennya badge) */
+            .table-custom td[data-label="Skor"] {
+                text-align: left;
+            }
+        }
     </style>
 </head>
 <body>
@@ -273,7 +327,7 @@
             <a class="nav-link {{ Request::routeIs('admin.pengaturan.index') ? 'active' : '' }}" href="{{ route('admin.pengaturan.index') }}"><i class="bi bi-gear-fill"></i> Pengaturan</a>
         </nav>
         <div class="user-profile">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center text-white">
                 <img src="https://placehold.co/40x40/ffffff/f97316?text={{ substr(Auth::user()->name, 0, 1) }}" class="rounded-circle me-3" alt="User">
                 <div>
                     <div class="fw-bold">{{ Auth::user()->name }}</div>
@@ -382,10 +436,10 @@
                         <tbody>
                             @forelse($pelamar as $user)
                             <tr>
-                                <td><input class="form-check-input row-checkbox" type="checkbox" value="{{ $user->id }}"></td>
-                                <td>
+                                <td data-label="Pilih"><input class="form-check-input row-checkbox" type="checkbox" value="{{ $user->id }}"></td>
+                                <td data-label="Nama Pelamar">
                                     <div class="user-info">
-                                        <img src="{{ $user->profilePelamar->foto_profil ? asset('storage/' . $user->profilePelamar->foto_profil) : 'https://placehold.co/40x40/f1f5f9/1e293b?text=' . substr($user->name, 0, 1) }}" class="rounded-circle" alt="Avatar">
+                                        <img src="{{ $user->profilePelamar->foto_profil ? asset('storage/'. $user->profilePelamar->foto_profil) : 'https://placehold.co/40x40/f1f5f9/1e293b?text='. substr($user->name, 0, 1) }}" class="rounded-circle" alt="Avatar">
                                         <div>
                                             <div class="name">{{ $user->name }}</div>
                                             <div class="email">{{ $user->email }}</div>
@@ -393,12 +447,11 @@
                                     </div>
                                 </td>
                                 @if(request('sort') === 'auto_rank')
-                                <td class="text-center">
-                                    <span class="badge fs-6 rounded-pill text-bg-primary"><i class="bi bi-star-fill me-1"></i> {{ number_format($user->ranking_score ?? 0, 2) }}</span>
+                                <td data-label="Skor" class="text-center-desktop"> <span class="badge fs-6 rounded-pill text-bg-primary"><i class="bi bi-star-fill me-1"></i> {{ number_format($user->ranking_score ?? 0, 2) }}</span>
                                 </td>
                                 @endif
-                                <td>
-                                     @php
+                                <td data-label="Profil">
+                                    @php
                                         $kelengkapan = $user->profilePelamar->kelengkapan_profil ?? 0;
                                         $colorClass = 'bg-danger';
                                         if ($kelengkapan >= 99) $colorClass = 'bg-success';
@@ -412,9 +465,10 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>{{ $user->created_at->format('d M Y') }}</td>
-                                <td class="text-center"><span class="badge rounded-pill text-bg-success">Aktif</span></td>
-                                <td>
+                                <td data-label="Registrasi">{{ $user->created_at->format('d M Y') }}</td>
+                                <td data-label="Status" class="text-center-desktop"> <span class="badge rounded-pill text-bg-success">Aktif</span>
+                                </td>
+                                <td data-label="Aksi">
                                     <div class="action-buttons">
                                         <button class="btn btn-sm btn-action" type="button" data-bs-toggle="modal" data-bs-target="#detailPelamarModal{{ $user->id }}" title="Lihat Detail"><i class="bi bi-eye-fill"></i></button>
                                         <a href="#" class="btn btn-sm btn-action" title="Edit"><i class="bi bi-pencil-fill"></i></a>
@@ -435,7 +489,7 @@
                 </div>
 
                 @if ($pelamar->hasPages())
-                <div class="d-flex justify-content-between align-items-center mt-4">
+                <div class="d-flex justify-content-between align-items-center mt-4 flex-wrap gap-2">
                     <div class="text-secondary small">
                         Menampilkan {{ $pelamar->firstItem() }} sampai {{ $pelamar->lastItem() }} dari {{ $pelamar->total() }} pelamar
                     </div>

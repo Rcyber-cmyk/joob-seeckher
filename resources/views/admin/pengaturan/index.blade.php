@@ -107,12 +107,16 @@
         }
 
         /* === STYLE BARU UNTUK PENGATURAN === */
+        .nav-tabs {
+            border-bottom: 2px solid #e2e8f0; /* Beri garis bawah solid */
+        }
         .nav-tabs .nav-link {
             border: none;
             color: var(--slate);
             font-weight: 600;
             padding: 0.75rem 1.25rem;
             border-bottom: 3px solid transparent;
+            margin-bottom: -2px; /* Sejajarkan dengan border-bottom .nav-tabs */
         }
         .nav-tabs .nav-link.active {
             color: var(--orange-dark);
@@ -134,6 +138,43 @@
             border-color: var(--orange-dark);
             color: var(--white);
         }
+
+        /* ================================== */
+        /* ==   STYLE RESPONSIVE MOBILE BARU   == */
+        /* ================================== */
+        @media (max-width: 767.98px) {
+            .main-content {
+                padding: 1rem; /* Kurangi padding utama */
+            }
+            .page-header {
+                margin-bottom: 1.5rem;
+            }
+            .page-header h2 {
+                font-size: 1.25rem; /* Kecilkan judul utama */
+            }
+            .card-base-no-hover {
+                padding: 1.25rem; /* Kurangi padding di kartu form */
+            }
+
+            /* --- Style untuk Scrolling Tabs on Mobile --- */
+            .nav-tabs {
+                flex-wrap: nowrap; /* Mencegah tabs turun ke baris baru */
+                overflow-x: auto; /* Memungkinkan scroll horizontal */
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch; /* Scroll mulus di iOS */
+                
+                /* Sembunyikan scrollbar (opsional tapi rapi) */
+                -ms-overflow-style: none;  /* IE and Edge */
+                scrollbar-width: none;  /* Firefox */
+            }
+            .nav-tabs::-webkit-scrollbar {
+                display: none; /* Chrome, Safari, Opera */
+            }
+            .nav-tabs .nav-link {
+                white-space: nowrap; /* Jaga teks tab di satu baris */
+                font-size: 0.9rem; /* Sedikit kecilkan font tab */
+            }
+        }
     </style>
 </head>
 <body>
@@ -152,7 +193,7 @@
             <a class="nav-link active" href="#"><i class="bi bi-gear-fill"></i> Pengaturan</a>
         </nav>
         <div class="user-profile">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center text-white">
                 <img src="https://placehold.co/40x40/ffffff/f97316?text={{ substr(Auth::user()->name, 0, 1) }}" class="rounded-circle me-3" alt="User">
                 <div>
                     <div class="fw-bold">{{ Auth::user()->name }}</div>
@@ -299,9 +340,6 @@
                     overlay.classList.remove('active');
                 });
             }
-
-            // Inisialisasi Chart.js DIHAPUS karena tidak ada chart di halaman ini
-
         });
     </script>
 </body>
