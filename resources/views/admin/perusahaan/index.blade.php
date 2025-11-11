@@ -12,8 +12,6 @@
     {{-- Google Fonts --}}
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    {{-- Hapus <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> dari <head> karena tidak dipakai di sini --}}
-
     <style>
         /* ========================================
          SEMUA STYLE DISAMAKAN DENGAN DASHBOARD
@@ -113,44 +111,130 @@
             border: 1px solid #e2e8f0;
         }
 
-        thead th {
+        .table-card .table {
+            /* Perubahan: Menambahkan ini agar style responsif lebih konsisten */
+            border-collapse: separate;
+            border-spacing: 0 1rem;
+            margin-top: -1rem;
+            width: 100%;
+        }
+
+        .table-card thead th {
+            border: none;
             font-weight: 600;
             color: var(--slate);
         }
+
+        .table-card tbody tr {
+            /* Perubahan: Menambahkan ini agar style responsif lebih konsisten */
+            background-color: var(--white);
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            transition: var(--default-transition);
+            border-radius: 0.75rem; /* Tambahkan ini */
+        }
+        .table-card tbody tr:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 7px 14px 0 rgb(0 0 0 / 0.07), 0 3px 6px 0 rgb(0 0 0 / 0.05);
+        }
+        .table-card tbody td {
+            border: none;
+            padding: 1.25rem 1rem; /* Sesuaikan padding */
+            vertical-align: middle;
+        }
+        /* Tambahkan ini */
+        .table-card tbody td:first-child { border-top-left-radius: 0.75rem; border-bottom-left-radius: 0.75rem; }
+        .table-card tbody td:last-child { border-top-right-radius: 0.75rem; border-bottom-right-radius: 0.75rem; }
+        
 
         .pagination-container .pagination {
             flex-wrap: wrap;
             justify-content: center;
         }
+
+        /* ================================== */
+        /* ==   STYLE RESPONSIVE MOBILE BARU   == */
+        /* ================================== */
+        @media (max-width: 767.98px) {
+            .main-content {
+                padding: 1rem; /* Kurangi padding utama */
+            }
+            .page-header {
+                margin-bottom: 1.5rem;
+            }
+            .page-header h2 {
+                font-size: 1.25rem; /* Kecilkan judul utama */
+            }
+            .card .card-body {
+                padding: 1rem; /* Perkecil padding di kartu filter */
+            }
+            .table-card {
+                padding: 0.5rem; /* Perkecil padding di kartu tabel */
+            }
+
+            /* --- Magic for Responsive Table --- */
+            .table-card .table thead {
+                display: none; /* 1. Sembunyikan header tabel asli */
+            }
+            .table-card .table tbody,
+            .table-card .table tr,
+            .table-card .table td {
+                display: block; /* 2. Ubah semua elemen jadi block */
+                width: 100%;
+            }
+            .table-card .table tr {
+                margin-bottom: 1rem; /* 3. Beri jarak antar baris (kartu) */
+                border-radius: var(--default-border-radius) !important;
+                box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07);
+                border: 1px solid #e2e8f0; /* Tambah border */
+            }
+            .table-card .table td {
+                padding: 0.75rem 1rem;
+                text-align: right; /* 4. Rata kanan untuk data */
+                position: relative;
+                padding-left: 50%; /* 5. Beri ruang di kiri untuk label */
+                border: none;
+                border-bottom: 1px solid #f1f5f9;
+            }
+            .table-card .table td:last-child {
+                border-bottom: none; /* Hapus border di elemen terakhir */
+            }
+            .table-card .table td:before {
+                /* 6. Tambahkan label menggunakan pseudo-element */
+                content: attr(data-label);
+                position: absolute;
+                left: 1rem;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left; /* Rata kiri untuk label */
+                font-weight: 600;
+                color: var(--dark-blue);
+            }
+        }
     </style>
 </head>
 <body>
     
-    {{-- 1. TAMBAHKAN SIDEBAR OVERLAY --}}
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-    {{-- 2. TAMBAHKAN ID="sidebar" & HAPUS .sidebar-nav --}}
     <aside class="sidebar" id="sidebar">
         <div class="logo">JobRec</div>
-        {{-- 3. TAMBAHKAN flex-grow-1 PADA NAV --}}
         <nav class="nav flex-column flex-grow-1">
             <a class="nav-link {{ Request::routeIs('admin.homepage') ? 'active' : '' }}" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
             <a class="nav-link {{ Request::routeIs('admin.pelamar.index') ? 'active' : '' }}" href="{{ route('admin.pelamar.index') }}"><i class="bi bi-people-fill"></i> Pelamar</a>
-            <a class="nav-link {{ Request::routeIs('admin.perusahaan.*') ? 'active' : '' }}" href="{{ route('admin.perusahaan.index') }}"><i class="bi bi-building-fill"></i> Perusahaan</a>
+            <a class="nav-link active" href="{{ route('admin.perusahaan.index') }}"><i class="bi bi-building-fill"></i> Perusahaan</a>
             <a class="nav-link" href="#"><i class="bi bi-shop"></i> UMKM</a>
             <a class="nav-link {{ Request::routeIs('admin.pelamar.ranking') ? 'active' : '' }}" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
             <a class="nav-link {{ Request::routeIs('admin.notifikasi.*') ? 'active' : '' }}" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a>
             <a class="nav-link {{ Request::routeIs('admin.pengaturan.index') ? 'active' : '' }}" href="{{ route('admin.pengaturan.index') }}"><i class="bi bi-gear-fill"></i> Pengaturan</a>
         </nav>
         
-        {{-- 4. PINDAHKAN LOGOUT KE DALAM USER-PROFILE --}}
         <div class="user-profile">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center text-white">
                 <img src="https://placehold.co/40x40/ffffff/f97316?text={{ substr(Auth::user()->name, 0, 1) }}" class="rounded-circle me-3" alt="Admin">
                 <div>
                     <div class="fw-bold">{{ Auth::user()->name }}</div>
-                    <small>Admin</small>
-                </div>
+                    <small class="opacity-75">Admin</small> </div>
             </div>
             <a class="nav-link mt-2" href="{{ route('logout') }}" 
                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -160,7 +244,6 @@
         </div>
     </aside>
 
-    {{-- 5. BUNGKUS KONTEN DENGAN main-content --}}
     <main class="main-wrapper">
         <div class="main-content">
             <header class="d-flex justify-content-between align-items-center mb-4">
@@ -168,7 +251,6 @@
                     <h2 class="h4 mb-0 fw-bold">Manajemen Perusahaan</h2>
                     <p class="text-secondary small mb-0">Daftar semua perusahaan yang terdaftar di sistem.</p>
                 </div>
-                {{-- 6. TAMBAHKAN TOMBOL TOGGLER MOBILE --}}
                 <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
                     <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
                 </button>
@@ -219,12 +301,12 @@
                         <tbody>
                             @forelse($perusahaan as $item)
                             <tr>
-                                <td><strong>{{ $item->nama_perusahaan }}</strong></td>
-                                <td>{{ $item->user->email ?? 'N/A' }}</td>
-                                <td>{{ $item->alamat_kota ?? 'N/A' }}</td>
-                                <td>{{ $item->no_telp_perusahaan ?? 'N/A' }}</td>
-                                <td>{{ $item->created_at->format('d M Y') }}</td>
-                                <td>
+                                <td data-label="Nama Perusahaan"><strong>{{ $item->nama_perusahaan }}</strong></td>
+                                <td data-label="Email">{{ $item->user->email ?? 'N/A' }}</td>
+                                <td data-label="Kota">{{ $item->alamat_kota ?? 'N/A' }}</td>
+                                <td data-label="No. Telepon">{{ $item->no_telp_perusahaan ?? 'N/A' }}</td>
+                                <td data-label="Tanggal Bergabung">{{ $item->created_at->format('d M Y') }}</td>
+                                <td data-label="Aksi">
                                     <a href="{{ route('admin.perusahaan.show', $item->id) }}" class="btn btn-sm btn-info text-white" title="Lihat Detail">
                                         <i class="bi bi-eye-fill"></i>
                                     </a>
@@ -254,7 +336,6 @@
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
-    {{-- 7. TAMBAHKAN SCRIPT UNTUK TOGGLE MOBILE --}}
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Mobile Sidebar Toggle

@@ -30,7 +30,7 @@
             background-color: var(--bg-main);
             font-family: 'Poppins', sans-serif;
             color: var(--dark-blue);
-            overflow-x: hidden;
+            overflow-x: hidden; /* Mencegah horizontal scroll secara paksa */
         }
 
         /* === Sidebar (Desktop & Mobile) === */
@@ -111,13 +111,78 @@
         .timeline-item:last-child { margin-bottom: 0; }
         
         /* === Tabel (Sama seperti sebelumnya) === */
-        .table-custom { border-collapse: separate; border-spacing: 0 1rem; margin-top: -1rem; }
+        .table-custom { border-collapse: separate; border-spacing: 0 1rem; margin-top: -1rem; width: 100%; }
         .table-custom thead th { border: none; font-weight: 600; color: var(--slate-light); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.8px; padding: 1rem 1.5rem; }
         .table-custom tbody tr { background-color: var(--white); box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); transition: var(--default-transition); }
         .table-custom tbody tr:hover { transform: translateY(-4px); box-shadow: 0 7px 14px 0 rgb(0 0 0 / 0.07), 0 3px 6px 0 rgb(0 0 0 / 0.05); }
         .table-custom tbody td { border: none; padding: 1.25rem 1.5rem; vertical-align: middle; }
         .table-custom tbody td:first-child { border-top-left-radius: 0.75rem; border-bottom-left-radius: 0.75rem; }
         .table-custom tbody td:last-child { border-top-right-radius: 0.75rem; border-bottom-right-radius: 0.75rem; }
+
+        /* ================================== */
+        /* ==   STYLE RESPONSIVE MOBILE   == */
+        /* ================================== */
+        @media (max-width: 767.98px) {
+            .main-content {
+                padding: 1rem; /* Kurangi padding utama */
+            }
+            .page-header {
+                margin-bottom: 1.5rem;
+            }
+            .page-header h2 {
+                font-size: 1.25rem; /* Kecilkan judul utama */
+            }
+            .card-base {
+                padding: 1.25rem; /* Kurangi padding di semua kartu */
+            }
+            .stat-card h3 {
+                font-size: 1.8rem; /* Kecilkan angka statistik */
+            }
+            .stat-card .icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            /* --- Magic for Responsive Table --- */
+            .table-custom thead {
+                display: none; /* 1. Sembunyikan header tabel asli */
+            }
+            .table-custom tbody,
+            .table-custom tr,
+            .table-custom td {
+                display: block; /* 2. Ubah semua elemen jadi block, agar menumpuk ke bawah */
+                width: 100%;
+            }
+            .table-custom tr {
+                margin-bottom: 1rem; /* 3. Beri jarak antar baris (yang sekarang jadi kartu) */
+                border-radius: var(--default-border-radius) !important;
+                box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.07);
+            }
+            .table-custom td {
+                padding: 0.75rem 1rem;
+                text-align: right; /* 4. Rata kanan untuk data */
+                position: relative;
+                padding-left: 50%; /* 5. Beri ruang di kiri untuk label */
+                border: none;
+                border-bottom: 1px solid #f1f5f9;
+            }
+            .table-custom td:last-child {
+                border-bottom: none; /* Hapus border di elemen terakhir */
+            }
+            .table-custom td:before {
+                /* 6. Tambahkan label menggunakan pseudo-element */
+                content: attr(data-label);
+                position: absolute;
+                left: 1rem;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                text-align: left; /* Rata kiri untuk label */
+                font-weight: 600;
+                color: var(--dark-blue);
+            }
+        }
     </style>
 </head>
 <body>
@@ -134,7 +199,7 @@
             <a class="nav-link {{ Request::routeIs('admin.pengaturan.index') ? 'active' : '' }}" href="{{ route('admin.pengaturan.index') }}"><i class="bi bi-gear-fill"></i> Pengaturan</a>
         </nav>
         <div class="user-profile">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center text-white">
                 <img src="https://placehold.co/40x40/ffffff/f97316?text={{ substr(Auth::user()->name, 0, 1) }}" class="rounded-circle me-3" alt="User">
                 <div>
                     <div class="fw-bold">{{ Auth::user()->name }}</div>
@@ -280,11 +345,11 @@
                         <tbody>
                             @forelse($menungguPersetujuan as $item)
                             <tr>
-                                <td><strong>{{ $item->nama }}</strong></td>
-                                <td><span class="badge rounded-pill bg-primary-subtle text-primary-emphasis">{{ $item->tipe }}</span></td>
-                                <td>{{ $item->tanggal }}</td>
-                                <td><span class="badge rounded-pill bg-warning-subtle text-warning-emphasis">{{ $item->status }}</span></td>
-                                <td>
+                                <td data-label="Nama"><strong>{{ $item->nama }}</strong></td>
+                                <td data-label="Tipe"><span class="badge rounded-pill bg-primary-subtle text-primary-emphasis">{{ $item->tipe }}</span></td>
+                                <td data-label="Tanggal">{{ $item->tanggal }}</td>
+                                <td data-label="Status"><span class="badge rounded-pill bg-warning-subtle text-warning-emphasis">{{ $item->status }}</span></td>
+                                <td data-label="Aksi">
                                     <button class="btn btn-sm btn-outline-success"><i class="bi bi-check-lg"></i></button>
                                     <button class="btn btn-sm btn-outline-danger"><i class="bi bi-x-lg"></i></button>
                                 </td>
@@ -328,10 +393,12 @@
             const chartCanvas = document.getElementById('userChart');
             if (chartCanvas) {
                 const ctx = chartCanvas.getContext('2d');
-                const chartLabels = JSON.parse(chartCanvas.dataset.labels);
-                const pelamarData = JSON.parse(chartCanvas.dataset.pelamar);
-                const perusahaanData = JSON.parse(chartCanvas.dataset.perusahaan);
-                const umkmData = JSON.parse(chartCanvas.dataset.umkm);
+                // Hati-hati, jika data-labels kosong, JSON.parse bisa error.
+                // Kita beri fallback array kosong jika dataset-nya tidak ada.
+                const chartLabels = JSON.parse(chartCanvas.dataset.labels || '[]');
+                const pelamarData = JSON.parse(chartCanvas.dataset.pelamar || '[]');
+                const perusahaanData = JSON.parse(chartCanvas.dataset.perusahaan || '[]');
+                const umkmData = JSON.parse(chartCanvas.dataset.umkm || '[]');
 
                 const createGradient = (color1, color2) => {
                     const gradient = ctx.createLinearGradient(0, 0, 0, 400);

@@ -22,7 +22,7 @@
             --dark-blue: #0f172a; 
             --slate: #475569;
             --slate-light: #94a3b8;
-            --bg-main: #f1f5f9; /* Diperbarui dari light-gray */
+            --bg-main: #f1f5f9; 
             --white: #ffffff;
             --sidebar-width: 260px;
             --default-border-radius: 1rem;
@@ -30,10 +30,10 @@
         }
 
         body {
-            background-color: var(--bg-main); /* Menggunakan var baru */
+            background-color: var(--bg-main);
             font-family: 'Poppins', sans-serif;
             color: var(--dark-blue);
-            overflow-x: hidden; /* Ditambahkan */
+            overflow-x: hidden; 
         }
 
         /* === Sidebar (Desktop & Mobile) === */
@@ -46,25 +46,24 @@
             left: 0;
             height: 100vh;
             z-index: 1100;
-            display: flex; /* Diperbarui dari 'none' */
+            display: flex;
             flex-direction: column;
             transition: var(--default-transition);
-            /* border-right dihapus agar sama */
         }
         .sidebar .logo { font-weight: 700; font-size: 1.8rem; text-align: center; margin-bottom: 2rem; letter-spacing: 1px; color: var(--white); }
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.85);
-            padding: 0.75rem 1.2rem; /* Diperbarui */
+            padding: 0.75rem 1.2rem;
             margin-bottom: 0.3rem;
             border-radius: 0.75rem;
             display: flex;
             align-items: center;
             font-weight: 500;
-            font-size: 0.95rem; /* Diperbarui */
-            transition: var(--default-transition); /* Diperbarui */
+            font-size: 0.95rem;
+            transition: var(--default-transition);
             text-decoration: none;
         }
-        .sidebar .nav-link i { margin-right: 1rem; font-size: 1.25rem; } /* Diperbarui */
+        .sidebar .nav-link i { margin-right: 1rem; font-size: 1.25rem; }
         .sidebar .nav-link:hover { background-color: rgba(255, 255, 255, 0.1); color: var(--white); }
         .sidebar .nav-link.active { background-color: var(--white); color: var(--orange-dark); font-weight: 600; }
         .sidebar .user-profile { margin-top: auto; background-color: rgba(0,0,0,0.15); padding: 1rem; border-radius: var(--default-border-radius); }
@@ -72,13 +71,12 @@
         /* === Main Wrapper === */
         .main-wrapper {
             transition: var(--default-transition);
-            padding: 0; /* Dihapus padding agar main-content yg mengatur */
+            padding: 0; 
         }
         @media (min-width: 992px) {
             .main-wrapper { margin-left: var(--sidebar-width); }
         }
         @media (max-width: 991.98px) {
-            /* Style mobile dari dashboard ditambahkan */
             .sidebar { transform: translateX(-100%); }
             .sidebar.active { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,0.3); }
         }
@@ -94,21 +92,16 @@
         .sidebar-overlay.active { display: block; }
         
         /* === Header & Components === */
-        /* main-content ditambahkan */
         .main-content { padding: 2.5rem; }
         .page-header { margin-bottom: 2.5rem; }
-         @media (max-width: 991.98px) {
-            .main-content { padding: 1.5rem; }
-            .page-header { margin-bottom: 1.5rem; }
-         }
-        
+         
         /* === PAGE-SPECIFIC STYLING (Tetap Sama) === */
         .table-card, .criteria-card, .selection-card {
             background-color: white;
             border-radius: 0.75rem;
             padding: 1.5rem;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            border: 1px solid #e2e8f0; /* Ditambahkan border */
+            border: 1px solid #e2e8f0; 
         }
         thead th {
             font-weight: 600;
@@ -153,39 +146,150 @@
             font-weight: 600;
             color: var(--orange-dark);
         }
+        
+        /* Style Tabel (dari halaman Pelamar) */
+        .table-card .table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        .table-card .table thead th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+            color: var(--slate);
+            background-color: #f8fafc;
+            padding: 1rem 1.25rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .table-card .table tbody td {
+            padding: 1rem 1.25rem;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .table-card .table tbody tr {
+            transition: background-color 0.2s ease-in-out;
+        }
+        .table-card .table tbody tr:nth-of-type(even) {
+            background-color: #f8fafc;
+        }
+        .table-card .table tbody tr:hover {
+            background-color: #f0f9ff;
+        }
+
+
+        /* ================================== */
+        /* ==   STYLE RESPONSIVE MOBILE BARU   == */
+        /* ================================== */
+        @media (max-width: 767.98px) {
+            .main-content {
+                padding: 1rem; 
+            }
+            .page-header {
+                margin-bottom: 1.5rem;
+            }
+            .page-header h2 {
+                font-size: 1.25rem;
+            }
+
+            /* Page-specific card padding */
+            .selection-card, .criteria-card, .table-card {
+                padding: 1rem;
+            }
+            
+            /* --- INI ADALAH STYLE TABEL RESPONSIf BARU (STACKED) --- */
+            .table-card .table thead {
+                display: none; /* 1. Sembunyikan header tabel */
+            }
+            .table-card .table tbody,
+            .table-card .table tr,
+            .table-card .table td {
+                display: block; /* 2. Buat menumpuk */
+                width: 100%;
+            }
+            .table-card .table tr {
+                margin-bottom: 1rem; /* 3. Beri jarak antar kartu */
+                border: 1px solid #e2e8f0;
+                border-radius: var(--default-border-radius);
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            }
+            .table-card .table tbody tr:nth-of-type(even) {
+                background-color: var(--white); /* Hilangkan zebra di mobile */
+            }
+            
+            .table-card .table td {
+                padding: 1rem 1.25rem; /* Padding baru untuk 'sel' kartu */
+                border-bottom: 1px solid #f1f5f9;
+                text-align: left; /* Konten rata kiri */
+            }
+            .table-card .table td:last-child {
+                border-bottom: none;
+            }
+
+            /* 4. Buat label dari data-label, tampilkan DI ATAS konten */
+            .table-card .table td:before {
+                content: attr(data-label);
+                display: block;
+                font-weight: 600;
+                font-size: 0.8rem;
+                color: var(--slate);
+                text-transform: uppercase;
+                margin-bottom: 0.25rem; /* Jarak antara label dan konten */
+            }
+            
+            /* --- Pengecualian & Perbaikan Tampilan --- */
+
+            /* Tombol Aksi: Rata Kanan */
+            .table-card .table td[data-label="Aksi"] {
+                text-align: right;
+            }
+            /* Sembunyikan label untuk Aksi */
+            .table-card .table td[data-label="Aksi"]:before {
+                display: none;
+            }
+
+            /* Peringkat: Sembunyikan label, atur padding */
+            .table-card .table td[data-label="Peringkat"]:before {
+                display: none;
+            }
+            .table-card .table td[data-label="Peringkat"] {
+                 padding: 1rem 1.25rem 0 1.25rem; 
+            }
+
+             /* Rincian Skor: Sembunyikan label, atur padding */
+            .table-card .table td[data-label="Rincian Skor"]:before {
+                 display: none;
+            }
+             .table-card .table td[data-label="Rincian Skor"] {
+                text-align: center; /* Tombol "Lihat Rincian" bagus di tengah */
+            }
+        }
     </style>
 </head>
 <body>
     
-    <!-- 1. TAMBAHKAN SIDEBAR OVERLAY -->
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-    <!-- 2. TAMBAHKAN ID="sidebar" & HAPUS .sidebar-nav -->
     <aside class="sidebar" id="sidebar">
         <div class="logo">JobRec</div>
-        <!-- 3. TAMBAHKAN flex-grow-1 PADA NAV -->
         <nav class="nav flex-column flex-grow-1">
             <a class="nav-link {{ Request::routeIs('admin.homepage') ? 'active' : '' }}" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
             <a class="nav-link {{ Request::routeIs('admin.pelamar.index') ? 'active' : '' }}" href="{{ route('admin.pelamar.index') }}"><i class="bi bi-people-fill"></i> Pelamar</a>
             <a class="nav-link {{ Request::routeIs('admin.perusahaan.*') ? 'active' : '' }}" href="{{ route('admin.perusahaan.index') }}"><i class="bi bi-building-fill"></i> Perusahaan</a>
             <a class="nav-link" href="#"><i class="bi bi-shop"></i> UMKM</a>
-            <!-- Link ini akan otomatis ACTIVE -->
-            <a class="nav-link {{ Request::routeIs('admin.pelamar.ranking') ? 'active' : '' }}" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
+            <a class="nav-link active" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
             <a class="nav-link {{ Request::routeIs('admin.notifikasi.*') ? 'active' : '' }}" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a>
             <a class="nav-link {{ Request::routeIs('admin.pengaturan.index') ? 'active' : '' }}" href="{{ route('admin.pengaturan.index') }}"><i class="bi bi-gear-fill"></i> Pengaturan</a>
-            <!-- Hapus Logout dari sini -->
         </nav>
         
-        <!-- 4. PINDAHKAN LOGOUT KE DALAM USER-PROFILE -->
         <div class="user-profile">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center text-white">
                 <img src="https://placehold.co/40x40/ffffff/f97316?text={{ substr(Auth::user()->name, 0, 1) }}" class="rounded-circle me-3" alt="Admin">
                 <div>
                     <div class="fw-bold">{{ Auth::user()->name }}</div>
                     <small class="opacity-75">Admin</small>
                 </div>
             </div>
-            <!-- Tambahkan link Logout di sini -->
             <a class="nav-link mt-2" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="bi bi-box-arrow-right"></i> Logout
             </a>
@@ -193,7 +297,6 @@
         </div>
     </aside>
 
-    <!-- 5. BUNGKUS KONTEN DENGAN main-content -->
     <main class="main-wrapper">
         <div class="main-content">
             <header class="d-flex justify-content-between align-items-center mb-4">
@@ -201,7 +304,6 @@
                     <h2 class="h4 mb-0 fw-bold">Auto <span style="color: var(--orange);">Ranking</span></h2>
                     <p class="text-secondary small mb-0">Lihat pelamar dengan mudah berdasarkan kecocokan lowongan.</p>
                 </div>
-                <!-- 6. GANTI TOMBOL TOGGLER MOBILE -->
                 <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
                     <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
                 </button>
@@ -264,8 +366,7 @@
                 <div class="table-card">
                     <h5 class="mb-4">Peringkat Pelamar</h5>
                     <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead>
+                        <table class="table table-hover align-middle table-custom"> <thead>
                                 <tr>
                                     <th>Peringkat</th>
                                     <th>Nama Pelamar</th>
@@ -277,8 +378,8 @@
                             <tbody>
                                 @forelse($rankedPelamar as $index => $pelamar)
                                     <tr>
-                                        <td><span class="badge bg-dark fs-6">#{{ $index + 1 }}</span></td>
-                                        <td>
+                                        <td data-label="Peringkat"><span class="badge bg-dark fs-6">#{{ $index + 1 }}</span></td>
+                                        <td data-label="Nama Pelamar">
                                             <div class="d-flex align-items-center">
                                                 <img src="{{ $pelamar->profilePelamar && $pelamar->profilePelamar->foto_profil ? asset('storage/' . $pelamar->profilePelamar->foto_profil) : 'https://placehold.co/40x40/f1f5f9/1e293b?text=' . substr($pelamar->name, 0, 1) }}" class="rounded-circle me-3" alt="Avatar" style="width: 40px; height: 40px; object-fit: cover;">
                                                 <div>
@@ -287,13 +388,13 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td data-label="Skor Akhir">
                                             <div class="fw-bold fs-5" style="color: var(--dark-blue);">{{ round($pelamar->final_score) }}%</div>
                                             <div class="progress mt-1" role="progressbar">
                                                 <div class="progress-bar bg-success" style="--progress-width: {{ round($pelamar->final_score) }}%;"></div>
                                             </div>
                                         </td>
-                                        <td class="text-center">
+                                        <td data-label="Rincian Skor" class="text-center">
                                             <button type="button" class="btn btn-sm btn-outline-secondary" 
                                                 data-bs-toggle="popover" 
                                                 data-bs-trigger="hover focus"
@@ -313,7 +414,7 @@
                                                 <i class="bi bi-info-circle"></i> Lihat Rincian
                                             </button>
                                         </td>
-                                        <td>
+                                        <td data-label="Aksi">
                                             <a href="{{ route('admin.pelamar.show', $pelamar->id) }}" class="btn btn-sm btn-outline-primary">Lihat Profil</a>
                                         </td>
                                     </tr>
@@ -338,12 +439,9 @@
         </div>
     </main>
     
-    <!-- 7. HAPUS KODE OFFCANVAS YANG LAMA -->
-    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // 8. TAMBAHKAN KODE TOGGLE SIDEBAR
             const sidebar = document.getElementById('sidebar');
             const overlay = document.getElementById('sidebar-overlay');
             const toggler = document.getElementById('sidebar-toggler');
@@ -361,7 +459,6 @@
                 });
             }
 
-            // 9. PINDAHKAN INISIALISASI POPOVER KE SINI
             const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]')
             const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
         });

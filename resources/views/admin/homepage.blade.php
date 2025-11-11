@@ -27,9 +27,17 @@
             --white: #ffffff;
         }
 
+        /* Penyesuaian Global untuk Mobile & iOS */
+        html {
+            scroll-behavior: smooth; /* Scroll lebih mulus */
+            -webkit-text-size-adjust: 100%; /* Mencegah auto-zoom font di iOS */
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background-color: var(--slate-100);
+            -webkit-font-smoothing: antialiased; /* Teks lebih tajam di macOS/iOS */
+            -moz-osx-font-smoothing: grayscale;
         }
 
         /* Navbar */
@@ -188,11 +196,93 @@
             color: var(--orange);
         }
 
+        /* Media Query Asli Anda (untuk Tablet) */
         @media (max-width: 991.98px) {
             .hero-illustration { display: none; }
             .welcome-text-bg { font-size: 5rem; }
             .hero-section { text-align: center; }
             .navbar-admin .nav-link { margin: 0.25rem 0; }
+        }
+
+        /* ================================== */
+        /* ==   STYLE RESPONSIVE MOBILE BARU   == */
+        /* ================================== */
+        @media (max-width: 767.98px) {
+
+            /* -- Hero Section -- */
+            .hero-section {
+                padding: 3rem 0; /* Kurangi padding atas-bawah */
+            }
+            .hero-section h1 {
+                font-size: 2.2rem; /* Kecilkan font judul utama */
+            }
+            .hero-section p {
+                font-size: 1rem; /* Kecilkan font paragraf */
+                margin-bottom: 2rem !important;
+            }
+            .btn-orange {
+                /* Sedikit kecilkan tombol */
+                padding: 0.6rem 1.2rem;
+                font-size: 0.9rem;
+            }
+            .welcome-text-bg {
+                font-size: 3.5rem; /* Kecilkan teks background 'ADMIN' */
+                top: 60%; /* Sesuaikan posisi */
+            }
+
+            /* -- Main Content -- */
+            .main-content {
+                padding: 2rem 0; /* Kurangi padding konten */
+            }
+
+            /* -- Kartu Statistik -- */
+            .stat-card-compact {
+                padding: 1.25rem; /* Kurangi padding di dalam kartu */
+                flex-direction: column; /* Susun ikon dan teks ke bawah */
+                text-align: center;
+            }
+            .stat-card-compact .icon {
+                margin-right: 0; /* Hapus margin kanan */
+                margin-bottom: 1rem; /* Beri jarak ke teks */
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+            .stat-card-compact h3 {
+                font-size: 1.8rem; /* Kecilkan angka statistik */
+            }
+            .stat-card-compact p {
+                font-size: 0.9rem; /* Kecilkan label statistik */
+            }
+
+            /* -- Kartu Grafik -- */
+            .chart-card {
+                padding: 1rem; /* Kurangi padding kartu grafik */
+            }
+            .chart-card h4 {
+                font-size: 1.15rem; /* Kecilkan judul grafik */
+                text-align: center;
+            }
+
+            /* -- Navbar -- */
+            .navbar-admin .navbar-brand {
+                font-size: 1.25rem; /* Kecilkan brand di mobile */
+            }
+            .navbar-text {
+                /* Sembunyikan sapaan 'Halo, Admin' di navbar mobile */
+                display: none !important;
+            }
+            .navbar-admin .navbar-collapse {
+                /* Beri padding saat menu mobile dibuka */
+                padding-top: 1rem;
+            }
+
+            /* -- Footer -- */
+            .admin-footer {
+                padding: 1.25rem 0;
+                margin-top: 2rem;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
@@ -308,6 +398,7 @@
                     </div>
                 </div>
             </div>
+            
             <div class="chart-card">
                 <h4 class="mb-4">Grafik Pendaftaran User Baru (Berdasarkan Bulan)</h4>
                 <div style="height: 350px;">
