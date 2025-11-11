@@ -27,18 +27,96 @@
         body { background-color: var(--bg-main); font-family: 'Poppins', sans-serif; color: var(--dark-blue); overflow-x: hidden; }
         .sidebar { width: var(--sidebar-width); background-image: linear-gradient(180deg, var(--orange-dark) 0%, var(--orange) 100%); padding: 1.5rem 1rem; position: fixed; top: 0; left: 0; height: 100vh; z-index: 1100; display: flex; flex-direction: column; transition: var(--default-transition); }
         .sidebar .logo { font-weight: 700; font-size: 1.8rem; text-align: center; margin-bottom: 2rem; letter-spacing: 1px; color: var(--white); }
-        .sidebar .nav-link { color: rgba(255, 255, 255, 0.85); padding: 0.75rem 1.2rem; margin-bottom: 0.3rem; border-radius: 0.75rem; display: flex; align-items: center; font-weight: 500; font-size: 0.95rem; transition: var(--default-transition); text-decoration: none; }
+        
+        /* ========================================
+         == PERUBAHAN CSS UNTUK SIDEBAR SCROLL ==
+         ========================================
+        */
+        .sidebar .nav {
+            overflow-y: auto; /* Membuat area link bisa di-scroll */
+            overflow-x: hidden;
+            flex-grow: 1; /* Memastikan nav mengambil sisa ruang */
+        }
+        .sidebar .user-profile { 
+            margin-top: 1rem; /* Beri jarak dari nav */
+            background-color: rgba(0,0,0,0.15); 
+            padding: 0.75rem; /* PERKECIL PADDING */
+            border-radius: var(--default-border-radius);
+            flex-shrink: 0; /* Mencegah user-profile ikut ter-scroll */
+        }
+        /* ========================================
+         == AKHIR PERUBAHAN CSS 
+         ========================================
+        */
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.85);
+            /* PERUBAHAN: Jarak diperkecil */
+            padding: 0.6rem 1.2rem; /* Diperkecil dari 0.75rem */
+            margin-bottom: 0.2rem; /* Diperkecil dari 0.3rem */
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            font-size: 0.9rem; /* Diperkecil dari 0.95rem */
+            transition: var(--default-transition);
+            text-decoration: none;
+        }
         .sidebar .nav-link i { margin-right: 1rem; font-size: 1.25rem; }
         .sidebar .nav-link:hover { background-color: rgba(255, 255, 255, 0.1); color: var(--white); }
         .sidebar .nav-link.active { background-color: var(--white); color: var(--orange-dark); font-weight: 600; }
-        .sidebar .user-profile { margin-top: auto; background-color: rgba(0,0,0,0.15); padding: 1rem; border-radius: var(--default-border-radius); }
+        
+        /* ========================================
+         == CSS BARU UNTUK MEMPERKECIL PROFIL ==
+         ========================================
+        */
+        .sidebar .user-profile .d-flex .fw-bold {
+            font-size: 0.9rem; /* Perkecil nama */
+        }
+        .sidebar .user-profile .d-flex small {
+            font-size: 0.8rem; /* Perkecil "Admin" */
+        }
+        .sidebar .user-profile .d-flex img {
+            width: 32px; /* Perkecil avatar */
+            height: 32px;
+            margin-right: 0.75rem !important; /* Perkecil margin */
+        }
+        .sidebar .user-profile .nav-link.mt-2 {
+            /* Perkecil link logout */
+            margin-top: 0.5rem !important;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.9rem;
+            margin-bottom: 0 !important;
+        }
+        /* ========================================
+         == AKHIR PERUBAHAN CSS 
+         ========================================
+        */
+
         .main-wrapper { transition: var(--default-transition); }
         @media (min-width: 992px) { .main-wrapper { margin-left: var(--sidebar-width); } }
         @media (max-width: 991.98px) { .sidebar { transform: translateX(-100%); } .sidebar.active { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,0.3); } }
         .sidebar-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); z-index: 1099; }
         .sidebar-overlay.active { display: block; }
-        .main-content { padding: 2.5rem; }
-        .page-header { margin-bottom: 2.5rem; }
+        
+        /* === Header & Components === */
+        
+        /* CSS UNTUK HEADER STICKY */
+        .main-content { 
+            padding: 2.5rem; 
+            padding-top: 0; 
+        }
+        
+        .page-header { 
+            margin-bottom: 0; 
+            position: sticky; 
+            top: 0;
+            z-index: 1050; 
+            background-color: var(--bg-main); 
+            padding: 2.5rem; 
+            border-bottom: 1px solid #e2e8f0;
+        }
+
         .card-base {
             background-color: var(--white);
             border-radius: var(--default-border-radius);
@@ -64,6 +142,28 @@
             margin-left: 0;
             color: var(--dark-blue);
         }
+        
+        /* STYLE RESPONSIVE MOBILE */
+        @media (max-width: 767.98px) {
+            .main-content {
+                padding: 1.5rem; 
+                padding-top: 0;
+            }
+            .page-header {
+                padding: 1.5rem 1rem; 
+                margin-bottom: 0;
+            }
+            .page-header h2 {
+                font-size: 1.25rem;
+            }
+            .card-base {
+                padding: 1.5rem;
+            }
+            .col-md-4 {
+                margin-top: 2rem;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -72,17 +172,21 @@
     
     <aside class="sidebar" id="sidebar">
         <div class="logo">JobRec</div>
-        <nav class="nav flex-column flex-grow-1">
-            <a class="nav-link {{ Request::routeIs('admin.homepage') ? 'active' : '' }}" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
+        <nav class="nav flex-column"> <a class="nav-link {{ Request::routeIs('admin.homepage') ? 'active' : '' }}" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
             <a class="nav-link {{ Request::routeIs('admin.pelamar.index') ? 'active' : '' }}" href="{{ route('admin.pelamar.index') }}"><i class="bi bi-people-fill"></i> Pelamar</a>
+            
+            <a class="nav-link {{ Request::routeIs('admin.kandidat.index') ? 'active' : '' }}" href="{{ route('admin.kandidat.index') }}"><i class="bi bi-person-check-fill"></i> Kandidat</a>
+            
             <a class="nav-link {{ Request::routeIs('admin.perusahaan.*') ? 'active' : '' }}" href="{{ route('admin.perusahaan.index') }}"><i class="bi bi-building-fill"></i> Perusahaan</a>
-            <a class="nav-link" href="#"><i class="bi bi-shop"></i> UMKM</a>
             <a class="nav-link {{ Request::routeIs('admin.pelamar.ranking') ? 'active' : '' }}" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
-            <a class="nav-link {{ Request::routeIs('admin.notifikasi.*') ? 'active' : '' }}" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a>
-            <a class="nav-link" href="#"><i class="bi bi-gear-fill"></i> Pengaturan</a>
+            
+            <a class="nav-link" href="#"><i class="bi bi-megaphone-fill"></i> Iklan</a>
+            <a class="nav-link" href="#"><i class="bi bi-newspaper"></i> Berita</a>
+
+            <a class="nav-link active" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a> 
         </nav>
         <div class="user-profile">
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center text-white">
                 <img src="https://placehold.co/40x40/ffffff/f97316?text={{ substr(Auth::user()->name, 0, 1) }}" class="rounded-circle me-3" alt="User">
                 <div>
                     <div class="fw-bold">{{ Auth::user()->name }}</div>
@@ -97,18 +201,17 @@
     </aside>
 
     <main class="main-wrapper">
-        <div class="main-content">
-            
-            <div class="page-header d-flex justify-content-between align-items-center">
-                <div>
-                    <h2 class="h4 mb-0 fw-bold">Detail Lowongan</h2>
-                    <p class="text-secondary small mb-0">{{ $lowongan->judul_lowongan }}</p>
-                </div>
-                <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
-                    <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
-                </button>
-            </div>
 
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="h4 mb-0 fw-bold">Detail Lowongan</h2>
+                <p class="text-secondary small mb-0">{{ $lowongan->judul_lowongan }}</p>
+            </div>
+            <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
+                <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
+            </button>
+        </div>
+        <div class="main-content">
             <div class="card-base">
                 <div class="row">
                     <div class="col-md-8">
@@ -118,7 +221,7 @@
                             {{ $lowongan->perusahaan->nama_perusahaan ?? 'Nama Perusahaan' }}
                         </p>
 
-                        <h5 class_="fw-semibold mt-5 mb-3">Deskripsi Pekerjaan</h5>
+                        <h5 class="fw-semibold mt-5 mb-3">Deskripsi Pekerjaan</h5>
                         <div class="deskripsi-content">
                             {!! $lowongan->deskripsi_pekerjaan !!}
                         </div>
