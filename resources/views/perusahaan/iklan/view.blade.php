@@ -1,7 +1,5 @@
-{{-- Ganti ini dengan layout utama Anda --}}
-@extends('perusahaan.layouts.app') 
-
-@section('content')
+<!DOCTYPE html>
+<html lang="id">
 <head>
     {{-- ... (head Anda sudah benar, tidak perlu diubah) ... --}}
     <meta charset="UTF-8">
@@ -353,6 +351,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-@endsection
-
-{{-- HAPUS @push('scripts') --}}

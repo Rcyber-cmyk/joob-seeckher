@@ -10,6 +10,9 @@
         <a href="{{ route('perusahaan.lowongan.create') }}" class="btn btn-primary d-flex align-items-center btn-post" style="background-color: var(--primary-color); border-color: var(--primary-color);">
             <i class="bi bi-plus-circle-fill me-2"></i> Buat Lowongan
         </a>
+        <a href="/perusahaan/iklan/pasang-baru" class="btn btn-primary d-flex align-items-center btn-post" style="background-color: var(--secondary-color); border-color: var(--secondary-color);">
+            <i class="bi bi-plus-circle-fill me-2"></i> Pasang Iklan
+        </a>
     </div>
 
     {{-- Tabel Lowongan (Desktop & Tablet) --}}
