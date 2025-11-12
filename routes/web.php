@@ -38,6 +38,7 @@ use App\Http\Controllers\Admin\NotifikasiAdminController;
 use App\Http\Controllers\Admin\LowonganAdminController;
 use App\Http\Controllers\Admin\PengaturanAdminController;
 use App\Http\Controllers\Admin\KandidatAdminController;
+use App\Http\Controllers\Admin\ApprovalController; 
 
 /*
 |--------------------------------------------------------------------------
@@ -104,6 +105,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::post('kandidat/{id}/setujui', [KandidatAdminController::class, 'approve'])->name('kandidat.approve');
         Route::post('kandidat/{id}/tolak', [KandidatAdminController::class, 'reject'])->name('kandidat.reject');
+
+        Route::get('/iklan/persetujuan', [ApprovalController::class, 'index'])->name('iklan.index');
+        Route::post('/iklan/approve/{id}', [ApprovalController::class, 'approve'])->name('iklan.approve');
+        Route::post('/iklan/reject/{id}', [ApprovalController::class, 'reject'])->name('iklan.reject');
+
+        Route::prefix('iklan')->name('iklan.')->group(function() {
+        // Ini adalah route yang memanggil halaman Anda
+        Route::get('/', [ApprovalController::class, 'index'])->name('index'); 
+        
+        // Ini adalah route untuk tombol-tombol
+        Route::post('/approve/{paymentId}', [ApprovalController::class, 'approve'])->name('approve');
+        Route::post('/reject/{paymentId}', [ApprovalController::class, 'reject'])->name('reject');
+    });
         
         
         // ================= KODE DIPERBAIKI =================
@@ -191,6 +205,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/kandidat/premium', [CariKandidatController::class, 'searchPremium'])->name('kandidat.search.premium');
         Route::get('langganan', [LanggananController::class, 'index'])->name('langganan.index');
         Route::post('langganan/process', [LanggananController::class, 'processPayment'])->name('langganan.process');
+    Route::get('/iklan/pasang-baru', [IklanController::class, 'create'])->name('iklan.create');
+    /**
+     * INI ROUTE UNTUK HALAMAN PEMBUATAN IKLAN (GRATIS / VIP)
+     * URL-nya adalah /perusahaan/iklan/pasang-baru
+     */
+    Route::get('/iklan/pasang-baru', [IklanController::class, 'create'])->name('iklan.create');
+    Route::post('/iklan/pasang-baru', [IklanController::class, 'store'])->name('iklan.store');
+    
+    /**
+     * INI ROUTE UNTUK HALAMAN MENUNGGU
+     */
+    Route::get('/iklan/menunggu', [IklanController::class, 'showWaiting'])->name('iklan.waiting');
 
         // --- RUTE UNTUK FITUR UNDANG MELAMAR (BARU) ---
         Route::post('/kandidat/{pelamar}/undang', [UndanganController::class, 'store'])->name('kandidat.undang');

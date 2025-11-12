@@ -333,7 +333,9 @@
             <a class="nav-link {{ Request::routeIs('admin.kandidat.index') ? 'active' : '' }}" href="{{ route('admin.kandidat.index') }}"><i class="bi bi-person-check-fill"></i> Kandidat</a>
             <a class="nav-link {{ Request::routeIs('admin.perusahaan.*') ? 'active' : '' }}" href="{{ route('admin.perusahaan.index') }}"><i class="bi bi-building-fill"></i> Perusahaan</a>
             <a class="nav-link active" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
-            <a class="nav-link" href="#"><i class="bi bi-megaphone-fill"></i> Iklan</a>
+            <a class="nav-link active" href="{{ route('admin.iklan.index') }}">
+                <i class="bi bi-megaphone-fill"></i> Iklan
+            </a>
             <a class="nav-link" href="#"><i class="bi bi-newspaper"></i> Berita</a>
             <a class="nav-link {{ Request::routeIs('admin.notifikasi.*') ? 'active' : '' }}" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a>
         </nav>
