@@ -376,7 +376,7 @@
 
             <a class="nav-link" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
             
-            <a class="nav-link active" href="{{ route('admin.iklan.index') }}">
+            <a class="nav-link" href="{{ route('admin.iklan.index') }}">
                 <i class="bi bi-megaphone-fill"></i> Iklan
             </a>
             <a class="nav-link" href="#"><i class="bi bi-newspaper"></i> Berita</a>
