@@ -50,8 +50,8 @@
         .sidebar .logo { font-weight: 700; font-size: 1.8rem; text-align: center; margin-bottom: 2rem; letter-spacing: 1px; color: var(--white); }
         
         /* ========================================
-         == PERUBAHAN CSS UNTUK SIDEBAR SCROLL ==
-         ========================================
+          == PERUBAHAN CSS UNTUK SIDEBAR SCROLL ==
+          ========================================
         */
         .sidebar .nav {
             overflow-y: auto; /* Membuat area link bisa di-scroll */
@@ -66,8 +66,8 @@
             flex-shrink: 0; /* Mencegah user-profile ikut ter-scroll */
         }
         /* ========================================
-         == AKHIR PERUBAHAN CSS 
-         ========================================
+          == AKHIR PERUBAHAN CSS 
+          ========================================
         */
 
         .sidebar .nav-link {
@@ -88,8 +88,8 @@
         .sidebar .nav-link.active { background-color: var(--white); color: var(--orange-dark); font-weight: 600; }
         
         /* ========================================
-         == CSS BARU UNTUK MEMPERKECIL PROFIL ==
-         ========================================
+          == CSS BARU UNTUK MEMPERKECIL PROFIL ==
+          ========================================
         */
         .sidebar .user-profile .d-flex .fw-bold {
             font-size: 0.9rem; /* Perkecil nama */
@@ -110,8 +110,8 @@
             margin-bottom: 0 !important;
         }
         /* ========================================
-         == AKHIR PERUBAHAN CSS 
-         ========================================
+          == AKHIR PERUBAHAN CSS 
+          ========================================
         */
         
         /* === Main Wrapper === */
@@ -120,6 +120,7 @@
         }
         @media (min-width: 992px) {
             .main-wrapper { margin-left: var(--sidebar-width); }
+            .sidebar { transform: translateX(0); }
         }
         @media (max-width: 991.98px) {
             .sidebar { transform: translateX(-100%); }
@@ -164,10 +165,10 @@
         /* Style card-base biasa (tanpa hover) */
         .card-base-no-hover {
              background-color: var(--white);
-            border-radius: var(--default-border-radius);
-            padding: 2rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.03), 0 2px 4px -2px rgb(0 0 0 / 0.03);
+             border-radius: var(--default-border-radius);
+             padding: 2rem;
+             border: 1px solid #e2e8f0;
+             box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.03), 0 2px 4px -2px rgb(0 0 0 / 0.03);
         }
         
         /* === CSS BARU UNTUK LIST NOTIFIKASI === */
@@ -251,7 +252,7 @@
         }
         
         /* ================================== */
-        /* ==   STYLE RESPONSIVE MOBILE   == */
+        /* == 	STYLE RESPONSIVE MOBILE 	== */
         /* ================================== */
         @media (max-width: 767.98px) {
             .main-content {
@@ -287,15 +288,46 @@
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     <aside class="sidebar" id="sidebar">
         <div class="logo">JobRec</div>
-        <nav class="nav flex-column"> <a class="nav-link {{ Request::routeIs('admin.homepage') ? 'active' : '' }}" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
+        <nav class="nav flex-column"> 
+            <a class="nav-link {{ Request::routeIs('admin.homepage') ? 'active' : '' }}" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
+            
             <a class="nav-link {{ Request::routeIs('admin.pelamar.index') ? 'active' : '' }}" href="{{ route('admin.pelamar.index') }}"><i class="bi bi-people-fill"></i> Pelamar</a>
-            <a class="nav-link {{ Request::routeIs('admin.kandidat.index') ? 'active' : '' }}" href="{{ route('admin.kandidat.index') }}"><i class="bi bi-person-check-fill"></i> Kandidat</a>
-            <a class="nav-link {{ Request::routeIs('admin.perusahaan.*') ? 'active' : '' }}" href="{{ route('admin.perusahaan.index') }}"><i class="bi bi-building-fill"></i> Perusahaan</a>
-            <a class="nav-link {{ Request::routeIs('admin.pelamar.ranking') ? 'active' : '' }}" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
-            <a class="nav-link" href="{{ route('admin.iklan.index') }}">
-                <i class="bi bi-megaphone-fill"></i> Iklan
+            
+            @php
+                // Tentukan apakah ada sub-menu Perusahaan yang aktif.
+                $isPerusahaanActive = Request::routeIs('admin.perusahaan.*') || 
+                                      Request::routeIs('admin.kandidat.index') || 
+                                      Request::routeIs('admin.iklan.*');
+            @endphp
+            
+            {{-- Tombol Toggler Utama: Perusahaan --}}
+            <a class="nav-link {{ $isPerusahaanActive ? 'active' : '' }}" 
+               data-bs-toggle="collapse" 
+               href="#perusahaanSubmenu" 
+               role="button" 
+               aria-expanded="{{ $isPerusahaanActive ? 'true' : 'false' }}" 
+               aria-controls="perusahaanSubmenu">
+                 <i class="bi bi-building-fill"></i> Perusahaan
+                 <i class="bi {{ $isPerusahaanActive ? 'bi-chevron-down' : 'bi-chevron-right' }} ms-auto" style="font-size: 0.8rem;"></i>
             </a>
-            <a class="nav-link" href="#"><i class="bi bi-newspaper"></i> Berita</a>
+
+            {{-- Konten Submenu --}}
+            <div class="collapse {{ $isPerusahaanActive ? 'show' : '' }}" id="perusahaanSubmenu">
+                <a class="nav-link ps-5 {{ Request::routeIs('admin.perusahaan.*') ? 'active' : '' }}" href="{{ route('admin.perusahaan.index') }}">
+                    <i class="bi bi-diagram-3-fill"></i> List Perusahaan
+                </a>
+                <a class="nav-link ps-5 {{ Request::routeIs('admin.kandidat.index') ? 'active' : '' }}" href="{{ route('admin.kandidat.index') }}">
+                    <i class="bi bi-person-check-fill"></i> Kandidat
+                </a>
+                <a class="nav-link ps-5 {{ Request::routeIs('admin.iklan.*') ? 'active' : '' }}" href="{{ route('admin.iklan.index') }}">
+                    <i class="bi bi-megaphone-fill"></i> Iklan Lowongan
+                </a>
+            </div>
+
+            <a class="nav-link {{ Request::routeIs('admin.pelamar.ranking') ? 'active' : '' }}" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
+            
+            <a class="nav-link {{ Request::routeIs('admin.berita.*') ? 'active' : '' }}" href="{{ route('admin.berita.index') }}"><i class="bi bi-newspaper"></i> Berita</a>
+
             <a class="nav-link active" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a>
         </nav>
         <div class="user-profile">
@@ -409,25 +441,23 @@
                                             $link = route('admin.umkm.show', $activity->user->umkmProfile->id); 
                                         }
                                     }
+                                    
+                                    $icon = 'bi-bell-fill';
+                                    $color = '#475569'; // slate
+                                    if ($activity->activity_type == 'Pendaftaran Pelamar') {
+                                        $icon = 'bi-person-plus-fill';
+                                        $color = '#3b82f6'; // blue
+                                    } elseif ($activity->activity_type == 'Pendaftaran Perusahaan') {
+                                        $icon = 'bi-building-add';
+                                        $color = '#10b981'; // green
+                                    } elseif ($activity->activity_type == 'Pendaftaran UMKM') {
+                                        $icon = 'bi-shop';
+                                        $color = '#8b5cf6'; // purple
+                                    }
                                 @endphp
 
                                 <a href="{{ $link }}" class="list-group-item list-group-item-action d-flex align-items-start notifikasi-read">
                                     
-                                    @php
-                                        $icon = 'bi-bell-fill';
-                                        $color = '#475569'; // slate
-                                        if ($activity->activity_type == 'Pendaftaran Pelamar') {
-                                            $icon = 'bi-person-plus-fill';
-                                            $color = '#3b82f6'; // blue
-                                        } elseif ($activity->activity_type == 'Pendaftaran Perusahaan') {
-                                            $icon = 'bi-building-add';
-                                            $color = '#10b981'; // green
-                                        } elseif ($activity->activity_type == 'Pendaftaran UMKM') {
-                                            $icon = 'bi-shop';
-                                            $color = '#8b5cf6'; // purple
-                                        }
-                                    @endphp
-
                                     <div class="notifikasi-icon" style="--icon-bg: {{ $color }}; --icon-color: #ffffff;">
                                         <i class="bi {{ $icon }}"></i>
                                     </div>

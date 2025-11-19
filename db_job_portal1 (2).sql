@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2025 at 06:09 PM
+-- Generation Time: Nov 19, 2025 at 05:06 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -137,11 +137,10 @@ CREATE TABLE `berita` (
 --
 
 INSERT INTO `berita` (`id`, `kategori_id`, `judul`, `slug`, `gambar`, `kutipan`, `isi_berita`, `is_featured`, `published_at`, `created_at`, `updated_at`) VALUES
-(1, 2, 'Prospek Pekerjaan Telkom Beserta Gajinya yang Ditawarkan Sekarang', 'prospek-pekerjaan-telkom-beserta-gajinya-yang-ditawarkan-sekarang', 'berita/telkom.jpg', 'Telkom Indonesia membuka berbagai peluang karir di bidang teknologi dan digital. Temukan posisi yang sesuai dengan keahlian Anda.', '<p>Telkom Indonesia sebagai salah satu BUMN terbesar di tanah air terus berinovasi dan membuka pintu bagi talenta-talenta terbaik bangsa. Dengan transformasi digital yang masif, peluang karir di Telkom tidak hanya terbatas pada bidang telekomunikasi, tetapi juga merambah ke dunia digital seperti cloud computing, data science, dan keamanan siber.</p><p>Gaji yang ditawarkan pun sangat kompetitif, disesuaikan dengan jenjang karir dan keahlian yang dimiliki. Program pengembangan diri yang terstruktur juga menjadi daya tarik utama bagi para pencari kerja.</p>', 1, '2025-08-05 08:11:35', '2025-08-05 08:11:35', '2025-08-05 08:11:35'),
 (2, 1, '5 Cara Efektif Menjawab Pertanyaan \"Kelemahan Diri\" Saat Wawancara', '5-cara-efektif-menjawab-pertanyaan-kelemahan-diri-saat-wawancara', 'berita/interview.jpg', 'Pertanyaan tentang kelemahan diri seringkali menjebak. Pelajari cara menjawabnya dengan jujur namun tetap profesional.', '<p>Menjawab pertanyaan ini membutuhkan strategi. Kuncinya adalah menunjukkan kesadaran diri dan kemauan untuk berkembang. Sebutkan kelemahan yang nyata namun tidak krusial untuk posisi yang dilamar, dan jelaskan langkah-langkah yang sudah Anda ambil untuk memperbaikinya.</p>', 0, '2025-08-04 08:11:35', '2025-08-05 08:11:35', '2025-08-05 08:11:35'),
 (3, 2, 'Gojek dan Tokopedia Terus Buka Lowongan di Sektor Teknologi', 'gojek-dan-tokopedia-terus-buka-lowongan-di-sektor-teknologi', 'berita/gojek.jpg', 'Sebagai entitas GoTo, kedua raksasa teknologi ini terus mencari talenta di bidang software engineering, product management, dan data analytics.', '<p>Ekosistem GoTo yang luas menawarkan tantangan dan peluang karir yang menarik. Bekerja di sini berarti menjadi bagian dari inovasi yang berdampak pada kehidupan jutaan orang setiap harinya.</p>', 0, '2025-08-03 08:11:35', '2025-08-05 08:11:35', '2025-08-05 08:11:35'),
-(4, 1, 'Pentingnya Personal Branding di LinkedIn untuk Karir Anda', 'pentingnya-personal-branding-di-linkedin-untuk-karir-anda', 'berita/linkedin.jpg', 'LinkedIn bukan hanya CV online. Manfaatkan platform ini untuk membangun citra profesional dan memperluas jaringan Anda.', '<p>Profil LinkedIn yang optimal dapat menarik perhatian perekrut. Bagikan pencapaian, tulis artikel singkat, dan aktif berinteraksi di industri Anda untuk membangun personal brand yang kuat.</p>', 0, '2025-08-02 08:11:35', '2025-08-05 08:11:35', '2025-08-05 08:11:35'),
-(5, 2, 'Industri Manufaktur Kembali Bergeliat, Simak Lowongan Terbaru', 'industri-manufaktur-kembali-bergeliat-simak-lowongan-terbaru', 'berita/manufaktur.jpg', 'Seiring dengan pemulihan ekonomi, sektor manufaktur kembali membuka banyak lowongan untuk posisi operator, teknisi, hingga supervisor.', '<p>Banyak perusahaan manufaktur kini mengadopsi teknologi Industri 4.0, membuka peluang bagi para pekerja dengan keahlian di bidang otomasi dan robotika.</p>', 0, '2025-08-01 08:11:35', '2025-08-05 08:11:35', '2025-08-05 08:11:35');
+(4, 1, 'Pentingnya Personal Branding di LinkedIn untuk Karir Anda', 'pentingnya-personal-branding-di-linkedin-untuk-karir-anda', 'berita_images/sz0nei4zEHhmdYhmkY6gQtKKuEIwh8M1kiumTiWV.png', 'LinkedIn bukan hanya CV online. Manfaatkan platform ini untuk membangun citra profesional dan memperluas jaringan Anda.', '<p>Profil LinkedIn yang optimal dapat menarik perhatian perekrut. Bagikan pencapaian, tulis artikel singkat, dan aktif berinteraksi di industri Anda untuk membangun personal brand yang kuat.</p>', 0, '2025-08-02 08:11:00', '2025-08-05 08:11:35', '2025-11-19 07:00:13'),
+(6, 1, 'pppp', 'pppp', 'berita_images/j6719WXapvryQt0DI1v2hIevVangXnCGVQ6JHlhc.png', 'ppppp', '<p>pppppp</p>', 0, '2025-11-22 14:04:00', '2025-11-19 07:04:33', '2025-11-19 07:04:33');
 
 -- --------------------------------------------------------
 
@@ -205,16 +204,6 @@ CREATE TABLE `cache` (
   `expiration` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `cache`
---
-
-INSERT INTO `cache` (`key`, `value`, `expiration`) VALUES
-('ramstore01@gmail.com|127.0.0.1', 'i:1;', 1762804045),
-('ramstore01@gmail.com|127.0.0.1:timer', 'i:1762804045;', 1762804045),
-('ramstore12@gmail.com|127.0.0.1', 'i:2;', 1762804054),
-('ramstore12@gmail.com|127.0.0.1:timer', 'i:1762804054;', 1762804054);
-
 -- --------------------------------------------------------
 
 --
@@ -256,7 +245,8 @@ CREATE TABLE `iklan_lowongan` (
 
 INSERT INTO `iklan_lowongan` (`id`, `perusahaan_id`, `judul`, `deskripsi`, `paket`, `status`, `file_iklan_banner`, `metode_pembayaran`, `bukti_pembayaran`, `total_bayar`, `published_at`, `expires_at`, `created_at`, `updated_at`) VALUES
 (1, 12, 'pppp', 'jbbbbhb', 'gratis', 'aktif', 'iklan_banners/SjspkfHkTZYULMDFUq67ScP1S8dWbOwbJi91I1cX.png', NULL, NULL, NULL, '2025-11-12 07:08:46', '2025-11-27 07:08:46', '2025-11-12 07:08:46', '2025-11-12 07:08:46'),
-(2, 12, 'AKUNTANSI DASAR', 'kakakakaka', 'vip', 'aktif', 'iklan_banners/50kNO0ljggrZf5dTwWkCMRsbbgaHrE5ZArrvMNEb.png', 'BCA', 'bukti_pembayaran_iklan/8BitqfkNPZ9lygUXPwbu66VCSWWKymMi9K7oSspI.png', 150000.00, '2025-11-12 07:57:25', '2025-12-12 07:57:25', '2025-11-12 07:56:37', '2025-11-12 07:57:25');
+(2, 12, 'AKUNTANSI DASAR', 'kakakakaka', 'vip', 'aktif', 'iklan_banners/50kNO0ljggrZf5dTwWkCMRsbbgaHrE5ZArrvMNEb.png', 'BCA', 'bukti_pembayaran_iklan/8BitqfkNPZ9lygUXPwbu66VCSWWKymMi9K7oSspI.png', 150000.00, '2025-11-12 07:57:25', '2025-12-12 07:57:25', '2025-11-12 07:56:37', '2025-11-12 07:57:25'),
+(3, 12, 'AKUNTANSI DASAR', 'gggg', 'vip', 'aktif', 'iklan_banners/QM0w0b4ljfEe8a6MbfoBAd6jmfFPXUbqAeAjBKAK.png', 'Mandiri', 'bukti_pembayaran_iklan/EduIfTKF2DQON0FAvSjy5FNTZuU7qZAJT7wcp62n.png', 150000.00, '2025-11-17 11:09:38', '2025-12-17 11:09:38', '2025-11-17 11:07:59', '2025-11-17 11:09:38');
 
 -- --------------------------------------------------------
 
@@ -937,7 +927,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('XLlaHz7gKZ0ZfSusrqil4mRbBG3y7JnMdJD216v2', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoia2J2V3c1bnVmeGFUbDVtRFByQ3oxQ3A5Wlo0TURiUFY1NElzUGRIYiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzM6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi9pa2xhbiI7fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1762960688);
+('lgfsIOqhCaghtGHEGktKvGzGHKL60FJF7S24LICn', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiU3BxTUgyWGQyU1U0bTFJZ2NtQVZGdnExak1KUkxXN0FjYUZFQjU0biI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6Mjc6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9sb2dpbiI7fX0=', 1763568295);
 
 -- --------------------------------------------------------
 
@@ -1253,7 +1243,7 @@ ALTER TABLE `activity_logs`
 -- AUTO_INCREMENT for table `berita`
 --
 ALTER TABLE `berita`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `bidang_keahlians`
@@ -1271,7 +1261,7 @@ ALTER TABLE `bidang_pekerjaan`
 -- AUTO_INCREMENT for table `iklan_lowongan`
 --
 ALTER TABLE `iklan_lowongan`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `iklan_payments`

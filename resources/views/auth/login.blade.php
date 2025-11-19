@@ -227,12 +227,6 @@
                             <div class="col">
                                 <a href="{{ route('login.google') }}" class="social-btn"><i class="bi bi-google"></i></a>
                             </div>
-                            <div class="col">
-                                <a href="#" class="social-btn"><i class="bi bi-facebook"></i></a>
-                            </div>
-                            <div class="col">
-                                <a href="#" class="social-btn"><i class="bi bi-apple"></i></a>
-                            </div>
                         </div>
 
                         <!-- Link Daftar -->

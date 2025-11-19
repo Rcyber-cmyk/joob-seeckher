@@ -12,8 +12,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
+    {{-- Memastikan Carbon tersedia untuk digunakan di Blade --}}
+    @inject('Carbon', 'Carbon\Carbon') 
+
     <style>
         :root { 
             --orange: #f97316; 
@@ -111,6 +112,7 @@
             .main-wrapper { 
                 margin-left: var(--sidebar-width); 
             } 
+            .sidebar { transform: translateX(0); }
         }
         @media (max-width: 991.98px) { 
             .sidebar { 
@@ -279,17 +281,47 @@
     <aside class="sidebar" id="sidebar">
         <div class="logo">JobRec</div>
         <nav class="nav flex-column"> 
-            <a class="nav-link" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
-            <a class="nav-link" href="{{ route('admin.pelamar.index') }}"><i class="bi bi-people-fill"></i> Pelamar</a>
-            <a class="nav-link {{ Request::routeIs('admin.kandidat.index') ? 'active' : '' }}" href="{{ route('admin.kandidat.index') }}"><i class="bi bi-person-check-fill"></i> Kandidat</a>
-            <a class="nav-link" href="{{ route('admin.perusahaan.index') }}"><i class="bi bi-building-fill"></i> Perusahaan</a>
-            <a class="nav-link" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
+            <a class="nav-link {{ Request::routeIs('admin.homepage') ? 'active' : '' }}" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
             
-            <a class="nav-link active" href="{{ route('admin.iklan.index') }}">
-                <i class="bi bi-megaphone-fill"></i> Iklan
+            <a class="nav-link {{ Request::routeIs('admin.pelamar.index') ? 'active' : '' }}" href="{{ route('admin.pelamar.index') }}"><i class="bi bi-people-fill"></i> Pelamar</a>
+            
+            @php
+                // Tentukan apakah ada sub-menu Perusahaan yang aktif.
+                $isPerusahaanActive = Request::routeIs('admin.perusahaan.*') || 
+                                      Request::routeIs('admin.kandidat.index') || 
+                                      Request::routeIs('admin.iklan.*');
+            @endphp
+            
+            {{-- Tombol Toggler Utama: Perusahaan (Sekarang aktif) --}}
+            <a class="nav-link {{ $isPerusahaanActive ? 'active' : '' }}" 
+               data-bs-toggle="collapse" 
+               href="#perusahaanSubmenu" 
+               role="button" 
+               aria-expanded="{{ $isPerusahaanActive ? 'true' : 'false' }}" 
+               aria-controls="perusahaanSubmenu">
+                 <i class="bi bi-building-fill"></i> Perusahaan
+                 <i class="bi {{ $isPerusahaanActive ? 'bi-chevron-down' : 'bi-chevron-right' }} ms-auto" style="font-size: 0.8rem;"></i>
             </a>
-            <a class="nav-link" href="#"><i class="bi bi-newspaper"></i> Berita</a>
-            <a class="nav-link {{ Request::routeIs('admin.notifikasi.*') ? 'active' : '' }}" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a>
+
+            {{-- Konten Submenu --}}
+            <div class="collapse {{ $isPerusahaanActive ? 'show' : '' }}" id="perusahaanSubmenu">
+                <a class="nav-link ps-5 {{ Request::routeIs('admin.perusahaan.index') ? 'active' : '' }}" href="{{ route('admin.perusahaan.index') }}">
+                    <i class="bi bi-diagram-3-fill"></i> List Perusahaan
+                </a>
+                <a class="nav-link ps-5 {{ Request::routeIs('admin.kandidat.index') ? 'active' : '' }}" href="{{ route('admin.kandidat.index') }}">
+                    <i class="bi bi-person-check-fill"></i> Kandidat
+                </a>
+                {{-- Tautan Iklan Lowongan aktif di halaman ini --}}
+                <a class="nav-link ps-5 active" href="{{ route('admin.iklan.index') }}">
+                    <i class="bi bi-megaphone-fill"></i> Iklan Lowongan
+                </a>
+            </div>
+
+            <a class="nav-link {{ Request::routeIs('admin.pelamar.ranking') ? 'active' : '' }}" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
+            
+            <a class="nav-link {{ Request::routeIs('admin.berita.*') ? 'active' : '' }}" href="{{ route('admin.berita.index') }}"><i class="bi bi-newspaper"></i> Berita</a>
+            
+            <a class="nav-link {{ Request::routeIs('admin.notifikasi.index') ? 'active' : '' }}" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a>
         </nav>
         
         <div class="user-profile">

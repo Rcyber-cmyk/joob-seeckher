@@ -30,7 +30,7 @@
             background-color: var(--bg-main);
             font-family: 'Poppins', sans-serif;
             color: var(--dark-blue);
-            overflow-x: hidden; /* Mencegah horizontal scroll secara paksa */
+            overflow-x: hidden; 
         }
 
         /* === Sidebar (Desktop & Mobile) === */
@@ -49,37 +49,28 @@
         }
         .sidebar .logo { font-weight: 700; font-size: 1.8rem; text-align: center; margin-bottom: 2rem; letter-spacing: 1px; color: var(--white); }
         
-        /* ========================================
-         == PERUBAHAN CSS UNTUK SIDEBAR SCROLL ==
-         ========================================
-        */
         .sidebar .nav {
-            overflow-y: auto; /* Membuat area link bisa di-scroll */
+            overflow-y: auto; 
             overflow-x: hidden;
-            flex-grow: 1; /* Memastikan nav mengambil sisa ruang */
+            flex-grow: 1; 
         }
         .sidebar .user-profile { 
-            margin-top: 1rem; /* Beri jarak dari nav */
+            margin-top: 1rem; 
             background-color: rgba(0,0,0,0.15); 
-            padding: 0.75rem; /* PERKECIL PADDING */
+            padding: 0.75rem; 
             border-radius: var(--default-border-radius);
-            flex-shrink: 0; /* Mencegah user-profile ikut ter-scroll */
+            flex-shrink: 0; 
         }
-        /* ========================================
-         == AKHIR PERUBAHAN CSS 
-         ========================================
-        */
 
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.85);
-            /* PERUBAHAN: Jarak diperkecil */
-            padding: 0.6rem 1.2rem; /* Diperkecil dari 0.75rem */
-            margin-bottom: 0.2rem; /* Diperkecil dari 0.3rem */
+            padding: 0.6rem 1.2rem; 
+            margin-bottom: 0.2rem; 
             border-radius: 0.75rem;
             display: flex;
             align-items: center;
             font-weight: 500;
-            font-size: 0.9rem; /* Diperkecil dari 0.95rem */
+            font-size: 0.9rem; 
             transition: var(--default-transition);
             text-decoration: none;
         }
@@ -87,32 +78,19 @@
         .sidebar .nav-link:hover { background-color: rgba(255, 255, 255, 0.1); color: var(--white); }
         .sidebar .nav-link.active { background-color: var(--white); color: var(--orange-dark); font-weight: 600; }
         
-        /* ========================================
-         == CSS BARU UNTUK MEMPERKECIL PROFIL ==
-         ========================================
-        */
-        .sidebar .user-profile .d-flex .fw-bold {
-            font-size: 0.9rem; /* Perkecil nama */
-        }
-        .sidebar .user-profile .d-flex small {
-            font-size: 0.8rem; /* Perkecil "Admin" */
-        }
+        .sidebar .user-profile .d-flex .fw-bold { font-size: 0.9rem; }
+        .sidebar .user-profile .d-flex small { font-size: 0.8rem; }
         .sidebar .user-profile .d-flex img {
-            width: 32px; /* Perkecil avatar */
+            width: 32px; 
             height: 32px;
-            margin-right: 0.75rem !important; /* Perkecil margin */
+            margin-right: 0.75rem !important; 
         }
         .sidebar .user-profile .nav-link.mt-2 {
-            /* Perkecil link logout */
             margin-top: 0.5rem !important;
             padding: 0.5rem 0.75rem;
             font-size: 0.9rem;
             margin-bottom: 0 !important;
         }
-        /* ========================================
-         == AKHIR PERUBAHAN CSS 
-         ========================================
-        */
 
         /* === Main Wrapper === */
         .main-wrapper {
@@ -138,7 +116,6 @@
         
         /* === Header & Components === */
         
-        /* CSS UNTUK HEADER STICKY */
         .main-content { 
             padding: 2.5rem;
             padding-top: 0; 
@@ -184,7 +161,7 @@
         .table-custom tbody td:last-child { border-top-right-radius: 0.75rem; border-bottom-right-radius: 0.75rem; }
 
         /* ================================== */
-        /* ==   STYLE RESPONSIVE MOBILE   == */
+        /* ==   STYLE RESPONSIVE MOBILE   == */
         /* ================================== */
         @media (max-width: 767.98px) {
             .main-content {
@@ -211,24 +188,15 @@
             }
 
             /* --- STYLE TABEL RESPONSIf BARU (STACKED) --- */
-            .table-custom thead {
-                display: none; 
-            }
-            .table-custom tbody,
-            .table-custom tr,
-            .table-custom td {
-                display: block; 
-                width: 100%;
-            }
+            .table-custom thead { display: none; }
+            .table-custom tbody, .table-custom tr, .table-custom td { display: block; width: 100%; }
             .table-custom tr {
                 margin-bottom: 1rem; 
                 border: 1px solid #e2e8f0;
                 border-radius: var(--default-border-radius);
                 box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             }
-            .table-custom tbody tr:nth-of-type(even) {
-                background-color: var(--white); 
-            }
+            .table-custom tbody tr:nth-of-type(even) { background-color: var(--white); }
             
             .table-custom td {
                 padding: 1rem 1.25rem; 
@@ -237,9 +205,7 @@
                 position: relative; 
                 padding-left: 1.25rem; 
             }
-            .table-custom td:last-child {
-                border-bottom: none;
-            }
+            .table-custom td:last-child { border-bottom: none; }
 
             .table-custom td:before {
                 content: attr(data-label);
@@ -255,12 +221,8 @@
                 padding-right: 0;
             }
             
-            .table-custom td[data-label="Aksi"] {
-                text-align: right; 
-            }
-            .table-custom td[data-label="Aksi"]:before {
-                display: none; 
-            }
+            .table-custom td[data-label="Aksi"] { text-align: right; }
+            .table-custom td[data-label="Aksi"]:before { display: none; }
         }
     </style>
 </head>
@@ -268,33 +230,59 @@
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
     <aside class="sidebar" id="sidebar">
         <div class="logo">JobRec</div>
-        <nav class="nav flex-column"> <a class="nav-link active" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
+        <nav class="nav flex-column"> 
+            <a class="nav-link active" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
             <a class="nav-link" href="{{ route('admin.pelamar.index') }}"><i class="bi bi-people-fill"></i> Pelamar</a>
             
-            <a class="nav-link {{ Request::routeIs('admin.kandidat.index') ? 'active' : '' }}" href="{{ route('admin.kandidat.index') }}"><i class="bi bi-person-check-fill"></i> Kandidat</a>
+            @php
+                // Tentukan apakah ada sub-menu yang aktif
+                $isPerusahaanActive = Request::routeIs('admin.perusahaan.*') || 
+                                      Request::routeIs('admin.kandidat.index') || 
+                                      Request::routeIs('admin.iklan.*');
+            @endphp
             
-            <a class="nav-link" href="{{ route('admin.perusahaan.index') }}"><i class="bi bi-building-fill"></i> Perusahaan</a>
+            {{-- Tombol Toggler Utama --}}
+            <a class="nav-link {{ $isPerusahaanActive ? 'active' : '' }}" 
+               data-bs-toggle="collapse" 
+               href="#perusahaanSubmenu" 
+               role="button" 
+               aria-expanded="{{ $isPerusahaanActive ? 'true' : 'false' }}" 
+               aria-controls="perusahaanSubmenu">
+                <i class="bi bi-building-fill"></i> Perusahaan
+                <i class="bi {{ $isPerusahaanActive ? 'bi-chevron-down' : 'bi-chevron-right' }} ms-auto" style="font-size: 0.8rem;"></i>
+            </a>
+
+            {{-- Konten Submenu --}}
+            <div class="collapse {{ $isPerusahaanActive ? 'show' : '' }}" id="perusahaanSubmenu">
+                <a class="nav-link ps-5 {{ Request::routeIs('admin.perusahaan.index') ? 'active' : '' }}" href="{{ route('admin.perusahaan.index') }}">
+                    <i class="bi bi-diagram-3-fill"></i> List Perusahaan
+                </a>
+                <a class="nav-link ps-5 {{ Request::routeIs('admin.kandidat.index') ? 'active' : '' }}" href="{{ route('admin.kandidat.index') }}">
+                    <i class="bi bi-person-check-fill"></i> Kandidat
+                </a>
+                <a class="nav-link ps-5 {{ Request::routeIs('admin.iklan.*') ? 'active' : '' }}" href="{{ route('admin.iklan.index') }}">
+                    <i class="bi bi-megaphone-fill"></i> Iklan Lowongan
+                </a>
+            </div>
+            
             <a class="nav-link" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
             
-            <a class="nav-link {{ Request::routeIs('admin.iklan.*') ? 'active' : '' }}" href="{{ route('admin.iklan.index') }}">
-                <i class="bi bi-megaphone-fill"></i> Iklan
-            </a>
-            <a class="nav-link" href="#"><i class="bi bi-newspaper"></i> Berita</a>
+            <a class="nav-link {{ Request::routeIs('admin.berita.*') ? 'active' : '' }}" href="{{ route('admin.berita.index') }}"><i class="bi bi-newspaper"></i> Berita</a>
 
             <a class="nav-link {{ Request::routeIs('admin.notifikasi.*') ? 'active' : '' }}" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a>
         </nav>
         <div class="user-profile">
             <div class="d-flex align-items-center text-white">
-                <img src="https://placehold.co/40x40/ffffff/f97316?text={{ substr(Auth::user()->name, 0, 1) }}" class="rounded-circle me-3" alt="User">
+                <img src="https://placehold.co/40x40/ffffff/f97316?text={{ substr(Auth::user()->name, 0, 1) }}" class="rounded-circle me-3" alt="Admin">
                 <div>
                     <div class="fw-bold">{{ Auth::user()->name }}</div>
-                    <small class="opacity-75">Admin</small>
-                </div>
+                    <small class="opacity-75">Admin</small> </div>
             </div>
-            <a class="nav-link mt-2" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <a class="nav-link mt-2" href="{{ route('logout') }}" 
+               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="bi bi-box-arrow-right"></i> Logout
             </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none"> @csrf </form>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
         </div>
     </aside>
 
@@ -335,10 +323,10 @@
                             <div>
                                 <small>Total Perusahaan</small>
                                 <h3>{{ number_format($totalPerusahaan, 0, ',', '.') }}</h3>
-                                 <span class="small {{ $persentasePerusahaan['status'] == 'increase' ? 'text-success' : 'text-danger' }}">
-                                    <i class="bi {{ $persentasePerusahaan['status'] == 'increase' ? 'bi-arrow-up-short' : 'bi-arrow-down-short' }}"></i>
-                                    {{ $persentasePerusahaan['value'] }}% Dari Bulan Lalu
-                                </span>
+                                   <span class="small {{ $persentasePerusahaan['status'] == 'increase' ? 'text-success' : 'text-danger' }}">
+                                     <i class="bi {{ $persentasePerusahaan['status'] == 'increase' ? 'bi-arrow-up-short' : 'bi-arrow-down-short' }}"></i>
+                                     {{ $persentasePerusahaan['value'] }}% Dari Bulan Lalu
+                                 </span>
                             </div>
                             <div class="icon" style="--color-from: #10b981; --color-to: #34d399;"><i class="bi bi-building-fill"></i></div>
                         </div>
@@ -347,14 +335,14 @@
                 {{-- Total UMKM --}}
                 <div class="col-lg-3 col-md-6">
                     <div class="stat-card card-base h-100">
-                         <div class="d-flex justify-content-between align-items-start">
+                           <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <small>Total UMKM</small>
                                 <h3>{{ number_format($totalUmkm, 0, ',', '.') }}</h3>
                                 <span class="small {{ $persentaseUmkm['status'] == 'increase' ? 'text-success' : 'text-danger' }}">
-                                    <i class="bi {{ $persentaseUmkm['status'] == 'increase' ? 'bi-arrow-up-short' : 'bi-arrow-down-short' }}"></i>
-                                    {{ $persentaseUmkm['value'] }}% Dari Bulan Lalu
-                                </span>
+                                     <i class="bi {{ $persentaseUmkm['status'] == 'increase' ? 'bi-arrow-up-short' : 'bi-arrow-down-short' }}"></i>
+                                     {{ $persentaseUmkm['value'] }}% Dari Bulan Lalu
+                                 </span>
                             </div>
                             <div class="icon" style="--color-from: #8b5cf6; --color-to: #a78bfa;"><i class="bi bi-shop"></i></div>
                         </div>
@@ -454,6 +442,7 @@
         </div>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Mobile Sidebar Toggle

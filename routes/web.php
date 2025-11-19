@@ -39,6 +39,9 @@ use App\Http\Controllers\Admin\LowonganAdminController;
 use App\Http\Controllers\Admin\PengaturanAdminController;
 use App\Http\Controllers\Admin\KandidatAdminController;
 use App\Http\Controllers\Admin\ApprovalController; 
+use App\Http\Controllers\Admin\BeritaController as AdminBeritaController; 
+use App\Http\Controllers\Admin\BeritaAdminController;
+use App\Http\Controllers\Admin\JadwalWawancaraAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -110,9 +113,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/iklan/approve/{id}', [ApprovalController::class, 'approve'])->name('iklan.approve');
         Route::post('/iklan/reject/{id}', [ApprovalController::class, 'reject'])->name('iklan.reject');
 
+       // 1. Index (GET /admin/berita)
+        Route::get('berita', [BeritaAdminController::class, 'index'])->name('berita.index');
+        
+        // 2. Create Form (GET /admin/berita/create)
+        Route::get('berita/create', [BeritaAdminController::class, 'create'])->name('berita.create');
+        
+        // 3. Store Data (POST /admin/berita)
+        Route::post('berita', [BeritaAdminController::class, 'store'])->name('berita.store');
+        
+        // 4. Edit Form (GET /admin/berita/{berita}/edit)
+        Route::get('berita/{beritum}/edit', [BeritaAdminController::class, 'edit'])->name('berita.edit');
+        
+        // 5. Update Data (PUT/PATCH /admin/berita/{berita})
+        Route::put('berita/{beritum}', [BeritaAdminController::class, 'update'])->name('berita.update');
+        
+        // 6. Delete Data (DELETE /admin/berita/{berita})
+        Route::delete('berita/{beritum}', [BeritaAdminController::class, 'destroy'])->name('berita.destroy');
+
+        Route::resource('jadwalwawancara', JadwalWawancaraAdminController::class)->except(['create', 'store', 'edit', 'update']);
+
         Route::prefix('iklan')->name('iklan.')->group(function() {
         // Ini adalah route yang memanggil halaman Anda
         Route::get('/', [ApprovalController::class, 'index'])->name('index'); 
+
         
         // Ini adalah route untuk tombol-tombol
         Route::post('/approve/{paymentId}', [ApprovalController::class, 'approve'])->name('approve');

@@ -14,8 +14,8 @@
     
     <style>
         /* ========================================
-         SEMUA STYLE DISAMAKAN DENGAN DASHBOARD
-         ========================================
+          SEMUA STYLE DISAMAKAN DENGAN DASHBOARD
+          ========================================
         */
         :root {
             --orange: #f97316;
@@ -53,37 +53,28 @@
         }
         .sidebar .logo { font-weight: 700; font-size: 1.8rem; text-align: center; margin-bottom: 2rem; letter-spacing: 1px; color: var(--white); }
         
-        /* ========================================
-         == PERUBAHAN CSS UNTUK SIDEBAR SCROLL ==
-         ========================================
-        */
         .sidebar .nav {
-            overflow-y: auto; /* Membuat area link bisa di-scroll */
+            overflow-y: auto; 
             overflow-x: hidden;
-            flex-grow: 1; /* Memastikan nav mengambil sisa ruang */
+            flex-grow: 1; 
         }
         .sidebar .user-profile { 
-            margin-top: 1rem; /* Beri jarak dari nav */
+            margin-top: 1rem; 
             background-color: rgba(0,0,0,0.15); 
-            padding: 0.75rem; /* PERKECIL PADDING */
+            padding: 0.75rem; 
             border-radius: var(--default-border-radius);
-            flex-shrink: 0; /* Mencegah user-profile ikut ter-scroll */
+            flex-shrink: 0; 
         }
-        /* ========================================
-         == AKHIR PERUBAHAN CSS 
-         ========================================
-        */
         
         .sidebar .nav-link {
             color: rgba(255, 255, 255, 0.85);
-            /* PERUBAHAN: Jarak diperkecil */
-            padding: 0.6rem 1.2rem; /* Diperkecil dari 0.75rem */
-            margin-bottom: 0.2rem; /* Diperkecil dari 0.3rem */
+            padding: 0.6rem 1.2rem;
+            margin-bottom: 0.2rem; 
             border-radius: 0.75rem;
             display: flex;
             align-items: center;
             font-weight: 500;
-            font-size: 0.9rem; /* Diperkecil dari 0.95rem */
+            font-size: 0.9rem; 
             transition: var(--default-transition);
             text-decoration: none;
         }
@@ -91,32 +82,23 @@
         .sidebar .nav-link:hover { background-color: rgba(255, 255, 255, 0.1); color: var(--white); }
         .sidebar .nav-link.active { background-color: var(--white); color: var(--orange-dark); font-weight: 600; }
 
-        /* ========================================
-         == CSS BARU UNTUK MEMPERKECIL PROFIL ==
-         ========================================
-        */
         .sidebar .user-profile .d-flex .fw-bold {
-            font-size: 0.9rem; /* Perkecil nama */
+            font-size: 0.9rem;
         }
         .sidebar .user-profile .d-flex small {
-            font-size: 0.8rem; /* Perkecil "Admin" */
+            font-size: 0.8rem;
         }
         .sidebar .user-profile .d-flex img {
-            width: 32px; /* Perkecil avatar */
+            width: 32px;
             height: 32px;
-            margin-right: 0.75rem !important; /* Perkecil margin */
+            margin-right: 0.75rem !important;
         }
         .sidebar .user-profile .nav-link.mt-2 {
-            /* Perkecil link logout */
             margin-top: 0.5rem !important;
             padding: 0.5rem 0.75rem;
             font-size: 0.9rem;
             margin-bottom: 0 !important;
         }
-        /* ========================================
-         == AKHIR PERUBAHAN CSS 
-         ========================================
-        */
 
         /* === Main Wrapper === */
         .main-wrapper {
@@ -211,7 +193,7 @@
         }
 
         /* ================================== */
-        /* ==   STYLE RESPONSIVE MOBILE BARU   == */
+        /* == 	STYLE RESPONSIVE MOBILE BARU 	== */
         /* ================================== */
         @media (max-width: 767.98px) {
             .main-content {
@@ -292,15 +274,42 @@
             <a class="nav-link {{ Request::routeIs('admin.homepage') ? 'active' : '' }}" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
             <a class="nav-link {{ Request::routeIs('admin.pelamar.index') ? 'active' : '' }}" href="{{ route('admin.pelamar.index') }}"><i class="bi bi-people-fill"></i> Pelamar</a>
             
-            <a class="nav-link {{ Request::routeIs('admin.kandidat.index') ? 'active' : '' }}" href="{{ route('admin.kandidat.index') }}"><i class="bi bi-person-check-fill"></i> Kandidat</a>
+            @php
+                // Tentukan apakah ada sub-menu Perusahaan yang aktif
+                $isPerusahaanActive = Request::routeIs('admin.perusahaan.*') || 
+                                      Request::routeIs('admin.kandidat.index') || 
+                                      Request::routeIs('admin.iklan.*');
+                // Tautan 'List Perusahaan' adalah yang aktif di halaman ini
+                $isCurrentPageActive = Request::routeIs('admin.perusahaan.index');
+            @endphp
             
-            <a class="nav-link active" href="{{ route('admin.perusahaan.index') }}"><i class="bi bi-building-fill"></i> Perusahaan</a>
+            {{-- Tombol Toggler Utama: Perusahaan --}}
+            <a class="nav-link {{ $isPerusahaanActive ? 'active' : '' }}" 
+               data-bs-toggle="collapse" 
+               href="#perusahaanSubmenu" 
+               role="button" 
+               aria-expanded="{{ $isPerusahaanActive ? 'true' : 'false' }}" 
+               aria-controls="perusahaanSubmenu">
+                 <i class="bi bi-building-fill"></i> Perusahaan
+                 <i class="bi {{ $isPerusahaanActive ? 'bi-chevron-down' : 'bi-chevron-right' }} ms-auto" style="font-size: 0.8rem;"></i>
+            </a>
+
+            {{-- Konten Submenu --}}
+            <div class="collapse {{ $isPerusahaanActive ? 'show' : '' }}" id="perusahaanSubmenu">
+                <a class="nav-link ps-5 {{ $isCurrentPageActive ? 'active' : '' }}" href="{{ route('admin.perusahaan.index') }}">
+                    <i class="bi bi-diagram-3-fill"></i> List Perusahaan
+                </a>
+                <a class="nav-link ps-5 {{ Request::routeIs('admin.kandidat.index') ? 'active' : '' }}" href="{{ route('admin.kandidat.index') }}">
+                    <i class="bi bi-person-check-fill"></i> Kandidat
+                </a>
+                <a class="nav-link ps-5 {{ Request::routeIs('admin.iklan.*') ? 'active' : '' }}" href="{{ route('admin.iklan.index') }}">
+                    <i class="bi bi-megaphone-fill"></i> Iklan Lowongan
+                </a>
+            </div>
+            
             <a class="nav-link {{ Request::routeIs('admin.pelamar.ranking') ? 'active' : '' }}" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
             
-            <a class="nav-link" href="{{ route('admin.iklan.index') }}">
-                <i class="bi bi-megaphone-fill"></i> Iklan
-            </a>
-            <a class="nav-link" href="#"><i class="bi bi-newspaper"></i> Berita</a>
+            <a class="nav-link {{ Request::routeIs('admin.berita.*') ? 'active' : '' }}" href="{{ route('admin.berita.index') }}"><i class="bi bi-newspaper"></i> Berita</a>
 
             <a class="nav-link {{ Request::routeIs('admin.notifikasi.*') ? 'active' : '' }}" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a>
         </nav>
@@ -314,7 +323,7 @@
             </div>
             <a class="nav-link mt-2" href="{{ route('logout') }}" 
                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <i class="bi bi-box-arrow-right"></i> Logout
+                 <i class="bi bi-box-arrow-right"></i> Logout
             </a>
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
         </div>
