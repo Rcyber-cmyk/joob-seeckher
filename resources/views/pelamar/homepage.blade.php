@@ -9,579 +9,429 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
+    {{-- Animate.css untuk efek masuk yang mudah --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+
     <style>
-    /* === Global & Reset === */
-    body {
-        font-family: 'Segoe UI', sans-serif;
-        background-color: #f4f6f9; /* Background abu-abu muda korporat */
-        color: #495057; /* Warna teks abu tua */
-        overflow-x: hidden;
-        line-height: 1.6;
-    }
-    a {
-        color: #F39C12; /* Warna link biru standar Bootstrap (atau bisa #22374e) */
-        text-decoration: none;
-    }
-    a:hover {
-        color: #0a58ca;
-        text-decoration: underline;
-    }
-    .btn-orange { /* Oranye tetap jadi aksen utama */
-        background-color: #F39C12; border-color: #F39C12; color: #fff;
-        padding: 0.6rem 1.5rem; border-radius: 6px; font-weight: 500; transition: all 0.3s;
-    }
-    .btn-orange:hover { background-color: #d8890b; border-color: #d8890b; transform: translateY(-2px); }
+        /* === Global & Reset === */
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f9;
+            color: #495057;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        a { text-decoration: none; color: inherit; transition: all 0.3s; }
+        a:hover { color: #F39C12; }
 
-    /* === Navbar (Tetap Sama) === */
-    .navbar { padding: 1rem 0; z-index: 1050 !important; position: relative; background-color: #22374e; color: white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); } /* Tambah shadow */
-    .navbar-brand { font-weight: bold; font-size: 1.5rem; letter-spacing: 2px; color: white; }
-    .navbar-nav .nav-link { margin-right: 1rem; color: rgba(255, 255, 255, 0.8); } /* Warna link navbar sedikit redup */
-    .navbar-nav .nav-link:hover, .navbar-nav .nav-link.active { color: #ffffff; } /* Warna hover/active jadi putih */
-    .dropdown-menu { z-index: 1051 !important; }
+        /* === Helper Classes === */
+        .text-orange { color: #F39C12 !important; }
+        .btn-orange {
+            background-color: #F39C12; border: 1px solid #F39C12; color: #fff;
+            padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 600; transition: all 0.3s;
+        }
+        .btn-orange:hover {
+            background-color: #d8890b; border-color: #d8890b; color: #fff; transform: translateY(-2px);
+        }
+        .btn-outline-light-custom {
+            border: 2px solid rgba(255,255,255,0.8); color: white; font-weight: 600;
+            padding: 0.6rem 1.5rem; border-radius: 8px; transition: all 0.3s;
+        }
+        .btn-outline-light-custom:hover {
+            background-color: white; color: #22374e; border-color: white;
+        }
+        /* Tombol Outline Oranye */
+        .btn-outline-orange {
+            border: 2px solid #F39C12; color: #F39C12; font-weight: 600;
+            padding: 0.6rem 1.5rem; border-radius: 8px; transition: all 0.3s;
+        }
+        .btn-outline-orange:hover {
+            background-color: #F39C12; color: white;
+        }
 
-    /* === Hero Section (Tema Korporat) === */
-    .hero-section {
-        background-color: #ffffff; /* Background putih */
-        color: #343a40; /* Teks gelap */
-        padding: 6rem 0; /* Padding lebih besar */
-        text-align: left;
-        border-bottom: 1px solid #dee2e6; /* Garis bawah tipis */
-        /* Penyesuaian untuk background image dinamis */
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-    .hero-section h1 {
-        font-size: 3rem;
-        font-weight: 700; /* Font lebih standar */
-        line-height: 1.3;
-        margin-bottom: 1rem;
-        color: #22374e; /* Judul warna biru tua */
-    }
-    .hero-section p.lead { /* Style untuk subtitle */
-        font-size: 1.2rem;
-        color: #6c757d; /* Warna abu */
-        margin-bottom: 2rem;
-        max-width: 500px; /* Batasi lebar subtitle */
-    }
-    .hero-img {
-        max-height: 400px; /* Ukuran disesuaikan */
-    }
-    /* Tombol Hero */
-    .hero-section .btn-orange { /* Tombol Daftar tetap oranye */ }
-    .hero-section .btn-outline-secondary { /* Tombol Masuk jadi outline abu */
-        padding: 0.8rem 1.8rem; border-radius: 6px; font-weight: 500; transition: all 0.3s;
-        border-color: #6c757d; color: #6c757d; border-width: 2px;
-    }
-    .hero-section .btn-outline-secondary:hover { background-color: #6c757d; color: white; transform: translateY(-2px); }
 
-    /* --- Responsif Hero --- */
-    @media (max-width: 767.98px) {
-        .hero-section { padding: 4rem 1rem; }
-        .hero-section h1 { font-size: 2.2rem; }
-        .hero-section p.lead { font-size: 1rem; }
-        .hero-img { max-width: 250px; margin-top: 2rem; }
-        .hero-section .mt-3 { justify-content: center; }
-        .hero-section .btn { padding: 0.7rem 1.4rem; font-size: 0.9rem; }
-    }
+        /* === Navbar === */
+        .navbar { z-index: 1050; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
 
-    /* === Carousel Iklan (Menggantikan Berita) === */
-    #iklanGratisCarousel {
-        position: relative;
-        height: 55vh; /* TINGGI TETAP (sesuaikan jika perlu) */
-        min-height: 450px; /* TINGGI MINIMUM (sesuaikan jika perlu) */
-        background-color: #e9ecef; /* Background abu-abu muda luar */
-        color: #343a40;
-        overflow: hidden;
-    }
-    #iklanGratisCarousel .carousel-inner {
-        height: 100%;
-    }
-    #iklanGratisCarousel .carousel-item {
-        height: 100%;
-        background-color: #E0F2F7; /* WARNA BINGKAI BIRU MUDA */
-        display: flex;
-        flex-direction: column;
-        align-items: center; /* Tengah Horizontal */
-        justify-content: center; /* Tengah Vertikal */
-        padding: 2rem;
-        text-align: center;
-    }
-    #iklanGratisCarousel .carousel-item img {
-        width: auto; /* Lebar otomatis */
-        max-width: 90%; /* Maksimal 90% lebar biar tidak mepet */
-        height: auto; /* Tinggi otomatis */
-        max-height: 60%; /* BATASI TINGGI GAMBAR (misal 60%) */
-        object-fit: contain; /* TAMPILKAN SELURUH GAMBAR */
-        display: block;
-        margin-left: auto; /* Paksa tengah H */
-        margin-right: auto; /* Paksa tengah H */
-        margin-bottom: 1rem; /* Jarak ke teks */
-    }
+        /* === BAGIAN 1: HERO CAROUSEL === */
+        /* Efek Blur untuk yang belum login */
+        .guest-blur {
+            filter: blur(5px);
+            pointer-events: none; /* Mencegah klik */
+            user-select: none;
+            transition: filter 0.5s ease;
+        }
+        /* Overlay pesan untuk guest */
+        .guest-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.6); /* Putih transparan */
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-radius: 16px; /* Sesuaikan dengan border radius kartu */
+        }
+        
+        .hero-section {
+            position: relative;
+            background-color: #22374e;
+            color: white;
+            overflow: hidden;
+        }
+        .hero-carousel-inner { min-height: 550px; }
+        .hero-slide-item {
+            min-height: 550px;
+            display: flex;
+            align-items: center;
+            padding: 4rem 0;
+            /* Fix transisi kasar: pastikan backface hidden */
+            backface-visibility: hidden; 
+            -webkit-backface-visibility: hidden;
+        }
+        
+        /* Slide 1: Statis */
+        .hero-title {
+            font-size: 3.5rem; font-weight: 800; line-height: 1.2; margin-bottom: 1.5rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        .hero-subtitle {
+            font-size: 1.2rem; color: rgba(255,255,255,0.9); margin-bottom: 2.5rem; font-weight: 300;
+        }
+        .hero-img-static {
+            max-height: 450px; width: auto; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
+            /* Animasi gerakan halus */
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
 
-    /* Konten teks di bawah gambar */
-    #iklanGratisCarousel .iklan-content-landing {
-        text-align: center;
-        max-width: 90%; /* Batasi lebar teks */
-        margin: 0 auto;
-        color: #343a40;
-    }
-    #iklanGratisCarousel .iklan-content-landing h2 {
-        color: #22374e;
-        font-size: 1.8rem;
-        font-weight: 600;
-        text-shadow: none;
-        margin-bottom: 0.5rem;
-    }
-    #iklanGratisCarousel .iklan-content-landing p {
-        color: #495057;
-        font-size: 1rem;
-        text-shadow: none;
-        margin-bottom: 1rem;
-    }
-    /* Tombol Outline Biru */
-    #iklanGratisCarousel .iklan-content-landing .btn-iklan-landing {
-        background-color: transparent; color: #22374e;
-        border: 2px solid #22374e; padding: 0.5rem 1.2rem;
-        border-radius: 6px;
-        font-size: 0.85rem; font-weight: 500; transition: all 0.3s;
-        text-decoration: none; box-shadow: none;
-        display: inline-block; /* Pastikan tombol tidak full width */
-    }
-    #iklanGratisCarousel .iklan-content-landing .btn-iklan-landing:hover {
-        background-color: #22374e; color: white;
-    }
-    /* Indikator & Kontrol */
-    #iklanGratisCarousel .carousel-indicators { z-index: 5; }
-    #iklanGratisCarousel .carousel-indicators button { background-color: rgba(0,0,0,0.2); }
-    #iklanGratisCarousel .carousel-indicators .active { background-color: #22374e; }
-    #iklanGratisCarousel .carousel-control-prev, #iklanGratisCarousel .carousel-control-next { z-index: 5; }
-    #iklanGratisCarousel .carousel-control-prev-icon,
-    #iklanGratisCarousel .carousel-control-next-icon {
-        filter: invert(20%) sepia(20%) saturate(1000%) hue-rotate(180deg) brightness(80%) contrast(90%); /* Ikon gelap */
-        background-color: transparent; border-radius: 0; padding: 0; box-shadow: none;
-    }
+        /* Slide Premium */
+        .hero-premium-content { text-align: center; max-width: 900px; margin: 0 auto; }
+        .premium-badge-hero {
+            background-color: #F39C12; color: white; padding: 6px 16px;
+            border-radius: 30px; font-weight: 700; text-transform: uppercase;
+            font-size: 0.85rem; letter-spacing: 1.5px; margin-bottom: 1.5rem;
+            display: inline-block; box-shadow: 0 4px 10px rgba(243, 156, 18, 0.4);
+        }
+        .hero-premium-title { font-size: 2.8rem; font-weight: 700; margin-bottom: 0.5rem; color: white; }
+        .hero-premium-company { font-size: 1.5rem; color: rgba(255,255,255,0.8); margin-bottom: 2rem; font-weight: 300; }
+        .hero-premium-visual {
+            background: white; border-radius: 16px; padding: 1.5rem;
+            display: inline-block; box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            margin-bottom: 2rem; transition: transform 0.3s;
+            position: relative; /* Untuk overlay guest */
+            overflow: hidden;
+        }
+        .hero-premium-img { height: 120px; width: auto; object-fit: contain; }
+        
+        /* Carousel Indicators & Controls */
+        .carousel-indicators [data-bs-target] { background-color: white; width: 10px; height: 10px; border-radius: 50%; margin: 0 6px; opacity: 0.5; }
+        .carousel-indicators .active { opacity: 1; background-color: #F39C12; transform: scale(1.2); }
+        
+        /* FIX TRANSISI: Hapus transisi default Bootstrap yang kadang glitchy jika tidak pas */
+        .carousel-item {
+            transition: transform 0.6s ease-in-out; /* Dipercepat sedikit atau sesuaikan */
+        }
+        /* Atau gunakan carousel-fade (sudah dipakai di HTML) untuk transisi opacity yang lebih mulus */
 
-    /* === Main Content (Area Putih/Abu Sangat Muda) === */
-    .main-content {
-        background: #ffffff; /* Background putih */
-        color: #343a40;
-        padding: 4rem 0;
-        position: relative;
-    }
-    .main-content .section-title {
-        font-weight: 600; /* Font lebih standar */
-        font-size: 1.8rem;
-        color: #22374e; /* Warna biru tua */
-        margin-bottom: 3rem; /* Jarak lebih besar */
-        text-align: center;
-        position: relative;
-        padding-bottom: 0.8rem;
-    }
-    .main-content .section-title::after { /* Garis bawah biru */
-        content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-        width: 70px; height: 3px; background-color: #22374e; border-radius: 2px;
-    }
 
-    /* === Jelajahi Perusahaan (Premium) === */
-    .section-perusahaan-partner .card {
-        border: 1px solid #dee2e6; /* Border abu standar */
-        border-radius: 8px; /* Radius lebih kotak */
-        box-shadow: 0 3px 10px rgba(0,0,0,0.05); /* Shadow sangat halus */
-        height: 100%; overflow: hidden; background-color: white;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-    .section-perusahaan-partner .card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 6px 15px rgba(0,0,0,0.08);
-    }
-    .section-perusahaan-partner .card .card-img-top { height: 160px; object-fit: cover; border-bottom: 1px solid #dee2e6; } /* Tinggi disesuaikan */
-    .section-perusahaan-partner .card-body { color: #343a40; padding: 1rem; } /* Padding dikurangi */
-    .section-perusahaan-partner .card-body h6 { color: #22374e; font-weight: 600; margin-bottom: 0.3rem; font-size: 1rem; } /* Warna biru */
-    .section-perusahaan-partner .card-body p { color: #6c757d; font-size: 0.85rem; }
-    .section-perusahaan-partner a.text-decoration-none:hover h6 { color: #F39C12; } /* Hover biru muda */
-    .section-perusahaan-partner + .text-end a { /* Link Lihat Selengkapnya */
-        color: #F39C12; font-weight: 500;
-    }
+        /* === BAGIAN 2: DAFTAR LOWONGAN === */
+        .section-lowongan { padding: 5rem 0; background-color: #f4f6f9; }
+        .section-header { text-align: center; margin-bottom: 3rem; }
+        .section-title { font-size: 2rem; font-weight: 700; color: #22374e; margin-bottom: 0.5rem; }
+        .section-desc { color: #6c757d; }
 
-    /* === Rekomendasi Pekerjaan (Slider) === */
-    .section-rekomendasi { padding: 3rem 0 4rem; }
-    .job-listing-card, .job-listing-card-premium {
-        border: 1px solid #dee2e6; border-radius: 8px; padding: 1.25rem; /* Padding disesuaikan */
-        height: 100%; display: flex; flex-direction: column;
-        transition: box-shadow 0.2s ease, transform 0.2s ease;
-        background-color: #fff;
-    }
-    .job-listing-card:hover, .job-listing-card-premium:hover {
-        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
-        transform: translateY(-4px);
-    }
-    .job-listing-card .company-logo, .job-listing-card-premium .company-logo { width: 40px; height: 40px; margin-right: 0.8rem; border-radius: 6px; } /* Ukuran logo */
-    .job-listing-card .company-details h6, .job-listing-card-premium .company-details h6 { font-size: 0.95rem; font-weight: 600; color: #22374e; } /* Ukuran & Warna */
-    .job-listing-card .company-details p, .job-listing-card-premium .company-details p { font-size: 0.8rem; color: #6c757d; }
-    .job-listing-card .location, .job-listing-card-premium .location { font-size: 0.8rem; margin-bottom: 0.8rem; }
-    .job-listing-card .location i, .job-listing-card-premium .location i { color: #6c757d; } /* Ikon lokasi abu */
-    .job-listing-card .description, .job-listing-card-premium .description { font-size: 0.85rem; color: #495057; margin-bottom: 1rem; }
-    .job-listing-card .btn-lihat-detail, .job-listing-card-premium .btn-lihat-detail {
-        background-color: transparent; color: #F39C12; /* Tombol jadi outline biru */
-        border: 1px solid #F39C12; padding: 0.4rem 0.8rem; border-radius: 6px;
-        font-size: 0.8rem; font-weight: 500; margin-top: auto;
-    }
-    .job-listing-card .btn-lihat-detail:hover, .job-listing-card-premium .btn-lihat-detail:hover {
-        background-color: #F39C12; color: white; /* Hover jadi biru solid */
-    }
+        .job-card {
+            background: white; border-radius: 16px; overflow: hidden;
+            border: 1px solid #e9ecef; transition: all 0.3s ease;
+            height: 100%; display: flex; flex-direction: column;
+            position: relative; /* Untuk overlay guest */
+        }
+        .job-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-color: #dbe2e8; }
+        
+        /* Premium Card Style */
+        .job-card.premium { border: 1px solid #ffeeba; background: linear-gradient(to bottom, #ffffff, #fffaf0); }
+        .job-card.premium::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background-color: #F39C12; }
+        .premium-tag {
+            position: absolute; top: 12px; right: 12px;
+            background-color: #fff4e0; color: #F39C12;
+            font-size: 0.7rem; font-weight: 700; padding: 4px 10px;
+            border-radius: 20px; display: flex; align-items: center; gap: 4px; z-index: 2;
+        }
 
-    /* --- Card Premium (Korporat) --- */
-    /* --- Card Premium (Dibuat Lebih Menonjol) --- */
-    .job-listing-card-premium {
-        border: 1px solid #FFEBCD; /* Border oranye sangat muda */
-        border-left: 5px solid #F39C12; /* Border kiri oranye tebal */
-        background-color: #FFFBF5; /* Background krem/oranye sangat muda */
-        box-shadow: 0 6px 20px rgba(243, 156, 18, 0.15); /* Shadow oranye halus */
-        position: relative; /* Diperlukan untuk badge absolut */
-    }
-    .job-listing-card-premium .company-details h6 {
-        color: #B9770E; /* Judul lowongan warna oranye tua */
-        font-weight: 700; /* Lebih tebal */
-    }
-    .job-listing-card-premium .btn-lihat-detail {
-        background-color: #F39C12; /* Tombol jadi solid oranye */
-        color: white;
-        border: none;
-    }
-    .job-listing-card-premium .btn-lihat-detail:hover {
-        background-color: #d8890b; /* Hover oranye gelap */
-        color: white;
-    }
-    /* Style untuk Badge Premium */
-    .premium-badge {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background-color: #F39C12;
-        color: white;
-        font-size: 0.7rem;
-        font-weight: bold;
-        padding: 3px 8px;
-        border-radius: 4px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    .premium-badge i {
-        font-size: 0.6rem; /* Ukuran bintang sedikit lebih kecil */
-        margin-right: 3px;
-    }
-    /* Style untuk company-info di dalam card */
-    .job-listing-card .company-info,
-    .job-listing-card-premium .company-info {
-        display: flex;
-        align-items: center; /* Sejajarkan logo dan detail */
-        margin-bottom: 0.8rem; /* Jarak ke lokasi */
-    }
+        .card-content { padding: 1.5rem; flex-grow: 1; }
+        .company-header { display: flex; align-items: center; margin-bottom: 1rem; }
+        .company-logo-thumb { width: 48px; height: 48px; border-radius: 10px; object-fit: contain; border: 1px solid #f1f1f1; padding: 2px; background: white; margin-right: 1rem; }
+        .job-info-title { font-size: 1.1rem; font-weight: 700; color: #212529; line-height: 1.3; margin-bottom: 0.2rem; }
+        .job-info-company { font-size: 0.9rem; color: #6c757d; margin: 0; }
+        
+        .job-details-meta { font-size: 0.85rem; color: #6c757d; margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 12px; }
+        .meta-item { display: flex; align-items: center; gap: 5px; }
+        .meta-item i { color: #F39C12; }
+        .job-desc-preview { font-size: 0.9rem; color: #6c757d; margin-top: 1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 
-    /* --- Swiper Slider (Korporat) --- */
-    .job-swiper-container { padding-bottom: 40px; }
-    .swiper-slide { height: auto; } /* Pastikan slide menyesuaikan tinggi konten */
-    .swiper-button-next, .swiper-button-prev {
-        color: #6c757d; /* Warna panah abu */
-        background: none; border-radius: 0; width: auto; height: auto; box-shadow: none;
-    }
-    .swiper-button-next:hover, .swiper-button-prev:hover { background: none; }
-    .swiper-button-next::after, .swiper-button-prev::after { font-size: 1.5rem; /* Ukuran panah lebih besar */ }
-    .swiper-button-prev { left: -10px; } /* Posisi disesuaikan */
-    .swiper-button-next { right: -10px; }
+        .card-action { padding: 1rem 1.5rem; border-top: 1px solid #f1f1f1; text-align: right; background-color: #ffffff; }
+        .btn-link-detail { color: #22374e; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 5px; transition: gap 0.2s; }
+        .btn-link-detail:hover { color: #F39C12; gap: 8px; }
 
-    /* === Modal Login (Korporat) === */
-    #loginRequiredModal .modal-content { border-radius: 8px; } /* Radius lebih kotak */
-    #loginRequiredModal .modal-header { padding: 1.5rem; border-bottom: 0; }
-    #loginRequiredModal .modal-header i.bi-lock-fill { 
-        color: #F39C12; 
-        font-size: 1.5rem; /* Besarkan ikon */
-        margin-right: 10px; /* Jarak ke judul */
-    }
-    #loginRequiredModal .modal-title { 
-        font-size: 1.4rem; 
-        color: #22374e !important; 
-        margin-bottom: 0; /* Hapus margin bawah */
-    }
-    #loginRequiredModal .modal-body { 
-        font-size: 0.95rem;
-        padding: 0 1.5rem 1.5rem 1.5rem; /* Sesuaikan padding */
-    }
-    #loginRequiredModal .modal-footer .btn { font-size: 0.9rem; border-radius: 6px; }
-    #loginRequiredModal .modal-footer .btn-primary-custom { /* Tombol Masuk jadi oranye */
-        background-color: #F39C12; border-color: #F39C12;
-    }
-    #loginRequiredModal .modal-footer .btn-primary-custom:hover { 
-        background-color: #d8890b; border-color: #d8890b; 
-    }
-    #loginRequiredModal .modal-footer .btn-outline-primary-custom { /* Tombol Daftar jadi outline oranye */
-        border-color: #F39C12; color: #F39C12;
-    }
-    #loginRequiredModal .modal-footer .btn-outline-primary-custom:hover { background-color: #F39C12; color: white; }
-    
-    footer.footer { 
-        background-color: #071b2f; 
-        color: white; 
-        width: 100%; 
-        padding: 4rem 0; 
-        flex-shrink: 0;
-    }
-    footer.footer ul { 
-        list-style-type: none; 
-        padding-left: 0; 
-    }
-    footer.footer .text-white-50 { 
-        color: rgba(255, 255, 255, 0.5); 
-    }
-    footer.footer a { 
-        color: #ff7b00; 
-        text-decoration: none; 
-        transition: text-decoration 0.3s ease; 
-    }
-    footer.footer a:hover { 
-        text-decoration: underline; 
-    }
 
-</style>
+        /* === BAGIAN 3: MITRA === */
+        .section-mitra { background-color: white; padding: 4rem 0; border-top: 1px solid #e9ecef; }
+        .mitra-title { text-align: center; font-size: 1rem; font-weight: 700; color: #adb5bd; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 3rem; }
+        .logo-swiper { padding: 10px 0; }
+        .logo-slide-item { display: flex; justify-content: center; align-items: center; height: 80px; opacity: 1; transition: all 0.3s; }
+        .logo-slide-item:hover { transform: scale(1.1); }
+        .mitra-logo-img { max-height: 60px; max-width: 100%; object-fit: contain; }
+
+
+        /* === Responsive === */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .hero-slide-item { min-height: auto; padding: 3rem 0; text-align: center; }
+            .hero-content-wrapper { text-align: center; margin-bottom: 2rem; }
+            .hero-img-static { max-height: 250px; margin-top: 2rem; }
+            .hero-premium-title { font-size: 2rem; }
+        }
+        footer.footer { 
+            background-color: #071b2f !important; /* Paksa warna Navy */
+            color: white !important; 
+            margin-top: 0; /* Hapus margin aneh jika ada */
+            padding-top: 4rem;
+            padding-bottom: 2rem;
+        }
+        footer.footer h6 { color: #F39C12 !important; } /* Judul kolom oranye */
+        footer.footer a { color: rgba(255,255,255,0.7) !important; }
+        footer.footer a:hover { color: #F39C12 !important; }
+    </style>
 </head>
 <body>
+
     @include('pelamar.partials.navbar')
 
-    {{-- ========================================================== --}}
-    {{-- 1. MODIFIKASI HERO SECTION (MENJADI DINAMIS)             --}}
-    {{-- ========================================================== --}}
-    
-    @php
-        // Tentukan class dan style berdasarkan $iklanHero
-        $heroClass = 'hero-section';
-        $heroStyle = '';
-        // Cek jika $iklanHero ADA (tidak null), TIDAK KOSONG, dan punya file_iklan_banner
-        if (isset($iklanHero) && $iklanHero->isNotEmpty() && $iklanHero->first()->file_iklan_banner) {
-            $heroStyle = "background-image: url('" . asset('storage/' . $iklanHero->first()->file_iklan_banner) . "');";
-        }
-    @endphp
-    
-    {{-- Terapkan class dan style dinamis ke hero-section --}}
-    <div class="{{ $heroClass }}" style="{{ $heroStyle }}">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6 mb-4 mb-md-0">
-                    <h1>TEMPAT SOLUSI <br> ANDA MENCARI KERJA <br> DISINI</h1>
-                    <div class="mt-3">
-                        @auth
-                            {{-- Link kosong dari kode asli Anda --}}
-                            <a href="{{ Auth::user()->role === 'pelamar' ? route('pelamar.dashboard') : (Auth::user()->role === 'perusahaan' ? route('perusahaan.dashboard') : route('admin.dashboard')) }}"></a>
-                        @else
-                            {{-- TOMBOL "MASUK" DIPERBAIKI agar terlihat --}}
-                            <a href="{{ route('login') }}" class="btn btn-outline-secondary me-3">MASUK</a>
-                            <a href="{{ route('register') }}" class="btn btn-orange">DAFTAR</a>
-                        @endauth
-                    </div>
-                </div>
-                <div class="col-md-6 text-center">
-                    {{-- Gambar kartun orang ramai TETAP ADA --}}
-                    <img src="{{ asset('images/gambar1.png') }}" alt="Sekelompok Profesional" class="img-fluid hero-img">
-                </div>
-            </div>  
-        </div>
-    </div>
-    {{-- ========================================================== --}}
-    {{-- AKHIR DARI MODIFIKASI HERO SECTION                         --}}
-    {{-- ========================================================== --}}
-
-    {{-- ========================================================== --}}
-    {{-- 2. CAROUSEL IKLAN GRATIS (MENGGANTIKAN BERITA)           --}}
-    {{-- ========================================================== --}}
-    <div id="iklanGratisCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="3000">
-        <div class="carousel-inner h-100">
-            {{-- Loop ini sekarang menggunakan $iklanGratis --}}
-            @forelse ($iklanGratis as $iklan)
-                <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                    {{-- Gambar banner iklan --}}
-                    <img src="{{ $iklan->file_iklan_banner ? asset('storage/' . $iklan->file_iklan_banner) : asset('images/default-news.png') }}" alt="{{ $iklan->judul }}">
-                    
-                    {{-- Konten iklan --}}
-                    <div class="iklan-content-landing">
-                        <h2>{{ $iklan->judul }}</h2>
-                        <p>Oleh: {{ $iklan->perusahaan->nama_perusahaan ?? 'Perusahaan Partner' }}</p>
-                        
-                        {{-- Link tombol (mengarahkan ke pencarian perusahaan tsb) --}}
-                        @php
-                            $searchUrl = route('lowongan.index', ['search' => $iklan->perusahaan->nama_perusahaan ?? '']);
-                        @endphp
-                        
-                        @auth
-                            <a href="{{ $searchUrl }}" class="btn-iklan-landing">Lihat Lowongan</a>
-                        @else
-                            <a href="#" class="btn-iklan-landing" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Lihat Lowongan</a>
-                        @endauth
-                    </div>
-                </div>
-            @empty
-                {{-- Tampilan jika tidak ada iklan gratis sama sekali --}}
-                <div class="carousel-item active">
-                    <img src="{{ asset('images/gambar1.png') }}" alt="Selamat Datang">
-                    <div class="iklan-content-landing d-flex flex-column justify-content-center align-items-center h-100">
-                        <h2>Selamat Datang di JobRec</h2>
-                        <p class="text-muted">Belum ada iklan yang tayang saat ini.</p>
-                    </div>
-                </div>
-            @endforelse
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#iklanGratisCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon" aria-hidden="true"></span><span class="visually-hidden">Previous</span></button>
-        <button class="carousel-control-next" type="button" data-bs-target="#iklanGratisCarousel" data-bs-slide="next"><span class="carousel-control-next-icon" aria-hidden="true"></span><span class="visually-hidden">Next</span></button>
-        
-        {{-- Indikator Carousel dinamis --}}
-        <div class="carousel-indicators">
-            @foreach ($iklanGratis as $index => $iklan)
-                <button type="button" data-bs-target="#iklanGratisCarousel" data-bs-slide-to="{{ $index }}" class="{{ $loop->first ? 'active' : '' }}" aria-current="{{ $loop->first ? 'true' : 'false' }}" aria-label="Slide {{ $index + 1 }}"></button>
-            @endforeach
-            @if($iklanGratis->isEmpty())
-                <button type="button" data-bs-target="#iklanGratisCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-            @endif
-        </div>
-    </div>
-
-    <div class="main-content">
-        <div class="container">
-            <h4 class="fw-bold mb-4 mt-5 d-flex align-items-center">Perusahaan Unggulan</h4>
-            <div class="row g-4 section-perusahaan-partner">
-
-                @forelse($perusahaanPremium as $perusahaan)
-                    <div class="col-md-4 col-sm-6 col-12"> {{-- Dibuat lebih responsif --}}
-                        <a href="{{ route('lowongan.index', ['search' => $perusahaan->nama_perusahaan, 'paket_iklan' => 'premium']) }}" class="text-decoration-none">
-                            <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-                                {{-- Tampilkan logo dinamis --}}
-                                <img src="{{ $perusahaan->logo_perusahaan ? asset('storage/' . $perusahaan->logo_perusahaan) : asset('images/default-logo.png') }}" 
-                                     class="card-img-top" alt="Logo {{ $perusahaan->nama_perusahaan }}" style="height: 160px; object-fit: cover;">
-                                <div class="card-body">
-                                    <h6 class="fw-bold">{{ $perusahaan->nama_perusahaan }}</h6>
-                                    {{-- Tampilkan deskripsi singkat dinamis --}}
-                                    <p class="mb-0 text-muted small">{{ Str::limit($perusahaan->deskripsi, 50, '...') }}</p>
+    {{-- =================================================================== --}}
+    {{-- BAGIAN 1: HERO CAROUSEL                                              --}}
+    {{-- =================================================================== --}}
+    <section class="hero-section">
+        {{-- Tambahkan class 'animate__animated animate__fadeIn' untuk efek masuk --}}
+        <div id="heroCarousel" class="carousel slide carousel-fade animate__animated animate__fadeIn" data-bs-ride="carousel" data-bs-interval="5000">
+            
+            <div class="carousel-inner hero-carousel-inner">
+                
+                {{-- SLIDE 1: STATIS (SELALU JELAS/TIDAK BLUR) --}}
+                <div class="carousel-item active hero-slide-item">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 hero-content-wrapper animate__animated animate__fadeInLeft animate__delay-1s">
+                                <h1 class="hero-title">TEMPAT SOLUSI<br>ANDA MENCARI KERJA<br><span class="text-orange">DISINI</span></h1>
+                                <p class="hero-subtitle">Bergabunglah dengan ribuan profesional lainnya dan temukan karir impian Anda bersama mitra perusahaan terbaik kami.</p>
+                                <div class="d-flex gap-3 justify-content-lg-start justify-content-center">
+                                    @auth
+                                        <a href="{{ route('lowongan.index') }}" class="btn btn-orange btn-lg shadow-sm">Cari Lowongan</a>
+                                    @else
+                                        <a href="{{ route('register') }}" class="btn btn-orange btn-lg shadow-sm">Daftar Sekarang</a>
+                                        <a href="{{ route('login') }}" class="btn btn-outline-light-custom btn-lg">Masuk</a>
+                                    @endauth
                                 </div>
                             </div>
-                        </a>
+                            <div class="col-lg-6 text-center d-none d-lg-block animate__animated animate__fadeInRight animate__delay-1s">
+                                <img src="{{ asset('images/gambar1.png') }}" alt="Hero Illustration" class="hero-img-static">
+                            </div>
+                        </div>
                     </div>
-                @empty
-                    {{-- Tampilan jika tidak ada perusahaan premium --}}
-                    <div class="col-12">
-                        <p class="text-center text-muted">Belum ada perusahaan premium yang beriklan saat ini.</p>
-                    </div>
-                @endforelse
+                </div>
 
-            </div>
-            <div class="text-end mt-4">
-                @auth
-                    <a href="{{ route('lowongan.index') }}" class="text-dark fw-semibold text-decoration-none">LIHAT SELENGKAPNYA →</a>
-                @else
-                    <a href="{{ route('lowongan.index') }}" class="text-dark fw-semibold text-decoration-none" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">LIHAT SELENGKAPNYA →</a>
-                @endauth
-            </div>
-
-            
-            {{-- ========================================================== --}}
-            {{-- 3. BAGIAN LOWONGAN TERBARU (SLIDER) TETAP SAMA          --}}
-            {{-- ========================================================== --}}
-            <br><br>
-            <h4 class="fw-bold mb-4 mt-5">Lowongan Terbaru Untukmu</h4>
-            <div class="swiper-container job-swiper-container overflow-hidden">
-                <div class="swiper-wrapper">
-                    
-                    @forelse ($lowonganPekerjaan as $lowongan)
-                        <div class="swiper-slide h-auto">
+                {{-- SLIDE 2 dst: IKLAN PREMIUM (BLUR JIKA BELUM LOGIN) --}}
+                @foreach($iklanPremiumHero as $iklan)
+                <div class="carousel-item hero-slide-item">
+                    <div class="container">
+                        {{-- Kontainer Konten Slide (yang akan di-blur) --}}
+                        <div class="hero-premium-content position-relative">
                             
-                            @php
-                                $cardClass = ($lowongan->paket_iklan == 'premium') ? 'job-listing-card-premium' : 'job-listing-card';
-                            @endphp
+                            {{-- Logika Blur: Tambahkan class 'guest-blur' jika belum login --}}
+                            <div class="{{ Auth::check() ? '' : 'guest-blur' }}">
+                                <span class="premium-badge-hero"><i class="bi bi-star-fill me-1"></i> Premium Hiring</span>
+                                
+                                <h2 class="hero-premium-title">{{ $iklan->judul_lowongan }}</h2>
+                                <p class="hero-premium-company">di {{ $iklan->perusahaan->nama_perusahaan }}</p>
+                                
+                                <div class="hero-premium-visual">
+                                    @if($iklan->perusahaan->logo_perusahaan)
+                                        <img src="{{ asset('storage/' . $iklan->perusahaan->logo_perusahaan) }}" alt="Logo" class="hero-premium-img">
+                                    @else
+                                        <img src="{{ asset('images/default-logo.png') }}" alt="Logo" class="hero-premium-img">
+                                    @endif
+                                </div>
 
-                            <div class="{{ $cardClass }}">
-                                @if($lowongan->paket_iklan == 'premium')
-                                <span class="premium-badge"><i class="bi bi-star-fill"></i></span>
-                                @endif
-                                <div class="company-info">
-                                    <img src="{{ $lowongan->perusahaan && $lowongan->perusahaan->logo_perusahaan ? asset('storage/' . $lowongan->perusahaan->logo_perusahaan) : asset('images/default-logo.png') }}" 
-                                         alt="Logo {{ $lowongan->perusahaan->nama_perusahaan ?? 'Perusahaan' }}" class="company-logo">
-                                    <div class="company-details">
-                                        <h6>{{ $lowongan->judul_lowongan }}</h6>
-                                        <p>{{ $lowongan->perusahaan->nama_perusahaan ?? 'Nama Perusahaan' }}</p>
+                                <div class="d-block">
+                                    <a href="{{ route('pelamar.lowongan.show', $iklan->id) }}" class="btn btn-orange btn-lg shadow-sm px-5">
+                                        Lihat Detail & Lamar <i class="bi bi-arrow-right ms-2"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+                            {{-- Overlay Pesan untuk Guest (Hanya muncul jika belum login) --}}
+                            @guest
+                                <div class="guest-overlay">
+                                    <div class="text-center p-4">
+                                        <i class="bi bi-lock-fill text-orange display-4 mb-3"></i>
+                                        <h4 class="fw-bold text-dark">Konten Eksklusif</h4>
+                                        <p class="text-muted mb-4">Login untuk melihat lowongan premium ini secara lengkap.</p>
+                                        <a href="{{ route('login') }}" class="btn btn-orange px-4">Masuk Sekarang</a>
                                     </div>
                                 </div>
-                                <div class="location"><i class="bi bi-geo-alt-fill"></i><span>{{ $lowongan->domisili }}</span></div>
-                                <div class="description">
-                                    {{ Str::limit(strip_tags($lowongan->deskripsi_pekerjaan), 100, '...') }}
+                            @endguest
+
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+
+            </div>
+
+            {{-- Navigasi Carousel --}}
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true"></button>
+                @foreach($iklanPremiumHero as $index => $iklan)
+                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="{{ $index + 1 }}"></button>
+                @endforeach
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            </button>
+        </div>
+    </section>
+
+
+    {{-- =================================================================== --}}
+    {{-- BAGIAN 2: SEMUA LOWONGAN (BLUR JIKA BELUM LOGIN)                    --}}
+    {{-- =================================================================== --}}
+    <section class="section-lowongan animate__animated animate__fadeInUp animate__delay-2s">
+        <div class="container">
+            <div class="section-header">
+                <h3 class="section-title">Lowongan Terbaru</h3>
+                <p class="section-desc">Temukan peluang karir terbaru yang sesuai dengan keahlian Anda</p>
+            </div>
+
+            <div class="row g-4">
+                @forelse($lowonganSemua as $lowongan)
+                    <div class="col-lg-3 col-md-6">
+                        <div class="position-relative h-100">
+                            
+                            {{-- Konten Kartu (yang akan di-blur) --}}
+                            <a href="{{ Auth::check() ? route('pelamar.lowongan.show', $lowongan->id) : '#' }}" 
+                               class="text-decoration-none h-100 d-block {{ Auth::check() ? '' : 'guest-blur' }}">
+                                
+                                <div class="job-card {{ $lowongan->paket_iklan == 'premium' ? 'premium' : '' }}">
+                                    @if($lowongan->paket_iklan == 'premium')
+                                        <div class="premium-tag"><i class="bi bi-star-fill"></i> Premium</div>
+                                    @endif
+                                    <div class="card-content">
+                                        <div class="company-header">
+                                            <img src="{{ $lowongan->perusahaan->logo_perusahaan ? asset('storage/' . $lowongan->perusahaan->logo_perusahaan) : asset('images/default-logo.png') }}" 
+                                                 class="company-logo-thumb" alt="Logo">
+                                            <div>
+                                                <h5 class="job-info-title">{{ Str::limit($lowongan->judul_lowongan, 20) }}</h5>
+                                                <p class="job-info-company">{{ Str::limit($lowongan->perusahaan->nama_perusahaan, 25) }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="job-desc-preview">
+                                            {{ Str::limit(strip_tags($lowongan->deskripsi_pekerjaan), 90) }}
+                                        </div>
+                                        <div class="job-details-meta">
+                                            <div class="meta-item"><i class="bi bi-geo-alt-fill"></i> <span>{{ Str::limit($lowongan->domisili, 15) }}</span></div>
+                                            <div class="meta-item"><i class="bi bi-clock"></i> <span>{{ $lowongan->tipe_pekerjaan ?? 'Full Time' }}</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="card-action">
+                                        <span class="btn-link-detail">Lihat Detail <i class="bi bi-arrow-right"></i></span>
+                                    </div>
                                 </div>
-                                @auth
-                                    <a href="{{ route('pelamar.lowongan.show', $lowongan->id) }}" class="btn-lihat-detail mt-auto">Lihat Detail</a>
-                                @else
-                                    <a href="#" class="btn-lihat-detail mt-auto" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Lihat Detail</a>
-                                @endauth
+                            </a>
+
+                            {{-- Overlay untuk Guest di Setiap Kartu --}}
+                            @guest
+                                <div class="guest-overlay" style="border-radius: 16px;">
+                                    <div class="text-center">
+                                        <i class="bi bi-lock-fill text-orange fs-3 mb-2"></i>
+                                        <h6 class="fw-bold text-dark mb-3">Login untuk melihat</h6>
+                                        <a href="{{ route('login') }}" class="btn btn-sm btn-orange">Masuk</a>
+                                    </div>
+                                </div>
+                            @endguest
+
+                        </div>
+                    </div>
+                @empty
+                    <div class="col-12 py-5 text-center">
+                        <div class="empty-state">
+                            <i class="bi bi-search display-4 text-muted mb-3"></i>
+                            <p class="text-muted fs-5">Belum ada lowongan tersedia saat ini.</p>
+                        </div>
+                    </div>
+                @endforelse
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="{{ route('lowongan.index') }}" class="btn btn-outline-orange rounded-pill px-4 py-2">
+                    Lihat Semua Lowongan
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    {{-- =================================================================== --}}
+    {{-- BAGIAN 3: MITRA PERUSAHAAN (LOGO SLIDER)                            --}}
+    {{-- =================================================================== --}}
+    <section class="section-mitra animate__animated animate__fadeIn">
+        <div class="container">
+            <h5 class="mitra-title">Dipercaya oleh Perusahaan Terkemuka</h5>
+            <div class="swiper-container logo-swiper overflow-hidden">
+                <div class="swiper-wrapper align-items-center">
+                    @foreach($semuaPerusahaan as $perusahaan)
+                        <div class="swiper-slide">
+                            <div class="logo-slide-item" title="{{ $perusahaan->nama_perusahaan }}">
+                                <img src="{{ asset('storage/' . $perusahaan->logo_perusahaan) }}" 
+                                     alt="{{ $perusahaan->nama_perusahaan }}" 
+                                     class="mitra-logo-img">
                             </div>
                         </div>
-                    @empty
-                        <div class="col-12">
-                            <p class="text-center text-muted">Belum ada lowongan pekerjaan yang tersedia saat ini.</p>
-                        </div>
-                    @endforelse
-
-                </div>
-                <div class="swiper-button-next text-dark"></div>
-                <div class="swiper-button-prev text-dark"></div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="modal fade" id="loginRequiredModal" tabindex="-1" aria-labelledby="loginRequiredModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 shadow">
-                <div class="modal-header p-4 border-bottom-0">
-                    <i class="bi bi-lock-fill"></i>
-                    <h5 class="modal-title fw-bold" id="loginRequiredModalLabel">Akses Aktivitas</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4 pt-0">
-                    <p class="text-center mb-0">Silakan masuk atau daftar akun terlebih dahulu untuk melihat aktivitas.</p>
-                </div>
-                <div class="modal-footer flex-column border-top-0 p-4 gap-2">
-                    <a href="{{ route('login') }}" class="btn btn-primary-custom d-flex align-items-center justify-content-center gap-2 w-100 fw-semibold">
-                        <i class="bi bi-arrow-right"></i> Masuk
-                    </a>
-                    <a href="{{ route('register') }}" class="btn btn-outline-primary-custom w-100 fw-semibold">Daftar</a>
+                    @endforeach
                 </div>
             </div>
         </div>
-    </div>
+    </section>
+
     @include('pelamar.partials.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 
     <script>
-        var swiper = new Swiper(".job-swiper-container", {
-            slidesPerView: 1.5,
-            spaceBetween: 20,
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
+        // Swiper untuk Logo Mitra
+        var logoSwiper = new Swiper(".logo-swiper", {
+            slidesPerView: 3,
+            spaceBetween: 30,
+            loop: true,
+            speed: 3000, // Kecepatan transisi diperlambat biar halus
+            autoplay: {
+                delay: 0, // Autoplay jalan terus (linear)
+                disableOnInteraction: false,
             },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
+            freeMode: true, // Mode bebas tanpa snap
             breakpoints: {
-                768: {
-                    slidesPerView: 2.5,
-                    spaceBetween: 30,
-                },
-                992: {
-                    slidesPerView: 3,
-                    spaceBetween: 30,
-                },
-                1200: {
-                    slidesPerView: 3.5,
-                    spaceBetween: 30,
-                }
+                640: { slidesPerView: 4, spaceBetween: 40 },
+                768: { slidesPerView: 5, spaceBetween: 50 },
+                1024: { slidesPerView: 6, spaceBetween: 60 },
             }
         });
     </script>

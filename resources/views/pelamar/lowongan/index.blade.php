@@ -1,65 +1,119 @@
-{{-- /resources/views/pelamar/lowongan/index.blade.php --}}
-
 @extends('pelamar.layouts.app')
 
 @section('title', 'Cari Lowongan')
 
 @section('content')
-<div class="main-content">
-    <div class="container py-5">
-        <div class="row g-4">
-            <!-- KOLOM KIRI (FILTER & DAFTAR LOWONGAN) -->
-            <div class="col-lg-5">
-                <div class="filter-card mb-4">
+{{-- HAPUS FOOTER AGAR TAMPILAN FULL HEIGHT --}}
+<style>footer.footer { display: none !important; }</style>
+
+<div class="search-page-wrapper">
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            
+            <div class="col-lg-4 col-xl-3 p-0 d-flex flex-column border-end job-sidebar" id="jobSidebar">
+                
+                {{-- Filter Section --}}
+                <div class="filter-section p-3 border-bottom bg-white shadow-sm" style="z-index: 10;">
                     <form action="{{ route('lowongan.index') }}" method="GET">
-                        <div class="input-group mb-3">
-                            <span class="input-group-text"><i class="bi bi-search"></i></span>
-                            <input type="text" name="search" class="form-control" placeholder="Jabatan atau perusahaan..." value="{{ request('search') }}">
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                                <input type="text" name="search" class="form-control bg-light border-start-0 ps-0" placeholder="Posisi / Perusahaan..." value="{{ request('search') }}">
+                            </div>
                         </div>
-                        <div class="input-group">
-                             <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
-                            <select name="lokasi" class="form-select">
+                        <div class="d-flex gap-2">
+                            <select name="lokasi" class="form-select form-select-sm bg-light">
                                 <option value="">Semua Lokasi</option>
                                 @foreach($lokasiOptions as $lokasi)
                                     <option value="{{ $lokasi }}" {{ request('lokasi') == $lokasi ? 'selected' : '' }}>{{ $lokasi }}</option>
                                 @endforeach
                             </select>
-                        </div>
-                        <div class="d-grid mt-3">
-                            <button type="submit" class="btn btn-orange">Cari Lowongan</button>
+                            <button type="submit" class="btn btn-orange btn-sm px-3"><i class="bi bi-filter"></i></button>
                         </div>
                     </form>
                 </div>
 
-                <div class="job-list-container">
+                {{-- Job List (Scrollable) --}}
+                <div class="job-list-scroll flex-grow-1 bg-light custom-scrollbar">
                     @forelse($lowonganList as $lowongan)
-                    <div class="job-list-card {{ ($detailLowongan && $detailLowongan->id == $lowongan->id) ? 'active' : '' }}" data-id="{{ $lowongan->id }}">
-                        <div class="d-flex">
-                            <img src="{{ $lowongan->perusahaan->logo_perusahaan ? asset('storage/' . $lowongan->perusahaan->logo_perusahaan) : 'https://placehold.co/60x60/e9ecef/343a40?text=' . substr($lowongan->perusahaan->nama_perusahaan, 0, 1) }}" alt="Logo" class="company-logo-list">
-                            <div class="ms-3">
-                                <h6 class="job-title-list">{{ $lowongan->judul_lowongan }}</h6>
-                                <p class="company-name-list text-muted mb-1">{{ $lowongan->perusahaan->nama_perusahaan }}</p>
-                                <p class="location-list text-muted"><i class="bi bi-geo-alt-fill"></i> {{ $lowongan->perusahaan->alamat_perusahaan }}</p>
+                        @php
+                            // Cek apakah lowongan ini premium
+                            $isPremium = $lowongan->paket_iklan == 'premium';
+                            
+                            // Cek apakah lowongan ini sedang dibuka detailnya
+                            $isActive = ($detailLowongan && $detailLowongan->id == $lowongan->id);
+                            
+                            // Tentukan kelas CSS tambahan
+                            $cardClasses = $isActive ? 'active' : '';
+                            $cardClasses .= $isPremium ? ' premium-card' : '';
+                        @endphp
+
+                        <div class="job-list-card p-3 border-bottom {{ $cardClasses }}" data-id="{{ $lowongan->id }}">
+                            
+                            {{-- BADGE PREMIUM (Hanya muncul jika premium) --}}
+                            @if($isPremium)
+                                <div class="list-premium-badge">
+                                    <i class="bi bi-star-fill"></i> Premium
+                                </div>
+                            @endif
+
+                            <div class="d-flex align-items-start">
+                                {{-- Logo Perusahaan --}}
+                                <img src="{{ $lowongan->perusahaan->logo_perusahaan ? asset('storage/' . $lowongan->perusahaan->logo_perusahaan) : 'https://placehold.co/60x60/e9ecef/343a40?text=' . substr($lowongan->perusahaan->nama_perusahaan, 0, 1) }}" 
+                                     alt="Logo" class="company-logo-list rounded-3 border bg-white shadow-sm">
+                                
+                                <div class="ms-3 flex-grow-1 position-relative" style="z-index: 2;">
+                                    {{-- Judul Lowongan (Oranye jika premium) --}}
+                                    <h6 class="job-title-list mb-1 {{ $isPremium ? 'text-orange' : 'text-dark' }}">
+                                        {{ $lowongan->judul_lowongan }}
+                                    </h6>
+                                    
+                                    <p class="company-name-list text-muted small mb-1">{{ $lowongan->perusahaan->nama_perusahaan }}</p>
+                                    
+                                    <div class="d-flex align-items-center text-muted small" style="font-size: 0.8rem;">
+                                        <span class="badge bg-white border text-secondary me-2 fw-normal">
+                                            <i class="bi bi-geo-alt text-orange me-1"></i> {{ Str::limit($lowongan->domisili, 15) }}
+                                        </span>
+                                        <span>{{ $lowongan->created_at->diffForHumans(null, true) }}</span>
+                                    </div>
+                                </div>
+                                
+                                {{-- Panah (Hanya di Mobile) --}}
+                                <i class="bi bi-chevron-right text-muted ms-2 align-self-center d-lg-none"></i> 
                             </div>
                         </div>
-                    </div>
                     @empty
-                    <div class="text-center p-5">
-                        <p>Tidak ada lowongan yang cocok dengan kriteria Anda.</p>
-                    </div>
+                        <div class="text-center p-5 text-muted">
+                            <img src="{{ asset('images/empty-state.svg') }}" alt="No Data" style="width: 100px; opacity: 0.5;" class="mb-3">
+                            <p>Lowongan tidak ditemukan.</p>
+                        </div>
                     @endforelse
-                </div>
-                <div class="mt-4 d-flex justify-content-center">
-                    {{ $lowonganList->appends(request()->query())->links() }}
+                    
+                    {{-- Pagination --}}
+                    @if($lowonganList->hasPages())
+                        <div class="p-3 text-center border-top bg-white">
+                            {{ $lowonganList->appends(request()->query())->links() }} 
+                        </div>
+                    @endif
                 </div>
             </div>
 
-            <!-- KOLOM KANAN (DETAIL LOWONGAN) -->
-            <div class="col-lg-7">
-                <div id="job-detail-wrapper">
+            <div class="col-lg-8 col-xl-9 p-0 bg-white h-100 job-detail-panel" id="jobDetailPanel">
+                
+                {{-- Tombol Kembali (HANYA MOBILE) --}}
+                <div class="d-lg-none p-3 border-bottom bg-white sticky-top d-flex align-items-center shadow-sm">
+                    <button class="btn btn-link text-dark text-decoration-none p-0 me-3" id="btnBackToList">
+                        <i class="bi bi-arrow-left fs-4"></i>
+                    </button>
+                    <span class="fw-bold">Detail Lowongan</span>
+                </div>
+
+                <div id="job-detail-wrapper" class="h-100 overflow-auto custom-scrollbar pb-5 pb-lg-0">
+                    {{-- Konten akan di-load di sini via AJAX --}}
                     @include('pelamar.lowongan.partials._job-detail')
                 </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -67,129 +121,133 @@
 
 @push('styles')
 <style>
-    /* --- Base --- */
-    .main-content { background-color: #f8f9fa; }
-
-    /* --- Filter Card --- */
-    .filter-card {
-        background-color: #fff;
-        padding: 1.75rem; /* Padding ditambah */
-        border-radius: 0.75rem;
-        border: 1px solid #dee2e6;
-        box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,.04); /* Shadow halus */
-        position: sticky; /* Membuat filter tetap terlihat */
-        top: 20px; /* Jarak dari atas */
-    }
-    .filter-card .input-group-text {
-        background-color: #e9ecef; /* Background ikon abu */
-        border-right: none; /* Hilangkan border kanan ikon */
-    }
-    .filter-card .form-control, .filter-card .form-select {
-        border-left: none; /* Hilangkan border kiri input (menyatu dgn ikon) */
-    }
-    .filter-card .btn-orange {
-        font-weight: 500; /* Font tombol sedikit tebal */
-    }
-
-    /* --- Job List Container --- */
-    .job-list-container {
-        background-color: #fff;
-        border-radius: 0.75rem;
-        border: 1px solid #dee2e6;
-        max-height: calc(100vh - 250px); /* Tinggi maksimum disesuaikan (kurangi tinggi navbar, filter, padding) */
-        overflow-y: auto;
-        box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,.04); /* Shadow halus */
-    }
-    /* Custom Scrollbar (Opsional, tapi keren) */
-    .job-list-container::-webkit-scrollbar { width: 6px; }
-    .job-list-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
-    .job-list-container::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
-    .job-list-container::-webkit-scrollbar-thumb:hover { background: #aaa; }
-
-    /* --- Job List Card (di dalam container) --- */
-    .job-list-card {
-        padding: 1.25rem 1.5rem; /* Padding disesuaikan */
-        border-bottom: 1px solid #e9ecef;
-        cursor: pointer;
-        transition: background-color 0.2s, border-left 0.2s; /* Tambah transisi border */
-        border-left: 4px solid transparent; /* Border kiri transparan */
-    }
-    .job-list-card:last-child { border-bottom: none; }
-    .job-list-card:hover { background-color: #f8f9fa; }
-    .job-list-card.active {
-        background-color: #f8f9fa; /* Background aktif jadi abu */
-        border-left: 4px solid #F39C12; /* Border kiri jadi oranye */
-    }
-    .company-logo-list { width: 48px; height: 48px; object-fit: contain; border-radius: 0.5rem; flex-shrink: 0; } /* Tambah flex-shrink */
-    .job-title-list {
-        font-weight: 600;
-        font-size: 1rem;
-        margin-bottom: 0.25rem;
-        color: #212529; /* Warna judul lebih tegas */
-        /* Efek elipsis jika judul terlalu panjang */
-        white-space: nowrap;
+    /* === DESKTOP LAYOUT === */
+    .search-page-wrapper {
+        height: calc(100vh - 76px); /* Sesuaikan dengan tinggi navbar kamu */
         overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 300px; /* Sesuaikan lebar maksimum */
+        background-color: #fff;
     }
-    .company-name-list, .location-list { font-size: 0.9rem; }
-    .location-list i { color: #F39C12; } /* Warna ikon lokasi */
 
-    /* Style Pagination (jika diperlukan) */
-    .pagination .page-item.active .page-link {
+    /* --- Style Dasar Kartu --- */
+    .job-list-card { 
+        cursor: pointer; 
+        transition: all 0.2s; 
+        background-color: #fff; 
+        position: relative; /* Penting untuk posisi badge */
+        border-left: 4px solid transparent; /* Border kiri default transparan */
+    }
+    .job-list-card:hover { background-color: #f8f9fa; }
+    
+    /* --- Style Active State (Sedang Diklik) --- */
+    .job-list-card.active { 
+        background-color: #f0f7ff; 
+        border-left: 4px solid #22374e; /* Biru Navy saat aktif */
+    }
+
+    /* --- STYLE PREMIUM (YANG KAMU MINTA) --- */
+    .job-list-card.premium-card {
+        background-color: #fffbf2 !important; /* Background kekuningan halus */
+        border-left: 4px solid #F39C12 !important; /* Border kiri Oranye */
+    }
+    /* Jika premium sedang aktif/diklik */
+    .job-list-card.premium-card.active {
+        background-color: #fff3cd !important; /* Lebih gelap saat aktif */
+        border-left: 4px solid #d8890b !important;
+    }
+
+    /* --- BADGE PREMIUM (Pojok Kanan Atas) --- */
+    .list-premium-badge {
+        position: absolute;
+        top: 0;
+        right: 0;
         background-color: #F39C12;
-        border-color: #F39C12;
+        color: white;
+        font-size: 0.65rem;
+        font-weight: bold;
+        padding: 2px 8px;
+        border-bottom-left-radius: 8px;
+        text-transform: uppercase;
+        z-index: 5;
+        box-shadow: -1px 1px 3px rgba(0,0,0,0.1);
     }
-    .pagination .page-link {
-        color: #F39C12;
-    }
+    .list-premium-badge i { font-size: 0.6rem; margin-right: 2px; }
 
+    /* Elemen Lain */
+    .company-logo-list { width: 50px; height: 50px; object-fit: contain; flex-shrink: 0; }
+    .job-title-list { font-weight: 700; font-size: 0.95rem; line-height: 1.3; }
+    .text-orange { color: #F39C12 !important; }
+    .btn-orange { background-color: #F39C12; border-color: #F39C12; color: white; }
+    .btn-orange:hover { background-color: #d8890b; border-color: #d8890b; color: white; }
+
+    /* Scrollbar */
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #ddd; border-radius: 10px; }
+
+    /* === MOBILE LAYOUT === */
+    @media (max-width: 991.98px) {
+        .job-sidebar { width: 100%; height: 100%; }
+        .job-detail-panel {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 2000; background-color: white;
+            transform: translateX(100%); transition: transform 0.3s ease-in-out;
+            padding-bottom: 0 !important;
+        }
+        .job-detail-panel.show { transform: translateX(0); }
+        #job-detail-wrapper { height: calc(100% - 60px) !important; }
+    }
 </style>
 @endpush
 
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const jobListContainer = document.querySelector('.job-list-container');
+    const jobListContainer = document.querySelector('.job-list-scroll');
+    const jobDetailPanel = document.getElementById('jobDetailPanel');
     const jobDetailWrapper = document.getElementById('job-detail-wrapper');
+    const btnBack = document.getElementById('btnBackToList');
 
-    // Fungsi async/await modern untuk mengambil data
     async function updateDetails(lowonganId) {
         if (!jobDetailWrapper) return;
-        
-        // Tampilkan loading skeleton
-        jobDetailWrapper.innerHTML = `<div class="job-detail-container"><div class="text-center p-5"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div></div>`;
-
+        // Tampilkan Loading
+        jobDetailWrapper.innerHTML = `
+            <div class="d-flex justify-content-center align-items-center h-100">
+                <div class="spinner-border text-orange" role="status"><span class="visually-hidden">Loading...</span></div>
+            </div>`;
         try {
-            // Fetch HTML yang sudah dirender dari controller
+            // Fetch Data Partial
             const response = await fetch(`/lowongan/detail/${lowonganId}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+            if (!response.ok) throw new Error('Error');
             const html = await response.text();
-            // Langsung ganti konten dengan HTML yang diterima
             jobDetailWrapper.innerHTML = html;
+            jobDetailWrapper.scrollTop = 0; 
         } catch (error) {
-            console.error('Error fetching details:', error);
-            if (jobDetailWrapper) {
-                jobDetailWrapper.innerHTML = `<div class="job-detail-container"><div class="text-center empty-state p-5"><p>Gagal memuat detail lowongan. Silakan coba lagi.</p></div></div>`;
-            }
+            jobDetailWrapper.innerHTML = `<div class="p-5 text-center text-muted">Gagal memuat detail.</div>`;
         }
     }
 
-    // Gunakan event delegation agar listener tetap berfungsi setelah paginasi
     if (jobListContainer) {
         jobListContainer.addEventListener('click', function(event) {
             const card = event.target.closest('.job-list-card');
             if (card) {
-                // Hapus kelas aktif dari semua kartu
+                // Handle Active Class
                 jobListContainer.querySelectorAll('.job-list-card').forEach(c => c.classList.remove('active'));
-                // Tambahkan kelas aktif ke kartu yang diklik
                 card.classList.add('active');
                 
+                // Fetch Detail
                 const lowonganId = card.dataset.id;
                 updateDetails(lowonganId);
+
+                // Mobile Logic
+                if (window.innerWidth < 992) {
+                    jobDetailPanel.classList.add('show');
+                }
             }
+        });
+    }
+
+    if (btnBack) {
+        btnBack.addEventListener('click', function() {
+            jobDetailPanel.classList.remove('show');
         });
     }
 });

@@ -1,26 +1,38 @@
-{{-- Simpan sebagai /resources/views/pelamar/berita/index.blade.php --}}
-
 @extends('pelamar.layouts.app')
 
 @section('title', 'Berita Terkini')
 
 @section('content')
+{{-- HAPUS FOOTER --}}
+<style>footer.footer { display: none !important; }</style>
+
 <div class="main-content">
-    <div class="container py-5">
+    <div class="container py-5" style="min-height: 100vh;">
+        
+        {{-- HEADER SECTION --}}
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold text-dark mb-3">Berita & Wawasan</h1>
+            <p class="text-muted lead">Update terbaru seputar dunia kerja dan pengembangan karir untukmu.</p>
+        </div>
 
         {{-- BERITA UTAMA (FEATURED) --}}
         @if($featured)
         <div class="featured-news-card mb-5">
-            <div class="row g-0 align-items-center">
-                <div class="col-lg-7">
-                    {{-- Ganti dengan gambar placeholder jika tidak ada gambar --}}
-                    <img src="{{ $featured->gambar ? asset('storage/' . $featured->gambar) : 'https://placehold.co/600x400/e9ecef/343a40?text=Berita' }}" class="img-fluid featured-image" alt="{{ $featured->judul }}">
+            <div class="row g-0">
+                <div class="col-lg-6 position-relative overflow-hidden featured-img-col">
+                    <img src="{{ $featured->gambar ? asset('storage/' . $featured->gambar) : 'https://placehold.co/600x400/e9ecef/343a40?text=Featured' }}" 
+                         class="img-fluid w-100 h-100 object-fit-cover featured-img" alt="{{ $featured->judul }}">
+                    <div class="featured-overlay"></div>
                 </div>
-                <div class="col-lg-5">
-                    <div class="featured-content">
-                        <h1 class="featured-title">{{ $featured->judul }}</h1>
-                        <p class="featured-excerpt">{{ $featured->kutipan }}</p>
-                        <a href="{{ route('berita.show', $featured->slug) }}" class="btn btn-orange">Baca Selengkapnya</a>
+                <div class="col-lg-6 d-flex align-items-center bg-white">
+                    <div class="featured-content p-4 p-lg-5">
+                        <span class="badge bg-orange text-white mb-3 px-3 py-2 rounded-pill text-uppercase" style="font-size: 0.7rem; letter-spacing: 1px;">Featured Story</span>
+                        <h2 class="featured-title mb-3"><a href="{{ route('berita.show', $featured->slug) }}" class="text-dark text-decoration-none">{{ $featured->judul }}</a></h2>
+                        <p class="featured-excerpt text-muted mb-4">{{ Str::limit($featured->kutipan, 150) }}</p>
+                        <a href="{{ route('berita.show', $featured->slug) }}" class="btn btn-outline-dark rounded-pill px-4">Baca Artikel <i class="bi bi-arrow-right ms-2"></i></a>
+                        <div class="mt-4 text-muted small border-top pt-3">
+                            <i class="bi bi-calendar3 me-2"></i> {{ \Carbon\Carbon::parse($featured->published_at)->format('d M Y') }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -28,67 +40,83 @@
         @endif
 
         <div class="row g-5">
-            {{-- KOLOM KIRI (DAFTAR BERITA) --}}
+            {{-- KOLOM KIRI (DAFTAR BERITA GRID) --}}
             <div class="col-lg-8">
-                <h2 class="section-title">Berita Terkini</h2>
-                <div class="news-list">
+                <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+                    <h4 class="fw-bold m-0">Artikel Terbaru</h4>
+                </div>
+
+                <div class="row g-4">
                     @forelse($beritaTerkini as $berita)
-                    <div class="news-card">
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <img src="{{ $berita->gambar ? asset('storage/' . $berita->gambar) : 'https://placehold.co/300x180/e9ecef/343a40?text=Berita' }}" class="img-fluid news-image" alt="{{ $berita->judul }}">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="news-content">
-                                    <h4 class="news-title"><a href="{{ route('berita.show', $berita->slug) }}">{{ $berita->judul }}</a></h4>
-                                    <p class="news-excerpt">{{ $berita->kutipan }}</p>
-                                    <a href="{{ route('berita.show', $berita->slug) }}" class="btn btn-sm btn-outline-orange">Baca Selengkapnya</a>
+                    <div class="col-md-6">
+                        <div class="news-card h-100 border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+                            <a href="{{ route('berita.show', $berita->slug) }}" class="text-decoration-none">
+                                <div class="news-img-wrapper position-relative">
+                                    <img src="{{ $berita->gambar ? asset('storage/' . $berita->gambar) : 'https://placehold.co/400x250/e9ecef/343a40?text=News' }}" 
+                                         class="card-img-top object-fit-cover" alt="{{ $berita->judul }}" style="height: 220px;">
+                                    <div class="category-badge position-absolute top-0 end-0 m-3 bg-white text-dark px-3 py-1 rounded-pill shadow-sm small fw-bold">
+                                        {{ $berita->kategori->nama_kategori ?? 'Umum' }}
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="card-body p-4 d-flex flex-column h-100">
+                                    <small class="text-muted mb-2 d-block"><i class="bi bi-clock me-1"></i> {{ \Carbon\Carbon::parse($berita->published_at)->diffForHumans() }}</small>
+                                    <h5 class="card-title fw-bold text-dark mb-3">{{ Str::limit($berita->judul, 60) }}</h5>
+                                    <p class="card-text text-secondary small mb-4 flex-grow-1">{{ Str::limit($berita->kutipan, 90) }}</p>
+                                    <span class="text-orange fw-bold small mt-auto">Baca Selengkapnya <i class="bi bi-arrow-right ms-1"></i></span>
+                                </div>
+                            </a>
                         </div>
                     </div>
                     @empty
-                    <div class="text-center py-5">
-                        <p>Belum ada berita yang dipublikasikan.</p>
+                    <div class="col-12 text-center py-5">
+                        <img src="{{ asset('images/empty-state.svg') }}" alt="Empty" style="width: 150px; opacity: 0.5;" class="mb-3">
+                        <p class="text-muted">Belum ada berita terbaru.</p>
                     </div>
                     @endforelse
                 </div>
                 
                 {{-- Paginasi --}}
-                <div class="mt-4">
+                <div class="mt-5 d-flex justify-content-center">
                     {{ $beritaTerkini->links() }}
                 </div>
             </div>
 
-            {{-- KOLOM KANAN (SIDEBAR) --}}
+            {{-- KOLOM KANAN (SIDEBAR MODERN) --}}
             <div class="col-lg-4">
-                {{-- Widget Berita Trending --}}
-                <div class="sidebar-widget mb-4">
-                    <h5 class="widget-title">Berita Sedang Tren</h5>
-                    <ul class="list-group list-group-flush trending-list">
-                        @forelse($beritaTrending as $item)
-                        <li class="list-group-item">
-                            <a href="{{ route('berita.show', $item->slug) }}">{{ $item->judul }}</a>
-                        </li>
-                        @empty
-                        <li class="list-group-item">Tidak ada berita tren.</li>
-                        @endforelse
-                    </ul>
-                </div>
-
-                {{-- Widget Kategori --}}
-                <div class="sidebar-widget">
-                    <h5 class="widget-title">Kategori Berita</h5>
-                    <div class="category-widget">
-                        @forelse($kategori as $cat)
-                        <a href="#" class="category-item">
-                            <span>{{ $cat->nama_kategori }}</span>
-                            <i class="bi bi-chevron-right"></i>
-                        </a>
-                        @empty
-                        <p class="text-white small">Tidak ada kategori.</p>
-                        @endforelse
+                <div class="sticky-top" style="top: 20px; z-index: 1;">
+                    
+                    {{-- Widget Trending --}}
+                    <div class="sidebar-widget bg-white p-4 rounded-4 shadow-sm border-0 mb-4">
+                        <h6 class="widget-title fw-bold text-uppercase text-muted small mb-4 letter-spacing-1">Sedang Tren</h6>
+                        <div class="trending-list">
+                            @forelse($beritaTrending as $index => $item)
+                            <a href="{{ route('berita.show', $item->slug) }}" class="d-flex align-items-start text-decoration-none mb-3 pb-3 border-bottom last-no-border">
+                                <span class="fw-bold text-orange fs-4 me-3" style="line-height: 1;">0{{ $index + 1 }}</span>
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-1" style="font-size: 0.95rem;">{{ $item->judul }}</h6>
+                                    <small class="text-muted" style="font-size: 0.75rem;">{{ \Carbon\Carbon::parse($item->published_at)->format('d M') }}</small>
+                                </div>
+                            </a>
+                            @empty
+                            <p class="text-muted small">Tidak ada berita tren.</p>
+                            @endforelse
+                        </div>
                     </div>
+
+                    {{-- Widget Kategori --}}
+                    <div class="sidebar-widget bg-white p-4 rounded-4 shadow-sm border-0">
+                        <h6 class="widget-title fw-bold text-uppercase text-muted small mb-4 letter-spacing-1">Jelajahi Topik</h6>
+                        <div class="d-flex flex-wrap gap-2">
+                            @forelse($kategori as $cat)
+                            <a href="#" class="badge bg-light text-dark border text-decoration-none px-3 py-2 rounded-pill fw-normal hover-orange transition">
+                                {{ $cat->nama_kategori }}
+                            </a>
+                            @empty
+                            <p class="text-muted small">Tidak ada kategori.</p>
+                            @endforelse
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -98,138 +126,34 @@
 
 @push('styles')
 <style>
-    /* --- Base Styling --- */
-    .main-content { background-color: #f8f9fa; /* Background sedikit abu-abu */ color: #333; }
-    .section-title { font-weight: 700; margin-bottom: 2rem; color: #343a40; } /* Judul section lebih jelas */
-
-    /* --- Featured News Card --- */
-    .featured-news-card {
-        background-color: #ffffff; /* Background putih */
-        border-radius: 0.75rem; /* Sudut lebih tumpul */
-        overflow: hidden;
-        border: none; /* Hilangkan border */
-        box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,.075); /* Shadow halus */
-        transition: transform 0.2s ease-in-out;
-    }
-    .featured-news-card:hover {
-         transform: translateY(-5px); /* Efek angkat saat hover */
-    }
-    .featured-image {
-        width: 100%;
-        height: 100%; /* Biar mengisi penuh kolom kiri */
-        min-height: 350px; /* Tinggi minimum */
-        object-fit: cover;
-    }
-    .featured-content { 
-        padding: 2.5rem; /* Padding lebih besar */
-        display: flex; /* Aktifkan flexbox */
-        flex-direction: column; /* Susun vertikal */
-        justify-content: center; /* Tengah secara vertikal */
-        height: 100%; /* Isi penuh tinggi kartu */
-    }
-    .featured-title { 
-        font-size: 1.8rem; /* Ukuran disesuaikan */ 
-        font-weight: 700; 
-        color: #212529; 
-        margin-bottom: 1rem; 
-        line-height: 1.3; /* Spasi antar baris judul */
-    }
-    .featured-excerpt { 
-        font-size: 1rem; /* Ukuran disesuaikan */ 
-        color: #6c757d; 
-        margin-bottom: 1.5rem; 
-        line-height: 1.6; /* Spasi antar baris */
-    }
-    /* Style Tombol (sudah konsisten) */
-    .btn-orange { background-color: #F39C12; border-color: #F39C12; color: #fff; }
-    .btn-orange:hover { background-color: #d8890b; border-color: #d8890b; }
+    .main-content { background-color: #f8f9fa; }
     
-    /* --- News List Card --- */
-    .news-card { 
-        margin-bottom: 2rem; 
-        background-color: #ffffff;
-        border-radius: 0.75rem;
-        overflow: hidden;
-        border: 1px solid #dee2e6; /* Border halus */
-        box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,.05);
-        transition: box-shadow 0.2s, transform 0.2s;
+    /* Featured Card */
+    .featured-news-card { 
+        border-radius: 1rem; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
+        transition: transform 0.3s; border: 1px solid rgba(0,0,0,0.05);
     }
-     .news-card:hover { 
-        transform: translateY(-3px);
-        box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,.1); 
-    }
-    .news-image { 
-        width: 100%; 
-        height: 200px; /* Tinggi gambar dibuat konsisten */ 
-        object-fit: cover; 
-    }
-    .news-content { padding: 1.5rem; } /* Padding di dalam konten teks */
-    .news-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.5rem; line-height: 1.4; }
-    .news-title a { color: #212529; text-decoration: none; transition: color 0.2s; }
-    .news-title a:hover { color: #F39C12; }
-    .news-excerpt { color: #6c757d; font-size: 0.95rem; margin-bottom: 1rem; line-height: 1.6; } /* Margin bawah ditambah */
-    .btn-outline-orange { 
-        color: #F39C12; 
-        border-color: #F39C12; 
-        font-weight: 500; /* Font sedikit tebal */
-    }
-    .btn-outline-orange:hover { background-color: #F39C12; color: #fff; }
-
-    /* --- Sidebar Widget --- */
-    .sidebar-widget {
-        background-color: #ffffff; /* Background putih */
-        padding: 1.5rem;
-        border-radius: 0.75rem; /* Radius disamakan */
-        border: 1px solid #dee2e6; /* Border halus */
-        box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,.05); /* Shadow halus */
-    }
-    .widget-title { font-weight: 700; /* Judul widget lebih tebal */ margin-bottom: 1.25rem; color: #343a40; }
+    .featured-news-card:hover { transform: translateY(-5px); }
+    .featured-title { font-size: 2rem; font-weight: 800; line-height: 1.2; }
+    .featured-img-col { min-height: 400px; }
     
-    /* Sidebar Trending */
-    .trending-list .list-group-item {
-        background: none;
-        border: none;
-        padding: 0.75rem 0;
-        border-bottom: 1px solid #e9ecef;
-    }
-    .trending-list .list-group-item:last-child { border-bottom: none; padding-bottom: 0; }
-    .trending-list a { text-decoration: none; color: #333; font-weight: 500; }
-    .trending-list a:hover { color: #F39C12; }
-
-    /* Sidebar Kategori (diubah) */
-    .category-widget { /* Hapus background oranye */ }
-    .category-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.8rem 1rem; /* Padding disesuaikan */
-        color: #333; /* Warna teks biasa */
-        background-color: #f8f9fa; /* Background abu-abu */
-        text-decoration: none;
-        font-weight: 500;
-        border-radius: 0.5rem; /* Sudut lebih tumpul */
-        margin-bottom: 0.5rem; /* Jarak antar item */
-        transition: background-color 0.2s, color 0.2s;
-    }
-    .category-item:last-child { margin-bottom: 0; }
-    .category-item:hover { 
-        background-color: #F39C12; /* Background jadi oranye saat hover */
-        color: #fff; /* Teks jadi putih */
-    }
-    .category-item i { transition: transform 0.2s; }
-    .category-item:hover i { transform: translateX(3px); } /* Efek panah bergerak */
-
-    /* Pagination Styling (jika perlu disesuaikan) */
-    .pagination .page-item.active .page-link {
-        background-color: #F39C12;
-        border-color: #F39C12;
-    }
-    .pagination .page-link {
-        color: #F39C12;
-    }
-    .pagination .page-link:hover {
-        color: #d8890b;
-    }
-
+    /* News Card */
+    .news-card { transition: transform 0.3s, box-shadow 0.3s; border: 1px solid rgba(0,0,0,0.03) !important; }
+    .news-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important; }
+    .news-card a:hover .card-title { color: #F39C12 !important; transition: color 0.2s; }
+    
+    /* Sidebar */
+    .last-no-border:last-child { border-bottom: none !important; margin-bottom: 0 !important; padding-bottom: 0 !important; }
+    .hover-orange:hover { background-color: #F39C12 !important; color: white !important; border-color: #F39C12 !important; }
+    .transition { transition: all 0.2s ease; }
+    
+    /* Colors */
+    .text-orange { color: #F39C12 !important; }
+    .bg-orange { background-color: #F39C12 !important; }
+    .btn-outline-dark:hover { background-color: #212529; color: white; }
+    
+    /* Pagination Style */
+    .pagination .page-link { color: #333; border: none; margin: 0 5px; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+    .pagination .active .page-link { background-color: #F39C12; color: white; font-weight: bold; }
 </style>
 @endpush
