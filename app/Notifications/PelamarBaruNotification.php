@@ -5,8 +5,9 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use App\Models\Lamaran; // <-- Import model Lamaran
+use Illuminate\Contracts\Queue\ShouldQueue; // <--- TAMBAHKAN INI
 
-class PelamarBaruNotification extends Notification
+class PelamarBaruNotification extends Notification implements ShouldQueue // <--- IMPLEMENT ShouldQueue
 {
     use Queueable;
 
@@ -27,6 +28,7 @@ class PelamarBaruNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
+            'type' => 'new_application', // <--- BARIS KRITIS BARU: Identifikasi jenis notifikasi
             'lamaran_id' => $this->lamaran->id,
             'nama_pelamar' => $this->lamaran->pelamar->user->name,
             'lowongan_id' => $this->lamaran->lowongan->id,

@@ -11,18 +11,13 @@
 
     {{-- Filter dan Aksi --}}
     <div class="filter-section mb-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-        <div class="dropdown me-md-2 mb-2 mb-md-0">
-            <button class="btn btn-outline-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Semua Notifikasi
+        {{-- Tombol Tandai Semua Sudah Dibaca (Menggunakan Form untuk POST) --}}
+        <form action="{{ route('perusahaan.notifikasi.markAllAsRead') }}" method="POST">
+            @csrf
+            <button class="btn btn-primary d-flex align-items-center btn-post" type="submit">
+                <i class="bi bi-check-all me-1"></i> Tandai Semua Sudah Dibaca
             </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Belum Terbaca</a></li>
-                <li><a class="dropdown-item" href="#">Sudah Terbaca</a></li>
-            </ul>
-        </div>
-        <button class="btn btn-primary d-flex align-items-center btn-post" type="button">
-            Tandai Semua Sudah Di baca
-        </button>
+        </form>
     </div>
 
     {{-- Daftar Notifikasi --}}
@@ -30,20 +25,21 @@
         <div class="notifikasi-list">
             @forelse ($notifications as $notification)
                 @php
-                    // Logika untuk menentukan tampilan notifikasi
                     $isUnread = is_null($notification->read_at);
                     $itemClass = $isUnread ? 'bg-light fw-bold' : '';
-                    $statusText = $isUnread ? 'Belum Terbaca' : 'Sudah Terbaca';
+                    $statusText = $isUnread ? 'Baru' : 'Terbaca';
                     $statusClass = $isUnread ? 'text-primary' : 'text-muted';
                 @endphp
+                
+                {{-- Gunakan $notification->data['action_url'] yang sudah kita simpan di notifikasi --}}
                 <div class="notifikasi-item d-flex align-items-start p-3 border-bottom {{ $itemClass }}">
                     <i class="bi bi-bell-fill me-3 fs-5 text-secondary"></i>
                     <div class="flex-grow-1">
-                        {{-- Buat notifikasi bisa diklik untuk menuju halaman detail pelamar --}}
+                        {{-- Arahkan ke route readAndRedirect, yang kemudian akan membawa user ke URL yang benar --}}
                         <a href="{{ route('perusahaan.lowongan.pelamar.index', ['lowongan_id' => $notification->data['lowongan_id']]) }}" class="text-decoration-none text-dark">
-                            <span class="d-block">Pelamar Baru untuk: {{ $notification->data['judul_lowongan'] }}</span>
-                            <small class="text-muted d-block">{{ $notification->data['message'] }}</small>
-                            <small class="text-muted d-block">{{ $notification->created_at->diffForHumans() }}</small>
+                            <span class="d-block fw-bold">{{ $notification->data['title'] ?? 'Notifikasi Baru' }}</span>
+                            <small class="text-muted d-block">{{ $notification->data['message'] ?? 'Klik untuk detail.' }}</small>
+                            <small class="text-muted d-block mt-1">{{ $notification->created_at->diffForHumans() }}</small>
                         </a>
                     </div>
                     <small class="{{ $statusClass }} text-end ms-auto">{{ $statusText }}</small>
