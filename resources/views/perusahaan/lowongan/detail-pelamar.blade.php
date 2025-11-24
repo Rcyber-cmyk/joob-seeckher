@@ -113,6 +113,7 @@
 {{-- Header --}}
 <div class="header-dashboard mb-3">
     <div>
+        {{-- Asumsi Auth::user()->profilePerusahaan sudah terload di layout --}}
         <img src="{{ Auth::user()->profilePerusahaan->logo_perusahaan ? asset('storage/' . Auth::user()->profilePerusahaan->logo_perusahaan) : asset('images/default-company-profile.png') }}" alt="Logo Perusahaan">
         <p class="text fw-bold mb-0">{{ $lowongan->judul_lowongan }}</p>
     </div>
@@ -138,13 +139,50 @@
 
             <h5 class="fw-bold mt-4 mb-3"><i class="bi bi-file-earmark-text me-2"></i> Dokumen Lamaran</h5>
             <div class="d-flex flex-wrap gap-3">
-                <a href="#" class="btn btn-outline-primary btn-sm">
-                    <i class="bi bi-file-earmark-text me-1"></i> Surat Lamaran
-                </a>
-                <a href="#" class="btn btn-outline-primary btn-sm">
-                    <i class="bi bi-file-earmark-richtext me-1"></i> Resume
-                </a>
+                
+                {{-- LINK SURAT LAMARAN --}}
+                @if ($lamaran->surat_lamaran_path)
+                    <a href="{{ asset('storage/' . $lamaran->surat_lamaran_path) }}" 
+                       target="_blank" 
+                       class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-file-earmark-text me-1"></i> Surat Lamaran (Lihat)
+                    </a>
+                @else
+                    <button class="btn btn-outline-secondary btn-sm" disabled>
+                        <i class="bi bi-file-earmark-text me-1"></i> Surat Lamaran (Tidak Ada File)
+                    </button>
+                    {{-- Opsi: Jika tidak ada file, tampilkan teks surat lamaran --}}
+                    @if ($lamaran->surat_lamaran_text)
+                        <button class="btn btn-outline-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#suratText" aria-expanded="false" aria-controls="suratText">
+                            <i class="bi bi-journal-text me-1"></i> Baca Teks Surat
+                        </button>
+                    @endif
+                @endif
+
+                {{-- LINK RESUME (CV) --}}
+                @if ($lamaran->resume_path)
+                    <a href="{{ asset('storage/' . $lamaran->resume_path) }}" 
+                       target="_blank" 
+                       class="btn btn-outline-success btn-sm">
+                        <i class="bi bi-file-earmark-richtext me-1"></i> Resume (Lihat)
+                    </a>
+                @else
+                    <button class="btn btn-outline-secondary btn-sm" disabled>
+                        <i class="bi bi-file-earmark-richtext me-1"></i> Resume (Tidak Ada File)
+                    </button>
+                @endif
             </div>
+
+            {{-- Collapsible Text Surat Lamaran (Hanya muncul jika ada teks) --}}
+            @if ($lamaran->surat_lamaran_text)
+                <div class="collapse mt-3" id="suratText">
+                    <div class="card card-body bg-light">
+                        <h6 class="fw-bold">Teks Surat Lamaran:</h6>
+                        <p style="white-space: pre-wrap;">{{ $lamaran->surat_lamaran_text }}</p>
+                    </div>
+                </div>
+            @endif
+
 
             <h5 class="fw-bold mt-4 mb-3"><i class="bi bi-card-list me-2"></i> Ringkasan Pelamar</h5>
             <ul class="list-unstyled list-info">
@@ -165,7 +203,7 @@
 
     {{-- Keahlian & Riwayat Karir & E-RANKING --}}
     <div class="col-lg-6">
-        {{-- ========================== BLOK DETAIL E-RANKING (BARU) ========================== --}}
+        {{-- ========================== BLOK DETAIL E-RANKING ========================== --}}
         <div class="dashboard-section ranking-breakdown-card p-4 mb-4">
             <h5 class="fw-bold mb-4 text-center"><i class="bi bi-graph-up-arrow me-2"></i> Rincian Skor E-Ranking</h5>
             <div class="d-flex justify-content-center mb-4">

@@ -24,7 +24,9 @@ class DetailPelamarController extends Controller
         $lowongan = LowonganPekerjaan::where('perusahaan_id', $perusahaan->id)
                                       ->findOrFail($lowongan_id);
                                       
-        $pelamar = ProfilePelamar::with('user')->findOrFail($pelamar_id);
+        // PERBAIKAN: Hapus 'riwayatPekerjaan' dari 'with()' karena relasi tidak terdefinisi
+        // Kami hanya memuat relasi yang sudah ada (user, keahlian)
+        $pelamar = ProfilePelamar::with('user', 'keahlian')->findOrFail($pelamar_id);
         
         $lamaran = Lamaran::where('lowongan_id', $lowongan->id)
                           ->where('pelamar_id', $pelamar->id)
@@ -36,4 +38,3 @@ class DetailPelamarController extends Controller
         return view('perusahaan.lowongan.detail-pelamar', compact('lowongan', 'pelamar', 'lamaran', 'rankingDetails'));
     }
 }
-

@@ -15,6 +15,13 @@ class Lamaran extends Model
         'pelamar_id',
         'lowongan_id',
         'status',
+        'surat_lamaran_path', 
+        'resume_path',
+        'surat_lamaran_text', // Tambahkan juga ini jika digunakan
+        'gaji_diharapkan',
+        'pendidikan_terakhir',
+        'pengalaman_tahun',
+        'riwayat_karir',
     ];
 
     public function pelamar()

@@ -161,7 +161,7 @@ class LowonganController extends Controller
         }
 
         $resumePath = null;
-        if ($request->hasFile('ungah_resume')) { // <-- Typo di sini, tapi kita ikuti form Anda
+        if ($request->hasFile('unggah_resume')) { // <-- Typo di sini, tapi kita ikuti form Anda
             $resumePath = $request->file('unggah_resume')->store('resume', 'public');
         }
 
@@ -170,6 +170,7 @@ class LowonganController extends Controller
             'lowongan_id' => $lowongan->id,
             'status' => 'pending',
             'surat_lamaran_path' => $suratLamaranPath,
+            'resume_path' => $resumePath,
             'surat_lamaran_text' => $request->tulis_surat_lamaran,
             'gaji_diharapkan' => $request->gaji_diharapkan,
             'pendidikan_terakhir' => $request->pendidikan_terakhir,
