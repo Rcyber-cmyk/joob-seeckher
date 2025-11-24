@@ -188,7 +188,8 @@
                 $isPerusahaanActive = Request::routeIs('admin.perusahaan.*') || 
                                       Request::routeIs('admin.kandidat.index') || 
                                       Request::routeIs('admin.iklan.*') || 
-                                      Request::routeIs('admin.lowongan.show'); 
+                                      Request::routeIs('admin.lowongan.show'); ||
+                                      Request::routeIs('admin.jadwalwawancara.index');
             @endphp
             
             {{-- Tombol Toggler Utama: Perusahaan (Sekarang aktif) --}}
@@ -210,6 +211,7 @@
                 <a class="nav-link ps-5 {{ Request::routeIs('admin.kandidat.index') ? 'active' : '' }}" href="{{ route('admin.kandidat.index') }}">
                     <i class="bi bi-person-check-fill"></i> Kandidat
                 </a>
+                <a class="nav-link ps-5 {{ Request::routeIs('admin.jadwalwawancara.index') ? 'active' : '' }}" href="{{ route('admin.jadwalwawancara.index') }}"><i class="bi bi-calendar-check-fill"></i> Interview</a>
                 {{-- Tautan Iklan Lowongan aktif --}}
                 <a class="nav-link ps-5 {{ Request::routeIs('admin.iklan.*') || Request::routeIs('admin.lowongan.show') ? 'active' : '' }}" href="{{ route('admin.iklan.index') }}">
                     <i class="bi bi-megaphone-fill"></i> Iklan Lowongan

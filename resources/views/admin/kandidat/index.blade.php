@@ -81,7 +81,8 @@
                 // Tentukan apakah ada sub-menu Perusahaan yang aktif.
                 $isPerusahaanActive = Request::routeIs('admin.perusahaan.*') || 
                                       Request::routeIs('admin.kandidat.index') || 
-                                      Request::routeIs('admin.iklan.*');
+                                      Request::routeIs('admin.iklan.*') ||
+                                      Request::routeIs('admin.jadwalwawancara.index');
             @endphp
             
             {{-- Tombol Toggler Utama: Perusahaan (Sekarang aktif) --}}
@@ -107,6 +108,7 @@
                 <a class="nav-link ps-5 {{ Request::routeIs('admin.iklan.*') ? 'active' : '' }}" href="{{ route('admin.iklan.index') }}">
                     <i class="bi bi-megaphone-fill"></i> Iklan Lowongan
                 </a>
+                <a class="nav-link ps-5 {{ Request::routeIs('admin.jadwalwawancara.index') ? 'active' : '' }}" href="{{ route('admin.jadwalwawancara.index') }}"><i class="bi bi-calendar-check-fill"></i> Interview</a>
             </div>
 
             <a class="nav-link {{ Request::routeIs('admin.pelamar.ranking') ? 'active' : '' }}" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
