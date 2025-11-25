@@ -111,7 +111,8 @@
                         <div class="mb-3">
                             <label for="password" class="form-label">Password <span class="required-star">*</span></label>
                             <div class="position-relative">
-                                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required>
+                                {{-- PENTING: Gunakan old('password') untuk menjaga nilai saat error --}}
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" value="{{ old('password') }}" required>
                                 <i class="bi bi-eye-slash password-toggle-icon" id="togglePassword"></i>
                             </div>
                             @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
@@ -120,15 +121,21 @@
                         <div class="mb-4">
                             <label for="password_confirmation" class="form-label">Konfirmasi Password <span class="required-star">*</span></label>
                             <div class="position-relative">
-                                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
+                                {{-- PENTING: Gunakan old('password_confirmation') untuk menjaga nilai saat error --}}
+                                <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" id="password_confirmation" name="password_confirmation" value="{{ old('password_confirmation') }}" required>
                                 <i class="bi bi-eye-slash password-toggle-icon" id="togglePasswordConfirm"></i>
                             </div>
+                            @error('password_confirmation')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
                     </div>
 
                     {{-- Step 2: Pelamar Specific --}}
                     <div id="step-2-pelamar" class="form-step" style="display: none;">
-                        <div class="mb-3"><label for="nik" class="form-label">NIK <span class="required-star">*</span></label><input type="text" class="form-control @error('nik') is-invalid @enderror" name="nik" value="{{ old('nik') }}" required>@error('nik')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+                        <div class="mb-3">
+                            <label for="nik" class="form-label">NIK <span class="required-star">*</span></label>
+                            <input type="text" class="form-control @error('nik') is-invalid @enderror" name="nik" value="{{ old('nik') }}" required>
+                            @error('nik')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
                         
                         <div class="row">
                             <div class="col-md-7 mb-3">
@@ -142,14 +149,52 @@
                             </div>
                         </div>
 
-                        <div class="mb-3"><label for="alamat" class="form-label">Alamat Lengkap Sesuai KTP <span class="required-star">*</span></label><textarea class="form-control @error('alamat') is-invalid @enderror" name="alamat" required>{{ old('alamat') }}</textarea>@error('alamat')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
-                        <div class="row"><div class="col-md-6 mb-3"><label for="gender" class="form-label">Jenis Kelamin <span class="required-star">*</span></label><select class="form-select @error('gender') is-invalid @enderror" name="gender" required><option value="">Pilih</option><option value="Laki-laki" {{ old('gender') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option><option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option></select>@error('gender')<div class="invalid-feedback">{{ $message }}</div>@enderror</div><div class="col-md-6 mb-3"><label for="no_hp" class="form-label">Nomor HP <span class="required-star">*</span></label><input type="tel" class="form-control @error('no_hp') is-invalid @enderror" name="no_hp" value="{{ old('no_hp') }}" required>@error('no_hp')<div class="invalid-feedback">{{ $message }}</div>@enderror</div></div>
+                        <div class="mb-3">
+                            <label for="alamat" class="form-label">Alamat Lengkap Sesuai KTP <span class="required-star">*</span></label>
+                            <textarea class="form-control @error('alamat') is-invalid @enderror" name="alamat" required>{{ old('alamat') }}</textarea>
+                            @error('alamat')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="gender" class="form-label">Jenis Kelamin <span class="required-star">*</span></label>
+                                <select class="form-select @error('gender') is-invalid @enderror" name="gender" required>
+                                    <option value="">Pilih</option>
+                                    <option value="Laki-laki" {{ old('gender') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                                    <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                                </select>
+                                @error('gender')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="no_hp" class="form-label">Nomor HP <span class="required-star">*</span></label>
+                                <input type="tel" class="form-control @error('no_hp') is-invalid @enderror" name="no_hp" value="{{ old('no_hp') }}" required>
+                                @error('no_hp')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                        </div>
                     </div>
 
                     {{-- Step 3: Pelamar Specific --}}
                     <div id="step-3-pelamar" class="form-step" style="display: none;">
-                        <div class="mb-3"><label for="domisili" class="form-label">Domisili (Kota) <span class="required-star">*</span></label><input type="text" class="form-control @error('domisili') is-invalid @enderror" name="domisili" value="{{ old('domisili') }}" required>@error('domisili')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
-                        <div class="mb-3"><label for="lulusan" class="form-label">Pendidikan Terakhir <span class="required-star">*</span></label><select class="form-select @error('lulusan') is-invalid @enderror" name="lulusan" required><option value="">Pilih</option><option value="SMP/Sederajat" @if(old('lulusan')=='SMP/Sederajat')selected @endif>SMP/Sederajat</option><option value="SMA/SMK Sederajat" @if(old('lulusan')=='SMA/SMK Sederajat')selected @endif>SMA/SMK Sederajat</option><option value="D1" @if(old('lulusan')=='D1')selected @endif>D1</option><option value="D2" @if(old('lulusan')=='D2')selected @endif>D2</option><option value="D3" @if(old('lulusan')=='D3')selected @endif>D3</option><option value="D4" @if(old('lulusan')=='D4')selected @endif>D4</option><option value="S1" @if(old('lulusan')=='S1')selected @endif>S1</option><option value="S2" @if(old('lulusan')=='S2')selected @endif>S2</option><option value="S3" @if(old('lulusan')=='S3')selected @endif>S3</option></select>@error('lulusan')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+                        <div class="mb-3">
+                            <label for="domisili" class="form-label">Domisili (Kota) <span class="required-star">*</span></label>
+                            <input type="text" class="form-control @error('domisili') is-invalid @enderror" name="domisili" value="{{ old('domisili') }}" required>
+                            @error('domisili')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="lulusan" class="form-label">Pendidikan Terakhir <span class="required-star">*</span></label>
+                            <select class="form-select @error('lulusan') is-invalid @enderror" name="lulusan" required>
+                                <option value="">Pilih</option>
+                                <option value="SMP/Sederajat" @if(old('lulusan')=='SMP/Sederajat')selected @endif>SMP/Sederajat</option>
+                                <option value="SMA/SMK Sederajat" @if(old('lulusan')=='SMA/SMK Sederajat')selected @endif>SMA/SMK Sederajat</option>
+                                <option value="D1" @if(old('lulusan')=='D1')selected @endif>D1</option>
+                                <option value="D2" @if(old('lulusan')=='D2')selected @endif>D2</option>
+                                <option value="D3" @if(old('lulusan')=='D3')selected @endif>D3</option>
+                                <option value="D4" @if(old('lulusan')=='D4')selected @endif>D4</option>
+                                <option value="S1" @if(old('lulusan')=='S1')selected @endif>S1</option>
+                                <option value="S2" @if(old('lulusan')=='S2')selected @endif>S2</option>
+                                <option value="S3" @if(old('lulusan')=='S3')selected @endif>S3</option>
+                            </select>
+                            @error('lulusan')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
                         
                         <div class="mb-3" id="nilai-container" style="display: none;">
                             <label for="nilai_akhir" class="form-label" id="nilai_akhir_label">Nilai <span class="required-star">*</span></label>
@@ -157,29 +202,98 @@
                             @error('nilai_akhir')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
 
-                        <div class="mb-3"><label for="tahun_lulus" class="form-label">Tahun Lulus <span class="required-star">*</span></label><select class="form-select @error('tahun_lulus') is-invalid @enderror" id="tahun_lulus" name="tahun_lulus" required><option value="">-- Pilih Tahun --</option>@php $tahunSekarang = date('Y'); for ($tahun = $tahunSekarang - 50; $tahun <= $tahunSekarang; $tahun++) { echo '<option value="' . $tahun . '" ' . (old('tahun_lulus') == $tahun ? 'selected' : '') . '>' . $tahun . '</option>'; } @endphp</select>@error('tahun_lulus')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
-                        <div class="mb-4"><label for="pengalaman_kerja" class="form-label">Pengalaman Kerja <span class="required-star">*</span></label><select class="form-select @error('pengalaman_kerja') is-invalid @enderror" name="pengalaman_kerja" required><option value="">Pilih</option><option value="Fresh Graduate" {{ old('pengalaman_kerja')=='Fresh Graduate'?'selected':'' }}>Fresh Graduate</option><option value="< 1 Tahun" {{ old('pengalaman_kerja')=='< 1 Tahun'?'selected':'' }}>< 1 Tahun</option><option value="1-3 Tahun" {{ old('pengalaman_kerja')=='1-3 Tahun'?'selected':'' }}>1-3 Tahun</option><option value="3-5 Tahun" {{ old('pengalaman_kerja')=='3-5 Tahun'?'selected':'' }}>3-5 Tahun</option><option value="> 5 Tahun" {{ old('pengalaman_kerja')=='> 5 Tahun'?'selected':'' }}>> 5 Tahun</option></select>@error('pengalaman_kerja')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+                        <div class="mb-3">
+                            <label for="tahun_lulus" class="form-label">Tahun Lulus <span class="required-star">*</span></label>
+                            <select class="form-select @error('tahun_lulus') is-invalid @enderror" id="tahun_lulus" name="tahun_lulus" required>
+                                <option value="">-- Pilih Tahun --</option>
+                                @php $tahunSekarang = date('Y'); for ($tahun = $tahunSekarang - 50; $tahun <= $tahunSekarang; $tahun++) { echo '<option value="' . $tahun . '" ' . (old('tahun_lulus') == $tahun ? 'selected' : '') . '>' . $tahun . '</option>'; } @endphp
+                            </select>
+                            @error('tahun_lulus')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="mb-4">
+                            <label for="pengalaman_kerja" class="form-label">Pengalaman Kerja <span class="required-star">*</span></label>
+                            <select class="form-select @error('pengalaman_kerja') is-invalid @enderror" name="pengalaman_kerja" required>
+                                <option value="">Pilih</option>
+                                <option value="Fresh Graduate" {{ old('pengalaman_kerja')=='Fresh Graduate'?'selected':'' }}>Fresh Graduate</option>
+                                <option value="< 1 Tahun" {{ old('pengalaman_kerja')=='< 1 Tahun'?'selected':'' }}>< 1 Tahun</option>
+                                <option value="1-3 Tahun" {{ old('pengalaman_kerja')=='1-3 Tahun'?'selected':'' }}>1-3 Tahun</option>
+                                <option value="3-5 Tahun" {{ old('pengalaman_kerja')=='3-5 Tahun'?'selected':'' }}>3-5 Tahun</option>
+                                <option value="> 5 Tahun" {{ old('pengalaman_kerja')=='> 5 Tahun'?'selected':'' }}>> 5 Tahun</option>
+                            </select>
+                            @error('pengalaman_kerja')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
                     </div>
 
                     {{-- Step 2: Perusahaan Specific --}}
                     <div id="step-2-perusahaan" class="form-step" style="display: none;">
-                        <div class="mb-3"><label for="alamat_jalan" class="form-label">Alamat Kantor (Jalan) <span class="required-star">*</span></label><textarea class="form-control @error('alamat_jalan') is-invalid @enderror" name="alamat_jalan" required>{{ old('alamat_jalan') }}</textarea>@error('alamat_jalan')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
-                        <div class="row"><div class="col-md-6 mb-3"><label for="alamat_kota" class="form-label">Kota <span class="required-star">*</span></label><input type="text" class="form-control @error('alamat_kota') is-invalid @enderror" name="alamat_kota" value="{{ old('alamat_kota') }}" required>@error('alamat_kota')<div class="invalid-feedback">{{ $message }}</div>@enderror</div><div class="col-md-6 mb-3"><label for="kode_pos" class="form-label">Kode Pos <span class="required-star">*</span></label><input type="text" class="form-control @error('kode_pos') is-invalid @enderror" name="kode_pos" value="{{ old('kode_pos') }}" required>@error('kode_pos')<div class="invalid-feedback">{{ $message }}</div>@enderror</div></div>
-                        <div class="mb-3"><label for="no_telp_perusahaan" class="form-label">Nomor Telepon Perusahaan <span class="required-star">*</span></label><input type="tel" class="form-control @error('no_telp_perusahaan') is-invalid @enderror" name="no_telp_perusahaan" value="{{ old('no_telp_perusahaan') }}" required>@error('no_telp_perusahaan')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
-                        <div class="mb-4"><label for="npwp_perusahaan" class="form-label">NPWP Perusahaan <span class="required-star">*</span></label><input type="text" class="form-control @error('npwp_perusahaan') is-invalid @enderror" name="npwp_perusahaan" value="{{ old('npwp_perusahaan') }}" required>@error('npwp_perusahaan')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+                        <div class="mb-3">
+                            <label for="alamat_jalan" class="form-label">Alamat Kantor (Jalan) <span class="required-star">*</span></label>
+                            <textarea class="form-control @error('alamat_jalan') is-invalid @enderror" name="alamat_jalan" required>{{ old('alamat_jalan') }}</textarea>
+                            @error('alamat_jalan')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="alamat_kota" class="form-label">Kota <span class="required-star">*</span></label>
+                                <input type="text" class="form-control @error('alamat_kota') is-invalid @enderror" name="alamat_kota" value="{{ old('alamat_kota') }}" required>
+                                @error('alamat_kota')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="kode_pos" class="form-label">Kode Pos <span class="required-star">*</span></label>
+                                <input type="text" class="form-control @error('kode_pos') is-invalid @enderror" name="kode_pos" value="{{ old('kode_pos') }}" required>
+                                @error('kode_pos')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="no_telp_perusahaan" class="form-label">Nomor Telepon Perusahaan <span class="required-star">*</span></label>
+                            <input type="tel" class="form-control @error('no_telp_perusahaan') is-invalid @enderror" name="no_telp_perusahaan" value="{{ old('no_telp_perusahaan') }}" required>
+                            @error('no_telp_perusahaan')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="mb-4">
+                            <label for="npwp_perusahaan" class="form-label">NPWP Perusahaan <span class="required-star">*</span></label>
+                            <input type="text" class="form-control @error('npwp_perusahaan') is-invalid @enderror" name="npwp_perusahaan" value="{{ old('npwp_perusahaan') }}" required>
+                            @error('npwp_perusahaan')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
                     </div>
 
                     {{-- Step 2 untuk UMKM --}}
                     <div id="step-2-umkm" class="form-step" style="display: none;">
-                        <div class="mb-3"><label for="nama_pemilik" class="form-label">Nama Pemilik <span class="required-star">*</span></label><input type="text" class="form-control @error('nama_pemilik') is-invalid @enderror" name="nama_pemilik" value="{{ old('nama_pemilik') }}" required>@error('nama_pemilik')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
-                        <div class="mb-3"><label for="alamat_usaha" class="form-label">Alamat Usaha <span class="required-star">*</span></label><textarea class="form-control @error('alamat_usaha') is-invalid @enderror" name="alamat_usaha" required>{{ old('alamat_usaha') }}</textarea>@error('alamat_usaha')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3"><label for="kota" class="form-label">Kota <span class="required-star">*</span></label><input type="text" class="form-control @error('kota') is-invalid @enderror" name="kota" value="{{ old('kota') }}" required>@error('kota')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
-                            <div class="col-md-6 mb-3"><label for="no_hp_umkm" class="form-label">Nomor HP (UMKM) <span class="required-star">*</span></label><input type="tel" class="form-control @error('no_hp_umkm') is-invalid @enderror" name="no_hp_umkm" value="{{ old('no_hp_umkm') }}" required>@error('no_hp_umkm')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+                        <div class="mb-3">
+                            <label for="nama_pemilik" class="form-label">Nama Pemilik <span class="required-star">*</span></label>
+                            <input type="text" class="form-control @error('nama_pemilik') is-invalid @enderror" name="nama_pemilik" value="{{ old('nama_pemilik') }}" required>
+                            @error('nama_pemilik')<div class="invalid-feedback">{{ $message }}</div>@enderror
                         </div>
-                        <div class="mb-3"><label for="kategori_usaha" class="form-label">Kategori Usaha <span class="required-star">*</span></label><input type="text" class="form-control @error('kategori_usaha') is-invalid @enderror" name="kategori_usaha" value="{{ old('kategori_usaha') }}" required>@error('kategori_usaha')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
-                        <div class="mb-3"><label for="deskripsi_usaha" class="form-label">Deskripsi Usaha</label><textarea class="form-control @error('deskripsi_usaha') is-invalid @enderror" name="deskripsi_usaha">{{ old('deskripsi_usaha') }}</textarea>@error('deskripsi_usaha')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
-                        <div class="mb-4"><label for="situs_web_atau_medsos" class="form-label">Situs Web / Media Sosial</label><input type="text" class="form-control @error('situs_web_atau_medsos') is-invalid @enderror" name="situs_web_atau_medsos" value="{{ old('situs_web_atau_medsos') }}">@error('situs_web_atau_medsos')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+                        <div class="mb-3">
+                            <label for="alamat_usaha" class="form-label">Alamat Usaha <span class="required-star">*</span></label>
+                            <textarea class="form-control @error('alamat_usaha') is-invalid @enderror" name="alamat_usaha" required>{{ old('alamat_usaha') }}</textarea>
+                            @error('alamat_usaha')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="kota" class="form-label">Kota <span class="required-star">*</span></label>
+                                <input type="text" class="form-control @error('kota') is-invalid @enderror" name="kota" value="{{ old('kota') }}" required>
+                                @error('kota')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="no_hp_umkm" class="form-label">Nomor HP (UMKM) <span class="required-star">*</span></label>
+                                <input type="tel" class="form-control @error('no_hp_umkm') is-invalid @enderror" name="no_hp_umkm" value="{{ old('no_hp_umkm') }}" required>
+                                @error('no_hp_umkm')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="kategori_usaha" class="form-label">Kategori Usaha <span class="required-star">*</span></label>
+                            <input type="text" class="form-control @error('kategori_usaha') is-invalid @enderror" name="kategori_usaha" value="{{ old('kategori_usaha') }}" required>
+                            @error('kategori_usaha')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="mb-3">
+                            <label for="deskripsi_usaha" class="form-label">Deskripsi Usaha</label>
+                            <textarea class="form-control @error('deskripsi_usaha') is-invalid @enderror" name="deskripsi_usaha">{{ old('deskripsi_usaha') }}</textarea>
+                            @error('deskripsi_usaha')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
+                        <div class="mb-4">
+                            <label for="situs_web_atau_medsos" class="form-label">Situs Web / Media Sosial</label>
+                            <input type="text" class="form-control @error('situs_web_atau_medsos') is-invalid @enderror" name="situs_web_atau_medsos" value="{{ old('situs_web_atau_medsos') }}">
+                            @error('situs_web_atau_medsos')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                        </div>
                     </div>
 
                     {{-- Container untuk tombol navigasi --}}
@@ -253,14 +367,52 @@ function showStep(step) {
         }
     }
     
+    // Panggil fungsi untuk memastikan error Blade muncul di step yang benar
+    highlightErrors();
+    
     updateStepIndicator();
     updateNavigation();
 }
+
+// Fungsi untuk menyorot error Laravel di step saat ini
+function highlightErrors() {
+    // Sembunyikan semua error feedback secara default (karena Blade menampilkan semuanya)
+    document.querySelectorAll('.invalid-feedback').forEach(el => el.style.display = 'none');
+    
+    // Tentukan step element yang aktif
+    let activeStepElement = document.getElementById('step-1');
+    if (currentStep !== 1) {
+        const stepId = `step-${currentStep}-${currentRole}`;
+        activeStepElement = document.getElementById(stepId);
+    }
+    
+    if (!activeStepElement) return;
+
+    // Tampilkan hanya error yang ada di step yang sedang aktif
+    const invalidInputsInActiveStep = activeStepElement.querySelectorAll('.is-invalid');
+    invalidInputsInActiveStep.forEach(input => {
+        let errorDiv;
+        // Cek jika input di dalam div wrapper (seperti password)
+        if (input.closest('.position-relative')) {
+            // Jika input ada di dalam .position-relative, ambil elemen setelah parent div
+            errorDiv = input.closest('.position-relative').parentElement.querySelector('.invalid-feedback');
+        } else {
+            // Untuk input biasa, ambil elemen setelah input
+            errorDiv = input.nextElementSibling;
+        }
+        
+        if (errorDiv && errorDiv.classList.contains('invalid-feedback')) {
+            errorDiv.style.display = 'block';
+        }
+    });
+}
+
 
 function changeStep(direction) {
     const newStep = currentStep + direction;
 
     if (direction > 0) {
+        // Hanya validasi client-side saat maju
         if (!validateCurrentStep()) {
             return;
         }
@@ -287,23 +439,29 @@ function validateCurrentStep() {
     inputs.forEach(input => {
         if (input.offsetParent === null) return;
 
-        const feedback = input.parentElement.querySelector('.invalid-feedback') || input.parentElement.parentElement.querySelector('.invalid-feedback');
-        if (feedback) feedback.style.display = 'none';
+        // Hapus penanda error client-side sebelumnya
         input.classList.remove('is-invalid');
+        
+        // Hapus/sembunyikan feedback manual (jika ada)
+        let feedback = input.parentElement.querySelector('.invalid-feedback') || input.parentElement.parentElement.querySelector('.invalid-feedback');
+        if (feedback) feedback.style.display = 'none';
 
         if (!input.value.trim()) {
             isValid = false;
             input.classList.add('is-invalid');
+            
+            // Tampilkan pesan error client-side "wajib diisi"
             let errorDiv = input.parentElement.querySelector('.invalid-feedback') || input.parentElement.parentElement.querySelector('.invalid-feedback');
             
-            if (errorDiv && errorDiv.textContent.includes('wajib diisi')) {
+            // Cek jika errorDiv sudah ada dari Blade dan isinya bukan 'wajib diisi', biarkan saja
+            if (errorDiv && errorDiv.textContent.includes('Kolom ini wajib diisi')) {
                  errorDiv.style.display = 'block';
             } else if (!errorDiv) {
                  errorDiv = document.createElement('div');
                  errorDiv.className = 'invalid-feedback';
                  // Handle password fields which are wrapped in an extra div
-                 if(input.type === 'password') {
-                     input.parentElement.parentElement.appendChild(errorDiv);
+                 if(input.closest('.position-relative')) {
+                     input.closest('.position-relative').parentNode.appendChild(errorDiv);
                  } else {
                      input.parentElement.appendChild(errorDiv);
                  }
@@ -348,6 +506,7 @@ function showRoleChoice() {
     formPanel.style.display = 'none';
     form.reset();
     document.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+    document.querySelectorAll('.invalid-feedback').forEach(el => el.style.display = 'none');
 }
 
 function handleLulusanChange() {
@@ -413,18 +572,23 @@ function calculateAge() {
     }
 }
 
-// BARU: Fungsi untuk toggle password visibility
+// FUNGSI INI BERTANGGUNG JAWAB UNTUK TOGGLE PASSWORD
 function setupPasswordToggle(toggleId, inputId) {
     const toggleElement = document.getElementById(toggleId);
     const inputElement = document.getElementById(inputId);
-    if (!toggleElement || !inputElement) return;
+    
+    // PENTING: Periksa apakah elemen ditemukan
+    if (!toggleElement || !inputElement) {
+        console.error(`Toggle function failed: Element not found for ID ${toggleId} or ${inputId}`);
+        return;
+    }
 
     toggleElement.addEventListener('click', function() {
-        // Ganti tipe input
+        // Ganti tipe input (password <-> text)
         const type = inputElement.getAttribute('type') === 'password' ? 'text' : 'password';
         inputElement.setAttribute('type', type);
         
-        // Ganti ikon mata
+        // Ganti ikon mata (terbuka <-> tertutup)
         this.classList.toggle('bi-eye-slash');
         this.classList.toggle('bi-eye');
     });
@@ -436,8 +600,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const hasErrors = body.getAttribute('data-has-errors') === 'true';
     const oldRole = body.getAttribute('data-old-role');
 
+    // Tambahan: Sembunyikan semua error bawaan Blade saat DOM dimuat
+    document.querySelectorAll('.invalid-feedback').forEach(el => el.style.display = 'none');
+
+
     if (hasErrors && oldRole) {
-        showForm(oldRole);
+        showForm(oldRole); // Tampilkan role yang benar
 
         let oldStep = 1;
         if (oldRole === 'pelamar') {
@@ -448,12 +616,11 @@ document.addEventListener('DOMContentLoaded', function() {
             oldStep = parseInt(body.getAttribute('data-old-step-umkm') || '1');
         }
         
-        if (oldStep > 1) {
-            showStep(oldStep);
-        }
+        // Tampilkan step yang menyebabkan error
+        showStep(oldStep); 
     }
 
-    // Panggil fungsi toggle password untuk kedua input
+    // PENTING: Panggil fungsi toggle password setelah DOM dimuat
     setupPasswordToggle('togglePassword', 'password');
     setupPasswordToggle('togglePasswordConfirm', 'password_confirmation');
 

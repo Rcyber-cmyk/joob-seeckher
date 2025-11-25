@@ -14,10 +14,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail; // BARU: Import Mail facade
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
-use App\Mail\OtpVerificationMail; // Pastikan Mailable ini sudah Anda buat
+use App\Mail\OtpVerificationMail;
+use Illuminate\Support\Facades\Validator; // DITAMBAHKAN: Untuk validasi manual
 
 class RegisteredUserController extends Controller
 {
@@ -36,44 +37,164 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // Validasi input dari form (Tidak ada perubahan di sini)
-        $request->validate([
+        // --- 1. AMBIL STEP SAAT INI UNTUK PENGEMBALIAN JIKA GAGAL ---
+        $stepFieldName = '';
+
+        if ($request->role === 'pelamar') {
+            $stepFieldName = 'current_step';
+        } elseif ($request->role === 'perusahaan') {
+            $stepFieldName = 'current_step_perusahaan';
+        } elseif ($request->role === 'umkm') {
+            $stepFieldName = 'current_step_umkm';
+        }
+        
+        // --- 2. TENTUKAN ATURAN VALIDASI ---
+        $validationRules = [
             // Aturan Umum
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
             'role' => ['required', 'in:pelamar,perusahaan,umkm'],
+        ];
 
-            // Aturan Khusus Pelamar
-            'nik' => ['required_if:role,pelamar', 'nullable', 'string', 'size:16', 'unique:profiles_pelamar,nik'],
-            'alamat' => ['required_if:role,pelamar', 'nullable', 'string'],
-            'tanggal_lahir' => ['required_if:role,pelamar', 'nullable', 'date'],
-            'domisili' => ['required_if:role,pelamar', 'nullable', 'string', 'max:255'],
-            'lulusan' => ['required_if:role,pelamar', 'nullable', 'string', 'max:255'],
-            'tahun_lulus' => ['required_if:role,pelamar', 'nullable', 'digits:4'],
-            'pengalaman_kerja' => ['required_if:role,pelamar', 'nullable', 'string', 'max:255'],
-            'gender' => ['required_if:role,pelamar', 'nullable', 'in:Laki-laki,Perempuan'],
-            'no_hp' => ['required_if:role,pelamar', 'nullable', 'string', 'max:20'],
-            'nilai_akhir' => ['required_if:role,pelamar', 'nullable', 'numeric', 'between:0,100.00'],
+        // Aturan Khusus Pelamar (Step 2 & 3)
+        if ($request->role === 'pelamar') {
+            $validationRules = array_merge($validationRules, [
+                'nik' => ['required', 'string', 'size:16', 'unique:profiles_pelamar,nik'],
+                'alamat' => ['required', 'string'],
+                'tanggal_lahir' => ['required', 'date'],
+                'domisili' => ['required', 'string', 'max:255'],
+                'lulusan' => ['required', 'string', 'max:255'],
+                'tahun_lulus' => ['required', 'digits:4'],
+                'pengalaman_kerja' => ['required', 'string', 'max:255'],
+                'gender' => ['required', 'in:Laki-laki,Perempuan'],
+                'no_hp' => ['required', 'string', 'max:20'],
+                'nilai_akhir' => ['nullable', 'numeric', 'between:0,100.00'], 
+            ]);
+        } 
+        
+        // Aturan Khusus Perusahaan (Step 2)
+        elseif ($request->role === 'perusahaan') {
+            $validationRules = array_merge($validationRules, [
+                'alamat_jalan' => ['required', 'string'],
+                'alamat_kota' => ['required', 'string', 'max:255'],
+                'kode_pos' => ['required', 'string', 'max:10'],
+                'no_telp_perusahaan' => ['required', 'string', 'max:20'],
+                'npwp_perusahaan' => ['required', 'string', 'max:25'],
+            ]);
+        } 
+        
+        // Aturan Khusus UMKM (Step 2)
+        elseif ($request->role === 'umkm') {
+            $validationRules = array_merge($validationRules, [
+                'nama_pemilik' => ['required', 'string', 'max:255'],
+                'alamat_usaha' => ['required', 'string'],
+                'kota' => ['required', 'string', 'max:255'],
+                'no_hp_umkm' => ['required', 'string', 'max:20'],
+                'kategori_usaha' => ['required', 'string', 'max:255'],
+                'deskripsi_usaha' => ['nullable', 'string'],
+                'situs_web_atau_medsos' => ['nullable', 'string', 'max:255'],
+            ]);
+        }
 
-            // Aturan Khusus Perusahaan
-            'alamat_jalan' => ['required_if:role,perusahaan', 'nullable', 'string'],
-            'alamat_kota' => ['required_if:role,perusahaan', 'nullable', 'string', 'max:255'],
-            'kode_pos' => ['required_if:role,perusahaan', 'nullable', 'string', 'max:10'],
-            'no_telp_perusahaan' => ['required_if:role,perusahaan', 'nullable', 'string', 'max:20'],
-            'npwp_perusahaan' => ['required_if:role,perusahaan', 'nullable', 'string', 'max:25'],
+        // --- 3. DOKUMENTASI PESAN VALIDASI KHUSUS INDONESIA (HARDCODE) ---
+        $validationMessages = [
+            'required' => 'Bidang :attribute wajib diisi.',
+            'email' => 'Bidang :attribute harus berupa alamat email yang valid.',
+            'unique' => ':attribute sudah terdaftar.',
+            'confirmed' => 'Konfirmasi :attribute tidak cocok.',
+            'max' => ':attribute tidak boleh lebih dari :max karakter.',
+            'min' => ':attribute harus minimal :min karakter.',
+            'size' => ':attribute harus berjumlah :size digit.',
+            'digits' => ':attribute harus berjumlah :digits digit.',
+            'numeric' => ':attribute harus berupa angka.',
+            'between' => ':attribute harus antara :min dan :max.',
+            'in' => ':attribute yang dipilih tidak valid.',
+            'date' => ':attribute bukan tanggal yang valid.',
+        ];
 
-            // Aturan Khusus UMKM
-            'nama_pemilik' => ['required_if:role,umkm', 'nullable', 'string', 'max:255'],
-            'alamat_usaha' => ['required_if:role,umkm', 'nullable', 'string'],
-            'kota' => ['required_if:role,umkm', 'nullable', 'string', 'max:255'],
-            'no_hp_umkm' => ['required_if:role,umkm', 'nullable', 'string', 'max:20'],
-            'kategori_usaha' => ['required_if:role,umkm', 'nullable', 'string', 'max:255'],
-            'deskripsi_usaha' => ['nullable', 'string'],
-            'situs_web_atau_medsos' => ['nullable', 'string', 'max:255'],
-        ]);
+        // --- 4. CUSTOM ATRIBUT UNTUK PESAN YANG LEBIH BAIK ---
+        $validationAttributes = [
+            'name' => 'Nama/Nama Perusahaan/Nama Usaha',
+            'email' => 'Alamat Email',
+            'password' => 'Password',
+            'nik' => 'NIK',
+            'alamat' => 'Alamat Lengkap',
+            'tanggal_lahir' => 'Tanggal Lahir',
+            'domisili' => 'Domisili',
+            'lulusan' => 'Pendidikan Terakhir',
+            'tahun_lulus' => 'Tahun Lulus',
+            'pengalaman_kerja' => 'Pengalaman Kerja',
+            'gender' => 'Jenis Kelamin',
+            'no_hp' => 'Nomor HP',
+            'nilai_akhir' => 'Nilai Akhir/IPK',
+            'alamat_jalan' => 'Alamat Kantor (Jalan)',
+            'alamat_kota' => 'Kota',
+            'kode_pos' => 'Kode Pos',
+            'no_telp_perusahaan' => 'Nomor Telepon Perusahaan',
+            'npwp_perusahaan' => 'NPWP Perusahaan',
+            'nama_pemilik' => 'Nama Pemilik',
+            'alamat_usaha' => 'Alamat Usaha',
+            'kota' => 'Kota Usaha',
+            'no_hp_umkm' => 'Nomor HP UMKM',
+            'kategori_usaha' => 'Kategori Usaha',
+        ];
 
-        // --- PENYIMPANAN DATA ---
+        // --- 5. RUN VALIDATOR ---
+        $validator = Validator::make($request->all(), $validationRules, $validationMessages, $validationAttributes);
+
+        if ($validator->fails()) {
+            
+            $e = new \Illuminate\Validation\ValidationException($validator);
+
+            // Ambil semua input saat ini
+            $inputsToFlash = $request->all();
+
+            // === BARIS DIHAPUS: UNTUK MEMASTIKAN PASSWORD TIDAK DI-RESET (RISIKO KEAMANAN) ===
+            // Hapus unset($inputsToFlash['password']);
+            // Hapus unset($inputsToFlash['password_confirmation']);
+            
+            // Tambahkan logika untuk mencari field yang gagal dan menentukan step yang benar
+            $failedFields = array_keys($e->errors());
+
+            if ($request->role === 'pelamar') {
+                $stepMapping = [
+                    // Step 1
+                    'name' => 1, 'email' => 1, 'password' => 1, 
+                    // Step 2
+                    'nik' => 2, 'alamat' => 2, 'tanggal_lahir' => 2, 'gender' => 2, 'no_hp' => 2,
+                    // Step 3
+                    'domisili' => 3, 'lulusan' => 3, 'tahun_lulus' => 3, 'pengalaman_kerja' => 3, 'nilai_akhir' => 3,
+                ];
+                $targetStep = 3; // Mulai dari step tertinggi
+                foreach ($failedFields as $field) {
+                    if (isset($stepMapping[$field]) && $stepMapping[$field] < $targetStep) {
+                        $targetStep = $stepMapping[$field]; // Cari step paling awal yang gagal
+                    }
+                }
+                
+                // Override nilai step yang akan di-flash
+                $inputsToFlash[$stepFieldName] = $targetStep;
+
+            } else { // Perusahaan atau UMKM
+                 // Untuk Perusahaan/UMKM, jika ada error di Step 2 (field profil), kembalikan ke Step 2
+                $profileFields = ['alamat_jalan', 'alamat_usaha', 'nama_pemilik', 'alamat_kota', 'kode_pos', 'no_telp_perusahaan', 'npwp_perusahaan', 'kota', 'no_hp_umkm', 'kategori_usaha'];
+                
+                if (!empty(array_intersect($failedFields, $profileFields))) {
+                    // Override nilai step yang akan di-flash
+                    $inputsToFlash[$stepFieldName] = 2;
+                } else {
+                    // Jika error hanya di Step 1 (email/password/name), step tetap 1.
+                    $inputsToFlash[$stepFieldName] = 1;
+                }
+            }
+            
+
+            // Kembalikan ke halaman registrasi dengan semua input saat ini (di-override dengan step yang benar)
+            return redirect()->back()->withInput($inputsToFlash)->withErrors($e->errors());
+        }
+
+        // --- 6. PENYIMPANAN DATA (Jika Validasi Berhasil) ---
         $user = DB::transaction(function () use ($request) {
             $user = User::create([
                 'name' => $request->name,
@@ -132,28 +253,18 @@ class RegisteredUserController extends Controller
             return $user;
         });
 
-        // --- UBAH: LOGIKA VERIFIKASI OTP ---
-
-        // 1. Buat OTP 4 digit
+        // --- LANJUT KE LOGIKA OTP DAN PENGALIHAN (Tidak diubah) ---
         $otp = rand(1000, 9999);
-
-        // 2. Simpan OTP dan waktu kedaluwarsa ke user
         $user->otp_code = $otp;
-        $user->otp_expires_at = now()->addMinutes(10); // OTP berlaku 10 menit
+        $user->otp_expires_at = now()->addMinutes(10);
         $user->save();
-
-        // 3. Kirim OTP ke email pengguna
         Mail::to($user->email)->send(new OtpVerificationMail($otp));
-
-        // 4. Login-kan pengguna
         Auth::login($user);
         
-        // 5. Simpan ID pelamar di session jika role-nya pelamar
         if ($user->role === 'pelamar') {
             $request->session()->put('new_pelamar_id', $user->profilePelamar->id);
         }
 
-        // 6. Arahkan SEMUA pengguna ke halaman verifikasi OTP
         return redirect()->route('otp.verification.notice');
     }
 
@@ -165,7 +276,6 @@ class RegisteredUserController extends Controller
         $pelamarId = session('new_pelamar_id');
 
         if (!$pelamarId) {
-            // Jika sesi hilang, arahkan kembali ke login atau dashboard
             return redirect(route('login'));
         }
 

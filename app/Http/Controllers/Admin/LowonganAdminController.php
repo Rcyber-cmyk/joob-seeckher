@@ -19,4 +19,5 @@ class LowonganAdminController extends Controller
             'lowongan' => $lowongan
         ]);
     }
+    
 }

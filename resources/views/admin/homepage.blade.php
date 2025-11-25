@@ -299,18 +299,6 @@
                     <li class="nav-item">
                         <a class="nav-link {{ Request::routeIs('admin.homepage') ? 'active' : '' }}" href="{{ route('admin.homepage') }}">Dashboard</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ Request::routeIs('admin.pelamar.index') ? 'active' : '' }}" href="{{ route('admin.pelamar.index') }}">Pelamar</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ Request::routeIs('admin.perusahaan.index') ? 'active' : '' }}" href="{{ route('admin.perusahaan.index') }}">Perusahaan</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ Request::routeIs('admin.notifikasi.index') ? 'active' : '' }}" href="{{ route('admin.notifikasi.index') }}">Notifikasi</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ Request::routeIs('admin.pengaturan.index') ? 'active' : '' }}" href="{{ route('admin.pengaturan.index') }}">Pengaturan</a>
-                    </li>
                 </ul>
                 <div class="d-flex align-items-center">
                     @auth

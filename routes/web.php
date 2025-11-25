@@ -42,6 +42,8 @@ use App\Http\Controllers\Admin\ApprovalController;
 use App\Http\Controllers\Admin\BeritaController as AdminBeritaController; 
 use App\Http\Controllers\Admin\BeritaAdminController;
 use App\Http\Controllers\Admin\JadwalWawancaraAdminController;
+use App\Http\Controllers\PelamarFormController; // Sudah ada di use statements
+use App\Http\Controllers\Admin\FormIsianInterviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +64,9 @@ Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::get('/berita/{slug}', [BeritaController::class, 'show'])->name('berita.show');
 
 Route::get('/toko-umkm', [UmkmController::class, 'indexToko'])->name('toko-umkm.index');
+
+Route::get('/interview-form/{token}', [PelamarFormController::class, 'tampilkanForm'])->name('pelamar.form.isi');
+Route::post('/interview-form/submit', [PelamarFormController::class, 'submitForm'])->name('pelamar.form.submit');
 
 /*
 |--------------------------------------------------------------------------
@@ -132,6 +137,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('berita/{beritum}', [BeritaAdminController::class, 'destroy'])->name('berita.destroy');
 
         Route::resource('jadwalwawancara', JadwalWawancaraAdminController::class)->except(['create', 'store', 'edit', 'update']);
+        Route::get('/admin/jadwalwawancara/{lowongan}', [JadwalWawancaraAdminController::class, 'show'])->name('admin.jadwalwawancara.show');
+        Route::delete('/admin/jadwalwawancara/destroy/{jadwalWawancara}', [JadwalWawancaraAdminController::class, 'destroy'])->name('admin.jadwalwawancara.destroy');
+
+        
+
+Route::prefix('jadwalwawancara')->name('jadwalwawancara.')->group(function () {
+    
+    // ... (Route index dan show lama)
+
+Route::post('/kirim-link-form/{jadwal}', [JadwalWawancaraAdminController::class, 'kirimLinkFormulir'])->name('form.kirim.link'); // Nama rute: admin.jadwalwawancara.form.kirim.link
+    // Route GET: Menggantikan fungsi 'draft' atau 'send' lama.
+    // Tombol "Kirim Formulir" sekarang mengarah ke sini, siap untuk diisi Admin.
+    Route::get('/isi-evaluasi/{jadwal}', [FormIsianInterviewController::class, 'createOrEdit'])->name('form.edit'); // Nama route: form.edit (reuse)
+    
+    // Route POST/PUT: Menyimpan/Memperbarui hasil isian Admin.
+    Route::post('/save-evaluasi/{jadwal}', [FormIsianInterviewController::class, 'storeOrUpdate'])->name('form.update'); 
+    
+    // TIDAK ADA LAGI route form.draft atau form.send.final
+});
 
         Route::prefix('iklan')->name('iklan.')->group(function() {
         // Ini adalah route yang memanggil halaman Anda
@@ -185,7 +209,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/bantuan', [BantuanController::class, 'index'])->name('bantuan.index');
         
         Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
-
+        Route::post('/notifikasi/mark-all-as-read', [NotifikasiController::class, 'markAllAsRead'])->name('notifikasi.markAllAsRead'); // <--- BARU// <--- BARU
         Route::get('/perusahaan/notifikasi/{notificationId}/baca', [NotifikasiController::class, 'readAndRedirect'])->name('perusahaan.notifikasi.readAndRedirect');
         // Rute untuk melihat daftar pelamar dari lowongan tertentu
         Route::get('/lowongan/{lowongan_id}/pelamar', [JumlahPelamarController::class, 'index'])->name('lowongan.pelamar.index');

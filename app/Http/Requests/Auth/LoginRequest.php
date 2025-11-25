@@ -1,6 +1,5 @@
 <?php
 
-// NAMESPACE DIPERBAIKI: dari App\Http\Auth menjadi App\Http\Requests\Auth
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Auth\Events\Lockout;
@@ -9,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use App\Models\User; // Ditambahkan: Memerlukan model User untuk cek email
+use Illuminate\Support\Facades\Hash; // Ditambahkan: Memerlukan Hash untuk verifikasi
 
 class LoginRequest extends FormRequest
 {
@@ -42,12 +43,32 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
+        $email = $this->only('email')['email'];
+        $password = $this->only('password')['password'];
+
+        // Cek 1: Jika otentikasi gagal secara keseluruhan
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
+            // --- Mulai Logika Pembeda Pesan Error ---
+
+            // Ambil data user berdasarkan email
+            $user = User::where('email', $email)->first();
+
+            if (!$user) {
+                // KASUS A: Email tidak ditemukan di database
+                throw ValidationException::withMessages([
+                    'email' => 'Alamat Email ini tidak terdaftar.',
+                ]);
+            }
+
+            // KASUS B: Email ditemukan, tetapi password salah
+            // (Karena Auth::attempt gagal di atas)
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'password' => 'Kata Sandi yang Anda masukkan salah.',
             ]);
+
+            // --- Akhir Logika Pembeda Pesan Error ---
         }
 
         RateLimiter::clear($this->throttleKey());
@@ -67,12 +88,11 @@ class LoginRequest extends FormRequest
         event(new Lockout($this));
 
         $seconds = RateLimiter::availableIn($this->throttleKey());
+        $minutes = ceil($seconds / 60);
 
+        // PESAN ERROR UNTUK RATE LIMITER (DALAM BAHASA INDONESIA)
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
-                'seconds' => $seconds,
-                'minutes' => ceil($seconds / 60),
-            ]),
+            'email' => "Terlalu banyak percobaan login. Silakan coba lagi dalam {$minutes} menit.",
         ]);
     }
 

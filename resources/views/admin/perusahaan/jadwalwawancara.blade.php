@@ -1,6 +1,6 @@
 <?php
-// FILE: resources/views/admin/jadwalwawancara/index.blade.php
-// Semua logika partials telah digabungkan ke dalam file ini.
+// FILE: resources/views/admin/perusahaan/jadwalwawancara.blade.php
+// Kode ini sekarang mencakup Sidebar, Page Header, Konten Utama, dan fungsionalitas Search.
 ?>
 
 <!DOCTYPE html>
@@ -50,358 +50,88 @@
         .page-header { margin-bottom: 0; position: sticky; top: 0; z-index: 1050; background-color: var(--bg-main); padding: 2.5rem; border-bottom: 1px solid var(--border-color); }
         .card-base { background-color: var(--white); border-radius: var(--default-border-radius); padding: 2rem; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.03), 0 2px 4px -2px rgb(0 0 0 / 0.03); }
 
-        /* === NEW GROUPED TABLE STYLES === */
-        
-        /* Baris Group Lowongan (Toggle Button) */
-        .group-header-row {
+        /* === NEW GROUPED TABLE STYLES (LINK) === */
+        .group-header-link {
             background-color: var(--white) !important;
             border-radius: var(--default-border-radius) !important;
             margin-bottom: 0.5rem;
-            cursor: pointer;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
             transition: all 0.2s;
             display: flex;
             align-items: center;
             padding: 1rem 1.5rem;
+            text-decoration: none;
+            color: inherit;
         }
-        .group-header-row:hover {
+        .group-header-link:hover {
             background-color: #f8fafc !important;
+            text-decoration: none;
         }
         
-        /* Konten Detail Pelamar (Inside Collapse) */
-        .pelamar-detail-table {
-            border-spacing: 0;
-            width: 100%;
-            margin-top: 0.5rem;
-            border-radius: 0 0 var(--default-border-radius) var(--default-border-radius);
-            overflow: hidden;
+        /* Ikon Navigasi */
+        .nav-icon {
+            color: var(--orange-dark);
+            font-size: 1.5rem;
+            margin-left: 1rem;
         }
 
-        .pelamar-detail-table thead th {
-            background-color: #e2e8f0;
-            font-size: 0.7rem;
-            color: var(--slate);
-            text-transform: uppercase;
-            padding: 0.75rem 1rem;
-        }
-        .pelamar-detail-table tbody td {
-            background-color: var(--white);
-            padding: 0.75rem 1rem;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 0.85rem;
-        }
-
-        .btn-action { width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center; border-radius: 0.5rem; }
-        
         /* Badge Kustom */
         .badge-terjadwal { background-color: #e0f2fe; color: #0284c7; font-weight: 600; padding: 0.4em 0.7em; }
         .badge-selesai { background-color: #d1fae5; color: #059669; font-weight: 600; padding: 0.4em 0.7em; }
-        .badge-dibatalkan { background-color: #fee2e2; color: #dc2626; font-weight: 600; padding: 0.4em 0.7em; }
+        .badge-batal { background-color: #fee2e2; color: #dc2626; font-weight: 600; padding: 0.4em 0.7em; }
+        .badge-pending { background-color: #fffbeb; color: #d97706; font-weight: 600; padding: 0.4em 0.7em; }
         
+        /* Gaya khusus untuk form pencarian */
+        .search-form-group .form-control {
+            border-top-left-radius: 0.75rem !important;
+            border-bottom-left-radius: 0.75rem !important;
+        }
+        .search-form-group .btn-search {
+            border-top-right-radius: 0.75rem !important;
+            border-bottom-right-radius: 0.75rem !important;
+        }
+        @media (max-width: 575.98px) {
+            .search-form-group .input-group {
+                width: 100%;
+                margin-bottom: 0.5rem;
+            }
+            .search-form-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-form-group .btn-outline-secondary {
+                width: 100%;
+                margin-left: 0 !important;
+            }
+        }
+
         /* === STYLE RESPONSIVE MOBILE === */
         @media (max-width: 767.98px) {
             .main-content { padding: 1.5rem; padding-top: 0; }
             .page-header { padding: 1.5rem 1rem; margin-bottom: 0; }
             
-            .group-header-row {
+            .group-header-link {
                 flex-direction: column;
                 align-items: flex-start;
                 padding: 1rem;
             }
-            .group-header-row strong {
+            .group-header-link strong {
                 font-size: 1.1rem;
             }
-            .group-header-row .text-muted {
+            .group-header-link .text-muted {
                 font-size: 0.8rem;
             }
-            .group-header-row .badge {
+            .group-header-link .badge {
                 margin-top: 0.5rem;
             }
-            .group-header-row .bi-chevron-down, 
-            .group-header-row .bi-chevron-right {
+            .nav-icon {
                 position: absolute;
                 top: 15px;
                 right: 15px;
-            }
-
-            .pelamar-detail-table {
-                display: none; 
-            }
-            
-            /* Tampilan Detail Pelamar Stacked untuk Mobile */
-            .pelamar-item-mobile {
-                background-color: var(--white);
-                border: 1px solid #e2e8f0;
-                border-radius: var(--default-border-radius);
-                padding: 1rem;
-                margin-bottom: 1rem;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-            }
-            .pelamar-item-mobile strong {
-                display: block;
-                border-bottom: 1px dashed #eee;
-                padding-bottom: 0.5rem;
-                margin-bottom: 0.5rem;
-            }
-            .pelamar-item-mobile div:before { 
-                content: attr(data-label);
-                display: inline-block;
-                width: 100px;
-                font-weight: 500;
-                color: var(--slate);
-                font-size: 0.8rem;
-            }
-            .pelamar-item-mobile .mt-2 { 
-                border-top: 1px solid #eee;
-                padding-top: 0.5rem;
-                margin-top: 0.5rem !important;
+                margin-left: 0;
             }
         }
     </style>
-</head>
-<body>
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
-    <aside class="sidebar" id="sidebar">
-        <div class="logo">JobRec</div>
-        <nav class="nav flex-column"> 
-            <a class="nav-link" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
-            <a class="nav-link" href="{{ route('admin.pelamar.index') }}"><i class="bi bi-people-fill"></i> Pelamar</a>
-            
-            @php
-                // Logika untuk menentukan aktif atau tidaknya menu dropdown
-                $isPerusahaanActive = \Request::routeIs('admin.perusahaan.*') || 
-                                      \Request::routeIs('admin.kandidat.index') || 
-                                      \Request::routeIs('admin.iklan.*') || 
-                                      \Request::routeIs('admin.jadwalwawancara.*');
-            @endphp
-            
-            {{-- Tombol Toggler Utama untuk Perusahaan --}}
-            <a class="nav-link d-flex justify-content-between align-items-center {{ $isPerusahaanActive ? 'active' : '' }}" 
-               data-bs-toggle="collapse" 
-               href="#perusahaanSubmenu" 
-               role="button" 
-               aria-expanded="{{ $isPerusahaanActive ? 'true' : 'false' }}" 
-               aria-controls="perusahaanSubmenu">
-                <span><i class="bi bi-building-fill"></i> Perusahaan</span>
-                <i class="bi {{ $isPerusahaanActive ? 'bi-chevron-down' : 'bi-chevron-right' }} ms-auto" style="font-size: 0.8rem;"></i>
-            </a>
-
-            {{-- Konten Submenu Perusahaan --}}
-            <div class="collapse {{ $isPerusahaanActive ? 'show' : '' }}" id="perusahaanSubmenu">
-                <a class="nav-link ps-5 {{ \Request::routeIs('admin.perusahaan.index') ? 'active' : '' }}" href="{{ route('admin.perusahaan.index') }}">
-                    <i class="bi bi-diagram-3-fill"></i> List Perusahaan
-                </a>
-                <a class="nav-link ps-5 {{ \Request::routeIs('admin.kandidat.index') ? 'active' : '' }}" href="{{ route('admin.kandidat.index') }}">
-                    <i class="bi bi-person-check-fill"></i> Kandidat
-                </a>
-                <a class="nav-link ps-5 {{ \Request::routeIs('admin.iklan.*') ? 'active' : '' }}" href="{{ route('admin.iklan.index') }}">
-                    <i class="bi bi-megaphone-fill"></i> Iklan Lowongan
-                </a>
-                <a class="nav-link ps-5 {{ \Request::routeIs('admin.jadwalwawancara.*') ? 'active' : '' }}" href="{{ route('admin.jadwalwawancara.index') }}">
-                    <i class="bi bi-calendar-check-fill"></i> Jadwal Interview
-                </a>
-            </div>
-            
-            <a class="nav-link" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
-            
-            <a class="nav-link {{ \Request::routeIs('admin.berita.*') ? 'active' : '' }}" href="{{ route('admin.berita.index') }}"><i class="bi bi-newspaper"></i> Berita</a>
-
-            <a class="nav-link {{ \Request::routeIs('admin.notifikasi.*') ? 'active' : '' }}" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a>
-        </nav>
-        <div class="user-profile">
-            <div class="d-flex align-items-center text-white">
-                <img src="https://placehold.co/40x40/ffffff/f97316?text={{ substr(Auth::user()->name, 0, 1) }}" class="rounded-circle me-3" alt="Admin">
-                <div>
-                    <div class="fw-bold">{{ Auth::user()->name }}</div>
-                    <small class="opacity-75">Admin</small> </div>
-            </div>
-            <a class="nav-link mt-2" href="{{ route('logout') }}" 
-               onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                <i class="bi bi-box-arrow-right"></i> Logout
-            </a>
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
-        </div>
-    </aside>
-
-    <main class="main-wrapper">
-        
-        <div class="page-header d-flex justify-content-between align-items-center">
-            <div>
-                <h2 class="h4 mb-0 fw-bold">Manajemen Jadwal Wawancara</h2>
-                <p class="text-secondary small mb-0">Daftar semua jadwal interview dikelompokkan berdasarkan lowongan.</p>
-            </div>
-            <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
-                <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
-            </button>
-        </div>
-        <div class="main-content">
-            
-            @if(session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            @endif
-
-            <div class="card-base p-0">
-                <div class="p-4 border-bottom">
-                    <h5 class="mb-0 fw-semibold">Grup Lowongan Interview</h5>
-                </div>
-
-                {{-- Konten Utama yang Dikelompokkan --}}
-                <div class="p-4 pt-3">
-                    @forelse ($groupedJadwals as $lowongan_id => $group)
-                        @php
-                            $lowongan = $group['lowongan'];
-                            $pelamarList = $group['jadwals'];
-                            $totalPelamar = count($pelamarList);
-                            $uniqueId = 'collapse-' . $lowongan_id;
-                            
-                            // Logika untuk status badge di partials
-                            $statusClassMap = [
-                                'terjadwal' => 'badge-terjadwal',
-                                'selesai' => 'badge-selesai',
-                                'dibatalkan' => 'badge-batal',
-                                'pending' => 'badge-terjadwal', 
-                            ];
-                        @endphp
-                        
-                        {{-- 1. HEADER GROUP LOWONGAN (Toggle Button) --}}
-                        <div class="group-header-row mb-3" 
-                             data-bs-toggle="collapse" 
-                             data-bs-target="#{{ $uniqueId }}" 
-                             aria-expanded="false" 
-                             aria-controls="{{ $uniqueId }}">
-                            
-                            <div class="me-auto">
-                                <strong class="d-block">{{ $lowongan->judul_lowongan ?? 'Lowongan Dihapus' }}</strong>
-                                <span class="text-muted small">
-                                    {{ $lowongan->perusahaan->nama_perusahaan ?? 'Perusahaan N/A' }} | 
-                                    {{ $lowongan->domisili ?? 'Lokasi N/A' }}
-                                </span>
-                            </div>
-
-                            <span class="badge bg-primary rounded-pill">{{ $totalPelamar }} Pelamar</span>
-                            <i class="bi bi-chevron-right ms-3"></i>
-                        </div>
-
-                        {{-- 2. COLLAPSE CONTENT (Daftar Pelamar di Lowongan ini) --}}
-                        <div class="collapse" id="{{ $uniqueId }}">
-                            <div class="p-3 pt-0">
-                                
-                                {{-- Tampilan Desktop/Tablet --}}
-                                <div class="d-none d-md-block">
-                                    <table class="pelamar-detail-table">
-                                        <thead>
-                                            <tr>
-                                                <th style="width: 30%;">Pelamar</th>
-                                                <th style="width: 25%;">Jadwal Interview</th>
-                                                <th style="width: 25%;">Metode</th>
-                                                <th style="width: 10%;">Status</th>
-                                                <th style="width: 10%;" class="text-center">Aksi</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($pelamarList as $jadwal)
-                                                {{-- START: Jadwal Row Detail (Gabungan dari partials/jadwal_row_detail.blade.php) --}}
-                                                @php
-                                                    $statusKey = strtolower($jadwal->status);
-                                                @endphp
-                                                <tr>
-                                                    <td>
-                                                        <strong class="d-block">{{ $jadwal->pelamar->nama_lengkap ?? 'Pelamar Dihapus' }}</strong>
-                                                        <small class="text-muted">{{ $jadwal->pelamar->user->email ?? 'Email N/A' }}</small>
-                                                    </td>
-                                                    <td>
-                                                        <strong class="d-block">{{ \Carbon\Carbon::parse($jadwal->tanggal_interview)->isoFormat('D MMM YYYY') }}</strong>
-                                                        <small class="text-muted">{{ \Carbon\Carbon::parse($jadwal->waktu_interview)->format('H:i') }} WIB</small>
-                                                    </td>
-                                                    <td>
-                                                        <strong class="d-block">{{ $jadwal->metode_wawancara }}</strong>
-                                                        <small class="text-muted">
-                                                            @if ($jadwal->metode_wawancara === 'Virtual Interview')
-                                                                <a href="{{ $jadwal->link_zoom }}" target="_blank">Link Zoom</a>
-                                                            @else
-                                                                {{ \Illuminate\Support\Str::limit($jadwal->lokasi_interview ?? 'Lokasi fisik', 20) }}
-                                                            @endif
-                                                        </small>
-                                                    </td>
-                                                    <td>
-                                                        <span class="badge rounded-pill {{ $statusClassMap[$statusKey] ?? 'bg-secondary' }}">{{ ucfirst($jadwal->status) }}</span>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        <a href="{{ route('admin.jadwalwawancara.show', $jadwal->id) }}" class="btn btn-sm btn-info text-white btn-action" title="Detail">
-                                                            <i class="bi bi-eye-fill"></i>
-                                                        </a>
-                                                        <button onclick="confirmDelete(this)" data-id="{{ $jadwal->id }}" class="btn btn-sm btn-danger text-white btn-action" title="Hapus">
-                                                            <i class="bi bi-trash-fill"></i>
-                                                        </button>
-                                                        <form id="delete-form-{{ $jadwal->id }}" action="{{ route('admin.jadwalwawancara.destroy', $jadwal->id) }}" method="POST" class="d-none">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                                {{-- END: Jadwal Row Detail --}}
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                                
-                                {{-- Tampilan Mobile (Stacked Cards) --}}
-                                <div class="d-md-none">
-                                    @foreach ($pelamarList as $jadwal)
-                                        {{-- START: Jadwal Card Mobile (Gabungan dari partials/jadwal_card_mobile.blade.php) --}}
-                                        @php
-                                            $statusKey = strtolower($jadwal->status);
-                                        @endphp
-                                        <div class="pelamar-item-mobile">
-                                            <strong class="d-flex justify-content-between">
-                                                {{ $jadwal->pelamar->nama_lengkap ?? 'Pelamar Dihapus' }}
-                                                <span class="badge rounded-pill {{ $statusClassMap[$statusKey] ?? 'bg-secondary' }}">{{ ucfirst($jadwal->status) }}</span>
-                                            </strong>
-                                            
-                                            <div data-label="Email:">{{ $jadwal->pelamar->user->email ?? 'N/A' }}</div>
-                                            <div data-label="Tanggal:">
-                                                {{ \Carbon\Carbon::parse($jadwal->tanggal_interview)->isoFormat('D MMM YYYY') }} - 
-                                                {{ \Carbon\Carbon::parse($jadwal->waktu_interview)->format('H:i') }} WIB
-                                            </div>
-                                            <div data-label="Metode:">
-                                                {{ $jadwal->metode_wawancara }}
-                                                @if ($jadwal->metode_wawancara === 'Virtual Interview')
-                                                    (<a href="{{ $jadwal->link_zoom }}" target="_blank">Link</a>)
-                                                @endif
-                                            </div>
-                                            
-                                            <div class="mt-2 text-center">
-                                                <a href="{{ route('admin.jadwalwawancara.show', $jadwal->id) }}" class="btn btn-sm btn-info text-white btn-action" title="Detail">
-                                                    <i class="bi bi-eye-fill"></i>
-                                                </a>
-                                                <button onclick="confirmDelete(this)" data-id="{{ $jadwal->id }}" class="btn btn-sm btn-danger text-white btn-action" title="Hapus">
-                                                    <i class="bi bi-trash-fill"></i>
-                                                </button>
-                                                <form id="delete-form-{{ $jadwal->id }}" action="{{ route('admin.jadwalwawancara.destroy', $jadwal->id) }}" method="POST" class="d-none">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
-                                            </div>
-                                        </div>
-                                        {{-- END: Jadwal Card Mobile --}}
-                                    @endforeach
-                                </div>
-                                
-                            </div>
-                        </div>
-                    @empty
-                        <div class="text-center text-muted py-5">
-                            <i class="bi bi-calendar-x fs-3 d-block mb-2"></i>
-                            <span>Tidak ada jadwal wawancara yang tersedia.</span>
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-        </div>
-    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -423,33 +153,218 @@
                     overlay.classList.remove('active');
                 });
             }
+
+            // --- Logika Collapse Menu Sidebar Perusahaan ---
+            const perusahaanSubmenu = document.getElementById('perusahaanSubmenu');
+            const perusahaanSubmenuIcon = document.getElementById('perusahaan-submenu-icon');
             
-            // Mengubah ikon chevron saat collapse di-toggle
-            const collapseElements = document.querySelectorAll('.collapse');
-            collapseElements.forEach(collapseEl => {
-                const togglerContainer = collapseEl.previousElementSibling;
-                const togglerIcon = togglerContainer.querySelector('.bi');
-
-                if (togglerIcon) {
-                    collapseEl.addEventListener('show.bs.collapse', function () {
-                        togglerIcon.classList.remove('bi-chevron-right');
-                        togglerIcon.classList.add('bi-chevron-down');
-                    });
-                    collapseEl.addEventListener('hide.bs.collapse', function () {
-                        togglerIcon.classList.remove('bi-chevron-down');
-                        togglerIcon.classList.add('bi-chevron-right');
-                    });
+            if (perusahaanSubmenu && perusahaanSubmenuIcon) {
+                perusahaanSubmenu.addEventListener('show.bs.collapse', function () {
+                    perusahaanSubmenuIcon.classList.remove('bi-chevron-right');
+                    perusahaanSubmenuIcon.classList.add('bi-chevron-down');
+                });
+                perusahaanSubmenu.addEventListener('hide.bs.collapse', function () {
+                    perusahaanSubmenuIcon.classList.remove('bi-chevron-down');
+                    perusahaanSubmenuIcon.classList.add('bi-chevron-right');
+                });
+                
+                // Tambahkan logika untuk mengaktifkan/menonaktifkan ikon saat halaman dimuat
+                if (perusahaanSubmenu.classList.contains('show')) {
+                     perusahaanSubmenuIcon.classList.remove('bi-chevron-right');
+                     perusahaanSubmenuIcon.classList.add('bi-chevron-down');
                 }
-            });
-        });
-
-        // === Konfirmasi Hapus ===
-        function confirmDelete(button) {
-            const jadwalId = button.getAttribute('data-id');
-            if (confirm('Apakah Anda yakin ingin menghapus jadwal wawancara ini? Tindakan ini tidak dapat dibatalkan.')) {
-                document.getElementById('delete-form-' + jadwalId).submit();
             }
-        }
+        });
     </script>
+</head>
+<body>
+    
+    {{-- START: SIDEBAR SECTION --}}
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <aside class="sidebar" id="sidebar">
+        <div class="logo">JobRec</div>
+        <nav class="nav flex-column"> 
+            <a class="nav-link" href="{{ route('admin.homepage') }}"><i class="bi bi-house-door-fill"></i> Home</a>
+            <a class="nav-link" href="{{ route('admin.pelamar.index') }}"><i class="bi bi-people-fill"></i> Pelamar</a>
+            
+            {{-- Blade PHP untuk menentukan status aktif menu dropdown --}}
+            @php
+                $isPerusahaanActive = 
+                    \Request::routeIs('admin.perusahaan.*') || 
+                    \Request::routeIs('admin.kandidat.index') || 
+                    \Request::routeIs('admin.iklan.*') || 
+                    \Request::routeIs('admin.jadwalwawancara.*');
+                
+                $chevronIcon = $isPerusahaanActive ? 'bi-chevron-down' : 'bi-chevron-right';
+
+                // Data User untuk sidebar
+                $user = Auth::user();
+                $initial = substr($user->name ?? 'Admin', 0, 1); 
+            @endphp
+            
+            {{-- Tombol Toggler Utama untuk Perusahaan --}}
+            <a class="nav-link d-flex justify-content-between align-items-center {{ $isPerusahaanActive ? 'active' : '' }}" 
+                data-bs-toggle="collapse" 
+                href="#perusahaanSubmenu" 
+                role="button" 
+                aria-expanded="{{ $isPerusahaanActive ? 'true' : 'false' }}" 
+                aria-controls="perusahaanSubmenu">
+                <span><i class="bi bi-building-fill"></i> Perusahaan</span>
+                <i class="bi {{ $chevronIcon }} ms-auto" style="font-size: 0.8rem;" id="perusahaan-submenu-icon"></i>
+            </a>
+
+            {{-- Konten Submenu Perusahaan --}}
+            <div class="collapse {{ $isPerusahaanActive ? 'show' : '' }}" id="perusahaanSubmenu">
+                <a class="nav-link ps-5 {{ \Request::routeIs('admin.perusahaan.index') ? 'active' : '' }}" href="{{ route('admin.perusahaan.index') }}">
+                    <i class="bi bi-diagram-3-fill"></i> List Perusahaan
+                </a>
+                <a class="nav-link ps-5 {{ \Request::routeIs('admin.kandidat.index') ? 'active' : '' }}" href="{{ route('admin.kandidat.index') }}">
+                    <i class="bi bi-person-check-fill"></i> Kandidat
+                </a>
+                <a class="nav-link ps-5 {{ \Request::routeIs('admin.iklan.index') ? 'active' : '' }}" href="{{ route('admin.iklan.index') }}">
+                    <i class="bi bi-megaphone-fill"></i> Iklan Lowongan
+                </a>
+                <a class="nav-link ps-5 {{ \Request::routeIs('admin.jadwalwawancara.*') ? 'active' : '' }}" href="{{ route('admin.jadwalwawancara.index') }}">
+                    <i class="bi bi-calendar-check-fill"></i> Jadwal Interview
+                </a>
+            </div>
+            
+            <a class="nav-link" href="{{ route('admin.pelamar.ranking') }}"><i class="bi bi-bar-chart-line-fill"></i> Auto-Ranking</a>
+            
+            <a class="nav-link {{ \Request::routeIs('admin.berita.*') ? 'active' : '' }}" href="{{ route('admin.berita.index') }}"><i class="bi bi-newspaper"></i> Berita</a>
+
+            <a class="nav-link {{ \Request::routeIs('admin.notifikasi.*') ? 'active' : '' }}" href="{{ route('admin.notifikasi.index') }}"><i class="bi bi-bell-fill"></i> Notifikasi</a>
+        </nav>
+        
+        {{-- START: USER PROFILE SECTION --}}
+        @auth
+        <div class="user-profile">
+            <div class="d-flex align-items-center text-white">
+                <img src="https://placehold.co/40x40/ffffff/f97316?text={{ $initial }}" class="rounded-circle me-3" alt="Admin">
+                <div>
+                    <div class="fw-bold">{{ $user->name ?? 'Admin User' }}</div>
+                    <small class="opacity-75">Admin</small> 
+                </div>
+            </div>
+            <a class="nav-link mt-2" href="{{ route('logout') }}" 
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">@csrf</form>
+        </div>
+        @endauth
+        {{-- END: USER PROFILE SECTION --}}
+    </aside>
+    {{-- END: SIDEBAR SECTION --}}
+
+    <main class="main-wrapper">
+        
+        {{-- START: PAGE HEADER SECTION --}}
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="h4 mb-0 fw-bold">Manajemen Jadwal Wawancara</h2>
+                <p class="text-secondary small mb-0">Daftar semua jadwal interview dikelompokkan berdasarkan lowongan.</p>
+            </div>
+            <button class="btn btn-link d-lg-none" type="button" id="sidebar-toggler">
+                <i class="bi bi-list fs-2" style="color: var(--dark-blue);"></i>
+            </button>
+        </div>
+        {{-- END: PAGE HEADER SECTION --}}
+
+        <div class="main-content">
+            
+            {{-- Alert Notifikasi --}}
+            @if(session('success'))
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
+            {{-- START: SEARCH AND FILTERING FORM --}}
+            <div class="row mb-4">
+                <div class="col-lg-12">
+                    <form action="{{ route('admin.jadwalwawancara.index') }}" method="GET" class="d-flex shadow-sm bg-white rounded-4 p-3 border search-form-group" style="border-color: var(--border-color);">
+                        <div class="input-group">
+                            {{-- Input Pencarian --}}
+                            <input type="text" name="q" class="form-control border-end-0 border-0" value="{{ request('q') }}" placeholder="Cari Lowongan atau Perusahaan..." aria-label="Search">
+                            
+                            {{-- Tombol Cari --}}
+                            <button class="btn btn-search" type="submit" style="background-color: var(--orange); border-color: var(--orange-dark); color: var(--white);">
+                                <i class="bi bi-search"></i> Cari
+                            </button>
+                        </div>
+                        {{-- Tombol Reset --}}
+                        @if(request('q'))
+                            <a href="{{ route('admin.jadwalwawancara.index') }}" class="btn btn-outline-secondary ms-2 rounded-4">
+                                <i class="bi bi-x-lg"></i> Reset
+                            </a>
+                        @endif
+                    </form>
+                </div>
+            </div>
+            {{-- END: SEARCH AND FILTERING FORM --}}
+
+            <div class="card-base p-0">
+                <div class="p-4 border-bottom">
+                    <h5 class="mb-0 fw-semibold">
+                        Grup Lowongan Interview 
+                        @if (request('q'))
+                            <span class="text-secondary small ms-2">({{ $groupedJadwals->count() ?? 0 }} hasil ditemukan)</span>
+                        @endif
+                    </h5>
+                </div>
+
+                {{-- Konten Utama yang Dikelompokkan --}}
+                <div class="p-4 pt-3">
+                    {{-- Pastikan $groupedJadwals adalah variabel yang dikirim dari controller --}}
+                    @forelse ($groupedJadwals ?? [] as $lowongan_id => $group)
+                        @php
+                            // Perbaikan: Gunakan operator null-safe (?-> di Laravel 8+) untuk mengakses properti relasi. 
+                            // Karena Anda menggunakan Blade/PHP, saya tetap menggunakan pengecekan yang lebih eksplisit atau null coalescing.
+                            $lowongan = $group['lowongan'] ?? null;
+                            $pelamarList = $group['jadwals'] ?? [];
+                            $totalPelamar = count($pelamarList);
+                            
+                            $judulLowongan = $lowongan->judul_lowongan ?? 'Lowongan Dihapus/Tidak Tersedia';
+                            $namaPerusahaan = $lowongan->perusahaan->nama_perusahaan ?? 'Perusahaan N/A';
+                            $domisili = $lowongan->domisili ?? 'Lokasi N/A';
+
+                            // URL rute harus aman dari nilai null
+                            $routeUrl = $lowongan ? route('admin.jadwalwawancara.show', $lowongan->id) : '#';
+                        @endphp
+                        
+                        {{-- 1. HEADER GROUP LOWONGAN (Link ke Halaman Show) --}}
+                        <a href="{{ $routeUrl }}" class="group-header-link mb-3 {{ $lowongan ? '' : 'disabled' }}" {{ $lowongan ? '' : 'onclick="event.preventDefault()"' }}>
+                            
+                            <div class="me-auto">
+                                <strong class="d-block">{{ $judulLowongan }}</strong>
+                                <span class="text-muted small">
+                                    {{ $namaPerusahaan }} | 
+                                    {{ $domisili }}
+                                </span>
+                            </div>
+                            
+                            {{-- Badge Jumlah Pelamar --}}
+                            <span class="badge bg-primary rounded-pill me-3 ms-auto d-none d-sm-inline-block">{{ $totalPelamar }} Pelamar</span>
+
+                            {{-- Ikon Navigasi --}}
+                            <i class="bi bi-chevron-right nav-icon"></i>
+                        </a>
+
+                    @empty
+                        <div class="text-center text-muted py-5">
+                            <i class="bi bi-calendar-x fs-3 d-block mb-2"></i>
+                            @if(request('q'))
+                                <span>Tidak ada jadwal wawancara yang cocok dengan pencarian "**{{ request('q') }}**".</span>
+                            @else
+                                <span>Tidak ada jadwal wawancara yang tersedia.</span>
+                            @endif
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+    </main>
 </body>
 </html>
