@@ -60,7 +60,10 @@ class LowonganController extends Controller
             }
         }
 
-        $lowonganList = $query->latest()->paginate($perPage, ['*'], 'page', $page);
+        // $lowonganList = $query->latest()->paginate($perPage, ['*'], 'page', $page); // <--- HAPUS/KOMENTAR INI
+        
+        // GANTI DENGAN INI:
+        $lowonganList = $query->latest()->get(); // Ambil semua data tanpa batas
 
         if (!$detailLowongan) {
             $detailLowongan = $lowonganList->first();
@@ -175,6 +178,7 @@ class LowonganController extends Controller
             'gaji_diharapkan' => $request->gaji_diharapkan,
             'pendidikan_terakhir' => $request->pendidikan_terakhir,
             'pengalaman_tahun' => $request->pengalaman_tahun,
+            'deskripsi_kemampuan' => $request->deskripsi_kemampuan,
             'riwayat_karir' => json_encode([
                 'posisi' => $request->posisi_pekerjaan,
                 'perusahaan' => $request->nama_perusahaan,
