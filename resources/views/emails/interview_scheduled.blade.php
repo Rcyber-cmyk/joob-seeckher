@@ -185,7 +185,7 @@
             <!-- Tombol Lihat Detail -->
             <div class="btn-container">
                 {{-- Ganti '#' dengan route ke halaman detail jadwal pelamar jika ada --}}
-                <a href="{{ url('/') }}" class="btn-primary">Lihat Detail di Dashboard</a>
+                <a href="{{ url('/') }}" class="btn-primary">Hubungi Perusahaan</a>
             </div>
             
             <p style="margin-top: 30px;">

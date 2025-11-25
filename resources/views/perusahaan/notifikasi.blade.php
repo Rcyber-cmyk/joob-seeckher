@@ -4,7 +4,7 @@
     {{-- Header Halaman --}}
     <div class="header-dashboard d-flex flex-wrap justify-content-between align-items-center mb-4">
         <div class="w-100 w-md-auto mb-3 mb-md-0">
-            <h1>Notifikasi Rekrutmen</h1>
+            <h1>🔔 Notifikasi Rekrutmen</h1>
             <p class="text-muted">Lihat Pembaruan Notifikasi Perusahaan Anda</p>
         </div>
     </div>
@@ -36,7 +36,7 @@
                     <i class="bi bi-bell-fill me-3 fs-5 text-secondary"></i>
                     <div class="flex-grow-1">
                         {{-- Arahkan ke route readAndRedirect, yang kemudian akan membawa user ke URL yang benar --}}
-                        <a href="{{ route('perusahaan.lowongan.pelamar.index', ['lowongan_id' => $notification->data['lowongan_id']]) }}" class="text-decoration-none text-dark">
+                        <a href="#" class="text-decoration-none text-dark">
                             <span class="d-block fw-bold">{{ $notification->data['title'] ?? 'Notifikasi Baru' }}</span>
                             <small class="text-muted d-block">{{ $notification->data['message'] ?? 'Klik untuk detail.' }}</small>
                             <small class="text-muted d-block mt-1">{{ $notification->created_at->diffForHumans() }}</small>
