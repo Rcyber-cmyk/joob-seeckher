@@ -149,51 +149,56 @@
         </div>
     </div>
 
-    <div class="form-section p-4 mb-4">
+     <div class="form-section p-4 mb-4">
         <h5 class="mb-3"><i class="bi bi-card-checklist me-2"></i> Kualifikasi Pelamar</h5>
         <div class="row g-4">
             <div class="col-12 col-md-6">
                 <label for="gender" class="form-label">Gender</label>
                 <select name="gender" id="gender" class="form-select">
                     <option value="">Pilih Gender</option>
-                    <option value="Laki-laki" {{ old('gender', $lowongan->gender) == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                    <option value="Perempuan" {{ old('gender', $lowongan->gender) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
-                    <option value="Semua" {{ old('gender', $lowongan->gender) == 'Semua' ? 'selected' : '' }}>Semua</option>
+                    <option value="Laki-laki" {{ old('gender') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                    <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                    <option value="Semua" {{ old('gender') == 'Semua' ? 'selected' : '' }}>Semua</option>
                 </select>
             </div>
             <div class="col-12 col-md-6">
-                <label for="pendidikan_terakhir" class="form-label">Pendidikan Terakhir</label>
-                <input type="text" name="pendidikan_terakhir" id="pendidikan_terakhir" class="form-control" 
-                       value="{{ old('pendidikan_terakhir', $lowongan->pendidikan_terakhir) }}">
+                <label for="pendidikan_terakhir" class="form-label fw-semibold">Pendidikan Terakhir</label>
+                <select name="pendidikan_terakhir" id="pendidikan_terakhir" class="form-select" required>
+                    <option value="">-- Pilih Pendidikan --</option>
+                    <option value="SD">SD</option>
+                    <option value="SMP">SMP</option>
+                    <option value="SMA/SMK">SMA/SMK</option>
+                    <option value="D1">D1</option>
+                    <option value="D2">D2</option>
+                    <option value="D3">D3</option>
+                    <option value="S1">S1</option>
+                    <option value="S2">S2</option>
+                    <option value="S3">S3</option>
+                </select>
             </div>
-            <div class="col-12 col-md-6">
-            <label for="usia_min" class="form-label">Usia Minimal</label>
-            <input type="number" name="usia_min" id="usia_min" class="form-control" 
-                   value="{{ old('usia_min', $lowongan->usia_min) }}" placeholder="Contoh: 21">
+            <div class="col-12 col-md-3">
+                <label for="usia_min" class="form-label">Usia Minimal</label>
+                <input type="number" name="usia_min" id="usia_min" class="form-control" 
+                       value="{{ old('usia_min') }}" placeholder="Contoh: 21">
             </div>
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-3">
                 <label for="usia" class="form-label">Usia Maksimal</label>
                 <input type="number" name="usia" id="usia" class="form-control" 
-                    value="{{ old('usia', $lowongan->usia) }}" placeholder="Contoh: 35">
+                       value="{{ old('usia') }}" placeholder="Contoh: 35">
             </div>
             <div class="col-12 col-md-6">
                 <label for="nilai_pendidikan_terakhir" class="form-label">Nilai Pendidikan Terakhir</label>
-                <input type="text" name="nilai_pendidikan_terakhir" id="nilai_pendidikan_terakhir" class="form-control" 
-                       value="{{ old('nilai_pendidikan_terakhir', $lowongan->nilai_pendidikan_terakhir) }}">
+                <input type="text" name="nilai_pendidikan_terakhir" id="nilai_pendidikan_terakhir" class="form-control" placeholder="Contoh: IPK 3.00" value="{{ old('nilai_pendidikan_terakhir') }}">
             </div>
-            <div class="col-12 col-md-6">
-            <label for="pengalaman_kerja" class="form-label">Pengalaman Min (Tahun)</label>
-            <input type="number" name="pengalaman_kerja" id="pengalaman_kerja" class="form-control" 
-                   value="{{ old('pengalaman_kerja', $lowongan->pengalaman_kerja) }}" placeholder="Contoh: 1">
+            <div class="col-12 col-md-3">
+                <label for="pengalaman_kerja" class="form-label">Pengalaman Min (Tahun)</label>
+                <input type="number" name="pengalaman_kerja" id="pengalaman_kerja" class="form-control" 
+                       value="{{ old('pengalaman_kerja') }}" placeholder="Contoh: 1">
             </div>
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-md-3">
                 <label for="pengalaman_kerja_maks" class="form-label">Pengalaman Maks (Tahun)</label>
                 <input type="number" name="pengalaman_kerja_maks" id="pengalaman_kerja_maks" class="form-control" 
-                    value="{{ old('pengalaman_kerja_maks', $lowongan->pengalaman_kerja_maks) }}" placeholder="Contoh: 5">
-            </div>
-            <div class="col-12 col-md-6">
-                <label for="keahlian_bidang_pekerjaan" class="form-label">Keahlian Bidang Pekerjaan</label>
-                <textarea name="keahlian_bidang_pekerjaan" id="keahlian_bidang_pekerjaan" class="form-control" rows="3">{{ old('keahlian_bidang_pekerjaan', $lowongan->keahlian_bidang_pekerjaan) }}</textarea>
+                       value="{{ old('pengalaman_kerja_maks') }}" placeholder="Contoh: 5">
             </div>
         </div>
     </div>

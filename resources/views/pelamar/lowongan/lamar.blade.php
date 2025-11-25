@@ -80,14 +80,12 @@
                 <div class="mb-3"><label class="form-label">Berapa tahun pengalaman Anda mendalami peran ini?</label>
                     <input type="number" name="pengalaman_tahun" class="form-control" placeholder="Contoh: 3 tahun"> {{-- Placeholder ditambahkan --}}
                 </div>
-                
-                <h6 class="form-section-title mt-4">Pilih bidang keahlian yang Anda kuasai!</h6>
-                {{-- Logika untuk Keahlian (mungkin perlu disesuaikan jika ingin checkbox) --}}
-                @foreach($semuaKeahlian->take(7) as $keahlian)
-                <div class="form-check"><input class="form-check-input" type="radio" name="keahlian_utama" id="keahlian{{$keahlian->id}}"><label class="form-check-label" for="keahlian{{$keahlian->id}}">{{$keahlian->nama_keahlian}}</label></div>
-                @endforeach
-                <div class="form-check"><input class="form-check-input" type="radio" name="keahlian_utama" id="keahlian_lainnya"><label class="form-check-label" for="keahlian_lainnya">Tidak Ada Satupun</label></div>
-                
+                <div class="mb-4">
+                    <h6 class="form-section-title">Deskripsi Kemampuan & Keahlian</h6>
+                    <p class="text-muted small">Jelaskan secara singkat keahlian atau pengalaman yang relevan dengan posisi ini.</p>
+                    <textarea name="deskripsi_kemampuan" class="form-control" rows="6" 
+                            placeholder="Contoh: Saya memiliki pengalaman 2 tahun menggunakan Laravel, menguasai database MySQL, dan terbiasa bekerja dalam tim..." required></textarea>
+                </div>
                 <div class="d-flex justify-content-end gap-2 mt-4">
                     <button type="button" class="btn btn-secondary prev-btn">&larr; Kembali</button>
                     <button type="button" class="btn btn-dark next-btn">Lanjut &rarr;</button>

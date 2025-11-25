@@ -208,8 +208,13 @@ Route::post('/kirim-link-form/{jadwal}', [JadwalWawancaraAdminController::class,
         Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
         Route::get('/bantuan', [BantuanController::class, 'index'])->name('bantuan.index');
         
+        // Rute Notifikasi
         Route::get('/notifikasi', [NotifikasiController::class, 'index'])->name('notifikasi.index');
+
         Route::post('/notifikasi/mark-all-as-read', [NotifikasiController::class, 'markAllAsRead'])->name('notifikasi.markAllAsRead'); // <--- BARU// <--- BARU
+        Route::post('/notifikasi/mark-all-as-read', [NotifikasiController::class, 'markAllAsRead'])->name('notifikasi.markAllAsRead'); // <--- BARU
+        Route::get('/notifikasi/{notificationId}/read-and-redirect', [NotifikasiController::class, 'readAndRedirect'])->name('notifikasi.readAndRedirect'); // <--- BARU
+
         Route::get('/perusahaan/notifikasi/{notificationId}/baca', [NotifikasiController::class, 'readAndRedirect'])->name('perusahaan.notifikasi.readAndRedirect');
         // Rute untuk melihat daftar pelamar dari lowongan tertentu
         Route::get('/lowongan/{lowongan_id}/pelamar', [JumlahPelamarController::class, 'index'])->name('lowongan.pelamar.index');

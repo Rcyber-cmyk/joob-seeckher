@@ -162,8 +162,19 @@
                 </select>
             </div>
             <div class="col-12 col-md-6">
-                <label for="pendidikan_terakhir" class="form-label">Pendidikan Terakhir</label>
-                <input type="text" name="pendidikan_terakhir" id="pendidikan_terakhir" class="form-control" placeholder="Contoh: S1 Teknik Informatika" value="{{ old('pendidikan_terakhir') }}">
+                <label for="pendidikan_terakhir" class="form-label fw-semibold">Pendidikan Terakhir</label>
+                <select name="pendidikan_terakhir" id="pendidikan_terakhir" class="form-select" required>
+                    <option value="">-- Pilih Pendidikan --</option>
+                    <option value="SD">SD</option>
+                    <option value="SMP">SMP</option>
+                    <option value="SMA/SMK">SMA/SMK</option>
+                    <option value="D1">D1</option>
+                    <option value="D2">D2</option>
+                    <option value="D3">D3</option>
+                    <option value="S1">S1</option>
+                    <option value="S2">S2</option>
+                    <option value="S3">S3</option>
+                </select>
             </div>
             <div class="col-12 col-md-3">
                 <label for="usia_min" class="form-label">Usia Minimal</label>
@@ -188,10 +199,6 @@
                 <label for="pengalaman_kerja_maks" class="form-label">Pengalaman Maks (Tahun)</label>
                 <input type="number" name="pengalaman_kerja_maks" id="pengalaman_kerja_maks" class="form-control" 
                        value="{{ old('pengalaman_kerja_maks') }}" placeholder="Contoh: 5">
-            </div>
-            <div class="col-12 col-md-6">
-                <label for="keahlian_bidang_pekerjaan" class="form-label">Keahlian Bidang Pekerjaan</label>
-                <textarea name="keahlian_bidang_pekerjaan" id="keahlian_bidang_pekerjaan" class="form-control" rows="3" placeholder="Contoh: HTML, CSS, JavaScript">{{ old('keahlian_bidang_pekerjaan') }}</textarea>
             </div>
         </div>
     </div>
