@@ -173,7 +173,7 @@
                 @endif
             </div>
 
-            {{-- Collapsible Text Surat Lamaran (Hanya muncul jika ada teks) --}}
+            {{-- Collapsible Text Surat Lamaran --}}
             @if ($lamaran->surat_lamaran_text)
                 <div class="collapse mt-3" id="suratText">
                     <div class="card card-body bg-light">
@@ -183,6 +183,16 @@
                 </div>
             @endif
 
+            {{-- ========================== DESKRIPSI KEMAMPUAN (BARU) ========================== --}}
+            @if ($lamaran->deskripsi_kemampuan)
+                <h5 class="fw-bold mt-4 mb-3"><i class="bi bi-lightning-charge me-2"></i> Deskripsi Kemampuan</h5>
+                <div class="alert alert-light border shadow-sm" role="alert">
+                    <p class="mb-0 text-secondary" style="white-space: pre-line; line-height: 1.6;">
+                        {{ $lamaran->deskripsi_kemampuan }}
+                    </p>
+                </div>
+            @endif
+            {{-- =============================================================================== --}}
 
             <h5 class="fw-bold mt-4 mb-3"><i class="bi bi-card-list me-2"></i> Ringkasan Pelamar</h5>
             <ul class="list-unstyled list-info">
