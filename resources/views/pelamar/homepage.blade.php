@@ -23,7 +23,7 @@
         .btn-orange { background-color: #F39C12; border: 1px solid #F39C12; color: #fff; padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 600; transition: all 0.3s; }
         .btn-orange:hover { background-color: #d8890b; border-color: #d8890b; color: #fff; transform: translateY(-2px); }
         
-        /* Tombol Outline Oranye (INI YANG AKU TAMBAHKAN) */
+        /* Tombol Outline Oranye */
         .btn-outline-orange { border: 2px solid #F39C12; color: #F39C12; font-weight: 600; padding: 0.6rem 1.5rem; border-radius: 50px; transition: all 0.3s; background: transparent; }
         .btn-outline-orange:hover { background-color: #F39C12; color: white; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3); }
 
@@ -36,7 +36,7 @@
 
         /* === BAGIAN 1: HERO (IKLAN VIP) === */
         .hero-section { position: relative; background-color: #22374e; color: white; overflow: hidden; }
-        .hero-slide-item { min-height: 550px; display: flex; align-items: center; padding: 4rem 0; }
+        .hero-slide-item { min-height: 550px; display: flex; align-items: center; padding: 4rem 0; position: relative; }
         .hero-title { font-size: 3.5rem; font-weight: 800; line-height: 1.2; margin-bottom: 1.5rem; text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
         .hero-subtitle { font-size: 1.2rem; color: rgba(255,255,255,0.9); margin-bottom: 2.5rem; font-weight: 300; }
         .hero-img-static { max-height: 450px; width: auto; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); animation: float 6s ease-in-out infinite; }
@@ -58,7 +58,7 @@
         .vip-meta { color: rgba(255,255,255,0.6); font-size: 0.9rem; font-style: italic; display: flex; justify-content: center; gap: 20px; }
 
         /* === BAGIAN 2: IKLAN GRATIS (GRID) === */
-        .section-promo { padding: 5rem 0; background-color: #f4f6f9; }
+        .section-promo { padding: 5rem 0; background-color: #f4f6f9; position: relative; }
         .section-title { font-size: 2rem; font-weight: 700; color: #22374e; margin-bottom: 0.5rem; }
         
         .promo-card {
@@ -83,6 +83,37 @@
         .logo-slide-item { display: flex; justify-content: center; align-items: center; height: 80px; opacity: 1; transition: all 0.3s; filter: none; }
         .logo-slide-item:hover { transform: scale(1.1); }
         .mitra-logo-img { max-height: 60px; max-width: 100%; object-fit: contain; }
+
+        /* === FITUR LOCKED / BLUR === */
+        .blur-effect {
+            filter: blur(8px);
+            pointer-events: none; /* Mencegah klik */
+            user-select: none; /* Mencegah copy text */
+            opacity: 0.5;
+        }
+
+        .locked-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .locked-card {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 2rem 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 90%;
+        }
+        
+        .locked-icon { font-size: 3rem; color: #22374e; margin-bottom: 1rem; }
+        .locked-title { font-weight: 800; color: #22374e; margin-bottom: 0.5rem; }
+        .locked-text { color: #6c757d; margin-bottom: 1.5rem; }
 
         /* === FIX FOOTER (NAVY) === */
         footer.footer { 
@@ -112,7 +143,7 @@
             
             <div class="carousel-inner hero-carousel-inner">
                 
-                {{-- Slide 1: Intro Messari --}}
+                {{-- Slide 1: Intro Messari (SELALU TERLIHAT) --}}
                 <div class="carousel-item active hero-slide-item">
                     <div class="container">
                         <div class="row align-items-center">
@@ -135,16 +166,33 @@
                     </div>
                 </div>
 
-                {{-- Slide 2 dst: Iklan VIP (Tanpa Tombol, Ada Tanggal) --}}
+                {{-- Slide 2 dst: Iklan VIP (DIBATASI UNTUK GUEST) --}}
                 @foreach($iklanVip as $iklan)
                 <div class="carousel-item hero-slide-item">
-                    <div class="container">
+                    
+                    {{-- OVERLAY JIKA TAMU (GUEST) --}}
+                    @guest
+                    <div class="locked-overlay">
+                        <div class="locked-card animate__animated animate__zoomIn">
+                            <i class="bi bi-lock-fill locked-icon"></i>
+                            <h3 class="locked-title">Konten Eksklusif</h3>
+                            <p class="locked-text">Login untuk melihat info lowongan VIP ini secara lengkap.</p>
+                            <div class="d-flex gap-2 justify-content-center">
+                                <a href="{{ route('login') }}" class="btn btn-orange btn-sm px-4">Masuk</a>
+                                <a href="{{ route('register') }}" class="btn btn-outline-orange btn-sm px-4">Daftar</a>
+                            </div>
+                        </div>
+                    </div>
+                    @endguest
+
+                    {{-- KONTEN IKLAN (DIBERI EFEK BLUR JIKA GUEST) --}}
+                    <div class="container @guest blur-effect @endguest">
                         <div class="vip-ad-container">
+                            <span class="vip-ad-badge"><i class="bi bi-star-fill me-1"></i> Spotlight</span>
                             <h2 class="vip-ad-title">{{ $iklan->judul }}</h2>
                             <p class="vip-ad-company">Oleh: {{ $iklan->perusahaan->nama_perusahaan }}</p>
                             
                             <div class="vip-ad-visual mb-3">
-                                {{-- GAMBAR DENGAN AUTO-FALLBACK JIKA ERROR/TIDAK ADA --}}
                                 <img src="{{ $iklan->file_iklan_banner ? asset('storage/' . $iklan->file_iklan_banner) : '' }}" 
                                      onerror="this.onerror=null; this.src='https://placehold.co/800x400/34495e/ffffff?text={{ urlencode($iklan->judul) }}';"
                                      alt="Banner Iklan">
@@ -152,7 +200,6 @@
                             
                             <div class="text-white mb-3 px-5">{{ $iklan->deskripsi }}</div>
 
-                            {{-- Tanggal Publish & Update --}}
                             <div class="vip-meta">
                                 <span><i class="bi bi-calendar3"></i> Diposting: {{ \Carbon\Carbon::parse($iklan->published_at)->format('d M Y') }}</span>
                                 <span><i class="bi bi-clock-history"></i> Update: {{ \Carbon\Carbon::parse($iklan->updated_at)->diffForHumans() }}</span>
@@ -180,21 +227,36 @@
         </div>
     </section>
 
-    {{-- BAGIAN 2: IKLAN GRATIS (GRID - SEMUA TAMPIL) --}}
-    <section class="section-promo animate__animated animate__fadeInUp">
-        <div class="container">
+    {{-- BAGIAN 2: IKLAN GRATIS (GRID - DIBATASI TOTAL JIKA GUEST) --}}
+    <section class="section-promo animate__animated animate__fadeInUp position-relative">
+        
+        {{-- OVERLAY LOCK UNTUK BAGIAN 2 --}}
+        @guest
+        <div class="locked-overlay" style="background-color: rgba(244, 246, 249, 0.6); backdrop-filter: blur(2px);">
+            <div class="locked-card animate__animated animate__fadeInUp">
+                <i class="bi bi-eye-slash-fill locked-icon text-orange"></i>
+                <h3 class="locked-title">Info & Promo Terkunci</h3>
+                <p class="locked-text">Bergabunglah dengan Messari untuk akses penuh ke semua info lowongan terbaru.</p>
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="{{ route('login') }}" class="btn btn-orange px-4">Masuk Akun</a>
+                    <a href="{{ route('register') }}" class="btn btn-outline-orange px-4">Daftar Gratis</a>
+                </div>
+            </div>
+        </div>
+        @endguest
+
+        <div class="container @guest blur-effect @endguest">
             <div class="text-center mb-5">
-                <h3 class="section-title">Info Terbaru</h3>
+                <h3 class="section-title">Info & Promo Terbaru</h3>
                 <p class="section-desc">Kabar terbaru dari mitra perusahaan kami</p>
             </div>
 
-            {{-- GRID LAYOUT (Bukan Slider) --}}
+            {{-- GRID LAYOUT --}}
             <div class="row g-4">
                 @forelse($iklanGratis as $iklan)
                 <div class="col-md-6 col-lg-3">
                     <div class="promo-card h-100">
                         <div class="promo-img-wrapper">
-                            {{-- GAMBAR DENGAN AUTO-FALLBACK --}}
                             <img src="{{ $iklan->file_iklan_banner ? asset('storage/' . $iklan->file_iklan_banner) : '' }}" 
                                  onerror="this.onerror=null; this.src='https://placehold.co/600x400/f8f9fa/22374e?text={{ urlencode(Str::limit($iklan->judul, 20)) }}';"
                                  class="promo-img" alt="{{ $iklan->judul }}">
@@ -204,7 +266,6 @@
                             <p class="promo-company">{{ $iklan->perusahaan->nama_perusahaan }}</p>
                             <p class="promo-desc">{{ Str::limit($iklan->deskripsi, 80) }}</p>
                             
-                            {{-- Tanggal --}}
                             <div class="promo-meta">
                                 <div><i class="bi bi-calendar3 me-1"></i> {{ \Carbon\Carbon::parse($iklan->published_at)->format('d M Y') }}</div>
                                 <div><i class="bi bi-clock-history me-1"></i> {{ \Carbon\Carbon::parse($iklan->updated_at)->diffForHumans() }}</div>
@@ -222,7 +283,6 @@
                 @endforelse
             </div>
             
-            {{-- TOMBOL SUDAH DIPERBAIKI (Class ditambahkan di CSS) --}}
             <div class="text-center mt-5">
                 <a href="{{ route('lowongan.index') }}" class="btn btn-outline-orange rounded-pill px-4 py-2">
                     Mulai Mencari Kerja
@@ -231,7 +291,7 @@
         </div>
     </section>
 
-    {{-- BAGIAN 3: LOGO MITRA --}}
+    {{-- BAGIAN 3: LOGO MITRA (SELALU TERLIHAT) --}}
     <section class="section-mitra">
         <div class="container">
             <h5 class="mitra-title">Dipercaya oleh Perusahaan Terkemuka</h5>
