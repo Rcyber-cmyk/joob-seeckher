@@ -68,7 +68,7 @@
                     </div>
                     @empty
                     <div class="col-12 text-center py-5">
-                        <img src="{{ asset('images/empty-state.svg') }}" alt="Empty" style="width: 150px; opacity: 0.5;">
+                        <img src="https://cdn-icons-png.flaticon.com/512/7486/7486754.png" alt="Empty" style="width: 150px; opacity: 0.5;">
                         <p class="text-muted mt-3">Belum ada pekerjaan yang disimpan.</p>
                         <a href="{{ route('lowongan.index') }}" class="btn btn-outline-orange rounded-pill px-4">Cari Lowongan</a>
                     </div>
@@ -196,7 +196,7 @@
                     </div>
                     @empty
                     <div class="col-12 text-center py-5">
-                        <img src="{{ asset('images/empty-state.svg') }}" alt="Empty" style="width: 150px; opacity: 0.5;">
+                        <img src="https://cdn-icons-png.flaticon.com/512/7486/7486754.png" alt="Empty" style="width: 150px; opacity: 0.5;">
                         <p class="text-muted mt-3">Belum ada riwayat lamaran.</p>
                         <a href="{{ route('lowongan.index') }}" class="btn btn-outline-orange rounded-pill px-4">Mulai Melamar</a>
                     </div>
