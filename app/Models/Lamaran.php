@@ -22,6 +22,7 @@ class Lamaran extends Model
         'pendidikan_terakhir',
         'pengalaman_tahun',
         'riwayat_karir',
+        'deskripsi_kemampuan',
     ];
 
     public function pelamar()

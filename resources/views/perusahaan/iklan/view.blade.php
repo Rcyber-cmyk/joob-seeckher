@@ -32,7 +32,7 @@
     
     {{-- Header --}}
     <div class="page-header text-center shadow-sm">
-        <h1 class="fw-bold mb-2">Pasang Iklan Lowongan Baru</h1>
+        <h1 class="fw-bold mb-2">Pasang Iklan Perusahaan Anda</h1>
         <p class="mb-0">Isi detail di bawah untuk menjangkau ribuan kandidat berkualitas</p>
     </div>
 
@@ -74,7 +74,7 @@
 
                         {{-- Judul Lowongan --}}
                         <div class="mb-3">
-                            <label for="judul_lowongan" class="form-label fw-semibold">Judul Lowongan</label>
+                            <label for="judul_lowongan" class="form-label fw-semibold">Judul Iklan</label>
                             <input type="text" class="form-control @error('judul_lowongan') is-invalid @enderror" id="judul_lowongan" name="judul_lowongan" 
                                    placeholder="Contoh: Senior Web Developer" required value="{{ old('judul_lowongan') }}">
                             @error('judul_lowongan')
@@ -84,7 +84,7 @@
 
                         {{-- Deskripsi --}}
                         <div class="mb-3">
-                            <label for="deskripsi" class="form-label fw-semibold">Deskripsi Lowongan</label>
+                            <label for="deskripsi" class="form-label fw-semibold">Deskripsi Iklan</label>
                             <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" rows="7"
                                       placeholder="Tulis deskripsi pekerjaan, kualifikasi, benefit, dll" required>{{ old('deskripsi') }}</textarea>
                             @error('deskripsi')
@@ -99,7 +99,7 @@
                             @error('file_iklan')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <div class="form-text">Format: JPG, PNG, atau PDF. Maks 2MB</div>
+                            <div class="form-text">Format: JPG, PNG, atau PDF. Ukuran 16x9</div>
                         </div>
 
                         {{-- Preview --}}

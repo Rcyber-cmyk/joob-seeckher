@@ -1,7 +1,7 @@
-    @extends('perusahaan.layouts.app')
+@extends('perusahaan.layouts.app')
 
-    @section('content')
-        {{-- Header Halaman --}}
+@section('content')
+    {{-- Header Halaman --}}
     <div class="header-dashboard d-flex flex-wrap justify-content-between align-items-center mb-4">
         <div>
             <h1 class="fw-bold">Pelamar untuk Lowongan</h1>
@@ -12,7 +12,7 @@
         </a>
     </div>
 
-    {{-- Stat Cards --}}
+    {{-- Stat Cards (TIDAK DIUBAH) --}}
     <div class="row g-4 mb-4">
         <div class="col-12 col-sm-6 col-lg-3">
             <div class="info-card info-total p-4">
@@ -29,7 +29,6 @@
             <div class="info-card info-diterima p-4">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        {{-- Teks & Variabel Diubah --}}
                         <h6 class="text-uppercase fw-bold small text-muted">Sudah Dipanggil</h6>
                         <div class="fs-3 fw-bold">{{ $pelamarSudahDipanggil }}</div>
                     </div>
@@ -41,7 +40,6 @@
             <div class="info-card info-ditolak p-4">
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        {{-- Teks & Variabel Diubah --}}
                         <h6 class="text-uppercase fw-bold small text-muted">Belum Dipanggil</h6>
                         <div class="fs-3 fw-bold">{{ $pelamarBelumDipanggil }}</div>
                     </div>
@@ -81,13 +79,19 @@
                             <td>{{ $loop->iteration + $pelamar->firstItem() - 1 }}</td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <img src="{{ $item->pelamar->foto_profil ? asset('storage/' . $item->pelamar->foto_profil) : asset('images/default-profile.png') }}" 
-                                        alt="Profile" class="rounded-circle me-3" width="40" height="40" style="object-fit: cover;">
+                                    {{-- [PERBAIKAN 1: Pengecekan Foto] --}}
+                                    {{-- Jika $item->pelamar ADA, baru cek fotonya. Jika tidak, pakai default --}}
+                                    <img src="{{ ($item->pelamar && $item->pelamar->foto_profil) ? asset('storage/' . $item->pelamar->foto_profil) : asset('images/default-profile.png') }}" 
+                                         alt="Profile" 
+                                         class="rounded-circle me-3" 
+                                         width="40" height="40" 
+                                         style="object-fit: cover;">
+                                    
                                     <div>
-                                        <span class="fw-semibold d-block">{{ $item->pelamar->user->name }}</span>
-                                        <a href="{{ route('perusahaan.pelamar.detail', ['lowongan_id' => $lowongan->id, 'pelamar_id' => $item->pelamar->id]) }}" class="small text-primary text-decoration-none">
-                                            Lihat Detail <i class="bi bi-box-arrow-up-right"></i>
-                                        </a>
+                                        {{-- [PERBAIKAN 2: Pengecekan Nama] --}}
+                                        <span class="fw-bold text-dark">
+                                            {{ $item->pelamar && $item->pelamar->user ? $item->pelamar->user->name : 'Data Pelamar Hilang' }}
+                                        </span>
                                     </div>
                                 </div>
                             </td>
@@ -116,17 +120,27 @@
                                 ">{{ ucfirst($item->status) }}</span>
                             </td>
                             <td>
-                                {{-- === LOGIKA TOMBOL DINAMIS (BARU) === --}}
-                                @if(in_array($item->pelamar->id, $pelamarDenganJadwal))
-                                    <button class="btn btn-secondary btn-sm" disabled>
-                                        <i class="bi bi-check-circle-fill me-1"></i> Sudah Dijadwalkan
-                                    </button>
-                                @else
-                                    <a href="{{ route('perusahaan.wawancara.create', ['lowongan_id' => $lowongan->id, 'pelamar_id' => $item->pelamar->id]) }}" class="btn btn-info btn-sm text-white">
-                                        Jadwal
+                                {{-- [PERBAIKAN 3: Pengecekan Tombol Aksi] --}}
+                                {{-- Pastikan pelamar ada sebelum mengecek ID-nya untuk jadwal --}}
+                                @if($item->pelamar)
+                                    @if(in_array($item->pelamar->id, $pelamarDenganJadwal))
+                                        <button class="btn btn-secondary btn-sm" disabled>
+                                            <i class="bi bi-check-circle-fill me-1"></i> Sudah Dijadwalkan
+                                        </button>
+                                    @else
+                                        <a href="{{ route('perusahaan.wawancara.create', ['lowongan_id' => $lowongan->id, 'pelamar_id' => $item->pelamar->id]) }}" class="btn btn-info btn-sm text-white">
+                                            Jadwal
+                                        </a>
+                                    @endif
+                                    
+                                    {{-- Tambahan Tombol Detail (Opsional, sesuai file Anda sebelumnya) --}}
+                                    <a href="{{ route('perusahaan.pelamar.detail', ['lowongan_id' => $lowongan->id, 'pelamar_id' => $item->pelamar->id]) }}" class="btn btn-sm btn-primary ms-1">
+                                        Detail
                                     </a>
+                                @else
+                                    {{-- Jika data pelamar di database hilang --}}
+                                    <button class="btn btn-sm btn-secondary" disabled title="Data pelamar tidak ditemukan di database">Data Hilang</button>
                                 @endif
-                                {{-- === AKHIR LOGIKA TOMBOL === --}}
                             </td>
                         </tr>
                     @empty
@@ -143,5 +157,4 @@
             {{ $pelamar->links() }}
         </div>
     </div>
-    @endsection
-    
+@endsection
