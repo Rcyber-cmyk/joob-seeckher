@@ -9,30 +9,37 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\LowonganPekerjaan;
 use App\Models\ProfilePelamar;
 use App\Models\Lamaran;
-use App\Services\RankingService; // Pastikan baris ini ada
+use App\Services\RankingService; 
 
 class DetailPelamarController extends Controller
 {
     /**
      * Menampilkan detail pelamar.
      */
-    public function showDetail($lowongan_id, $pelamar_id, RankingService $rankingService): View // Injeksi service
+    public function showDetail($lowongan_id, $pelamar_id, RankingService $rankingService): View 
     {
         $user = Auth::user();
         $perusahaan = $user->profilePerusahaan;
 
+        // Pastikan lowongan milik perusahaan yang login
         $lowongan = LowonganPekerjaan::where('perusahaan_id', $perusahaan->id)
                                       ->findOrFail($lowongan_id);
                                       
-        // PERBAIKAN: Hapus 'riwayatPekerjaan' dari 'with()' karena relasi tidak terdefinisi
-        // Kami hanya memuat relasi yang sudah ada (user, keahlian)
         $pelamar = ProfilePelamar::with('user', 'keahlian')->findOrFail($pelamar_id);
         
         $lamaran = Lamaran::where('lowongan_id', $lowongan->id)
                           ->where('pelamar_id', $pelamar->id)
                           ->firstOrFail();
 
-        // Panggil service untuk mendapatkan rincian skor
+        // === [FITUR BARU: AUTO-READ STATUS] ===
+        // Jika status masih pending, ubah jadi 'dilihat' saat halaman ini dibuka
+        if ($lamaran->status == 'pending') {
+            $lamaran->status = 'dilihat';
+            $lamaran->save(); 
+        }
+        // =======================================
+
+        // Panggil service untuk mendapatkan rincian skor (Kode Lama Tetap Ada)
         $rankingDetails = $rankingService->calculateScores($pelamar, $lowongan);
 
         return view('perusahaan.lowongan.detail-pelamar', compact('lowongan', 'pelamar', 'lamaran', 'rankingDetails'));

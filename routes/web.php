@@ -178,13 +178,14 @@ Route::post('/kirim-link-form/{jadwal}', [JadwalWawancaraAdminController::class,
     Route::middleware('role:pelamar')->prefix('pelamar')->name('pelamar.')->group(function () {
         Route::get('/dashboard', [PelamarDashboardController::class, 'index'])->name('dashboard');
         Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-        // INI SOLUSINYA
         Route::post('/pelamar/profile/update', [ProfileController::class, 'update'])->name('profile.update');
         Route::get('/settings', [App\Http\Controllers\Pelamar\SettingsController::class, 'index'])->name('settings.index');
         Route::delete('/settings/delete-account', [App\Http\Controllers\Pelamar\SettingsController::class, 'destroy'])->name('settings.destroy');
         Route::put('/settings/update-email', [App\Http\Controllers\Pelamar\SettingsController::class, 'updateEmail'])->name('settings.updateEmail');
         Route::get('/aktivitas', [AktivitasController::class, 'index'])->name('aktivitas.index');
         Route::get('/lowongan/{id}', [LowonganController::class, 'show'])->name('lowongan.show');
+        Route::get('/notifikasi', [App\Http\Controllers\Pelamar\UndanganController::class, 'index'])->name('notifikasi.index');
+        Route::get('/notifikasi/{id}/baca', [App\Http\Controllers\Pelamar\UndanganController::class, 'markAsRead'])->name('notifikasi.read');
     });
     Route::delete('/lamaran/{lamaran}', [AktivitasController::class, 'destroyLamaran'])
          // Middleware 'auth' sudah otomatis dari grup luar

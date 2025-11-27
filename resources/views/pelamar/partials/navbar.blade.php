@@ -212,6 +212,25 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('pelamar.notifikasi.index') }}" class="nav-link {{ Request::routeIs('pelamar.notifikasi.index') ? 'active fw-bold' : '' }} position-relative">
+                        Notifikasi
+                        
+                        {{-- Badge Merah Penghitung Undangan Baru --}}
+                        @php
+                            $jumlahUndangan = \App\Models\UndanganLamaran::where('pelamar_id', Auth::user()->profilePelamar->id ?? 0)
+                                            ->where('status', 'terkirim')
+                                            ->count();
+                        @endphp
+                        
+                        @if($jumlahUndangan > 0)
+                            <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem; margin-left: -5px; margin-top: 5px;">
+                                {{ $jumlahUndangan }}
+                                <span class="visually-hidden">undangan baru</span>
+                            </span>
+                        @endif
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ Request::routeIs('perusahaan.index') ? 'active fw-bold' : '' }}" href="{{ route('lowongan.index') }}">Cari Lowongan</a>
                 </li>
                 <li class="nav-item">

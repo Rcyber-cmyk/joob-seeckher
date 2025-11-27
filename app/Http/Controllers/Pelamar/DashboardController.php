@@ -30,7 +30,7 @@ class DashboardController extends Controller
             ->where('paket', 'gratis')
             ->where('status', 'aktif')
             ->latest('published_at')
-            ->take(12)
+            ->take(18)
             ->get();
 
         // BAGIAN 3: Logo Mitra Perusahaan (Tetap)
