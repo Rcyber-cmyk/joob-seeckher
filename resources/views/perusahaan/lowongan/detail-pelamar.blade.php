@@ -226,6 +226,59 @@
             </ul>
         </div>
     </div>
+        {{-- ========================== KARTU AKSI KEPUTUSAN ========================== --}}
+    <div class="dashboard-section p-4 mb-4 border border-2 {{ $lamaran->status == 'diterima' ? 'border-success bg-success-subtle' : ($lamaran->status == 'ditolak' ? 'border-danger bg-danger-subtle' : 'border-warning') }}">
+        <h5 class="fw-bold mb-3"><i class="bi bi-gavel me-2"></i> Keputusan HRD</h5>
+        
+        @if($lamaran->status == 'diterima')
+            <div class="text-center text-success py-2">
+                <i class="bi bi-check-circle-fill display-4 mb-2"></i>
+                <h4 class="fw-bold">PELAMAR DITERIMA</h4>
+                <p class="mb-0">Anda telah menerima pelamar ini.</p>
+            </div>
+            {{-- Opsional: Tombol Batal --}}
+            <form action="{{ route('perusahaan.lamaran.updateStatus', $lamaran->id) }}" method="POST" class="text-center mt-3">
+                @csrf
+                <input type="hidden" name="status" value="dilihat"> {{-- Kembalikan ke dilihat --}}
+                <button class="btn btn-sm btn-outline-secondary">Batalkan Keputusan</button>
+            </form>
+
+        @elseif($lamaran->status == 'ditolak')
+            <div class="text-center text-danger py-2">
+                <i class="bi bi-x-circle-fill display-4 mb-2"></i>
+                <h4 class="fw-bold">PELAMAR DITOLAK</h4>
+                <p class="mb-0">Anda telah menolak pelamar ini.</p>
+            </div>
+            <form action="{{ route('perusahaan.lamaran.updateStatus', $lamaran->id) }}" method="POST" class="text-center mt-3">
+                @csrf
+                <input type="hidden" name="status" value="dilihat">
+                <button class="btn btn-sm btn-outline-secondary">Batalkan Keputusan</button>
+            </form>
+
+        @else
+            <p class="text-muted small mb-3">Tentukan nasib pelamar ini untuk tahap selanjutnya.</p>
+            <div class="d-flex gap-2">
+                {{-- Tombol TOLAK --}}
+                <form action="{{ route('perusahaan.lamaran.updateStatus', $lamaran->id) }}" method="POST" class="w-50" onsubmit="return confirm('Yakin ingin MENOLAK pelamar ini?');">
+                    @csrf
+                    <input type="hidden" name="status" value="ditolak">
+                    <button type="submit" class="btn btn-outline-danger w-100 py-2 fw-bold">
+                        <i class="bi bi-x-lg me-1"></i> Tolak
+                    </button>
+                </form>
+
+                {{-- Tombol TERIMA --}}
+                <form action="{{ route('perusahaan.lamaran.updateStatus', $lamaran->id) }}" method="POST" class="w-50" onsubmit="return confirm('Yakin ingin MENERIMA pelamar ini?');">
+                    @csrf
+                    <input type="hidden" name="status" value="diterima">
+                    <button type="submit" class="btn btn-success w-100 py-2 fw-bold">
+                        <i class="bi bi-check-lg me-1"></i> Terima
+                    </button>
+                </form>
+            </div>
+        @endif
+    </div>
+{{-- ========================================================================== --}}
 </div>
 @endsection
 

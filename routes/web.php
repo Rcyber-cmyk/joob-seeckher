@@ -245,7 +245,7 @@ Route::post('/kirim-link-form/{jadwal}', [JadwalWawancaraAdminController::class,
 
         Route::get('/pengaturan', [PengaturanController::class, 'edit'])->name('settings.edit');
     
-    // Route untuk memproses update pengaturan
+        // Route untuk memproses update pengaturan
         Route::patch('/pengaturan', [PengaturanController::class, 'update'])->name('settings.update');
 
         // Rute Profil untuk Perusahaan
@@ -259,24 +259,27 @@ Route::post('/kirim-link-form/{jadwal}', [JadwalWawancaraAdminController::class,
         Route::get('/kandidat/premium', [CariKandidatController::class, 'searchPremium'])->name('kandidat.search.premium');
         Route::get('langganan', [LanggananController::class, 'index'])->name('langganan.index');
         Route::post('langganan/process', [LanggananController::class, 'processPayment'])->name('langganan.process');
-    Route::get('/iklan/pasang-baru', [IklanController::class, 'create'])->name('iklan.create');
-    /**
-     * INI ROUTE UNTUK HALAMAN PEMBUATAN IKLAN (GRATIS / VIP)
-     * URL-nya adalah /perusahaan/iklan/pasang-baru
-     */
-    Route::get('/iklan/pasang-baru', [IklanController::class, 'create'])->name('iklan.create');
-    Route::post('/iklan/pasang-baru', [IklanController::class, 'store'])->name('iklan.store');
+        Route::get('/iklan/pasang-baru', [IklanController::class, 'create'])->name('iklan.create');
+        /**
+        * INI ROUTE UNTUK HALAMAN PEMBUATAN IKLAN (GRATIS / VIP)
+        * URL-nya adalah /perusahaan/iklan/pasang-baru
+        */
+        Route::get('/iklan/pasang-baru', [IklanController::class, 'create'])->name('iklan.create');
+        Route::post('/iklan/pasang-baru', [IklanController::class, 'store'])->name('iklan.store');
     
-    /**
-     * INI ROUTE UNTUK HALAMAN MENUNGGU
-     */
-    Route::get('/iklan/menunggu', [IklanController::class, 'showWaiting'])->name('iklan.waiting');
+        /**
+         * INI ROUTE UNTUK HALAMAN MENUNGGU
+        */
+        Route::get('/iklan/menunggu', [IklanController::class, 'showWaiting'])->name('iklan.waiting');
 
         // --- RUTE UNTUK FITUR UNDANG MELAMAR (BARU) ---
         Route::post('/kandidat/{pelamar}/undang', [UndanganController::class, 'store'])->name('kandidat.undang');
 
         // Rute untuk melihat detail pelamar
         Route::get('/lowongan/{lowongan_id}/pelamar/{pelamar_id}/detail', [DetailPelamarController::class, 'showDetail'])->name('pelamar.detail');
+        // === [BARU] UPDATE STATUS LAMARAN (TERIMA/TOLAK) ===
+        Route::post('/lamaran/{id}/update-status', [DetailPelamarController::class, 'updateStatus'])
+            ->name('lamaran.updateStatus');
     });
 });
 
