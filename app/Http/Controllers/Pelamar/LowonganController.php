@@ -85,31 +85,66 @@ class LowonganController extends Controller
         return view('pelamar.lowongan.index', compact('lowonganList', 'detailLowongan', 'saved_lowongan_ids', 'lokasiOptions', 'sudahMelamar'));
     }
 
-    public function showDetailPartial(LowonganPekerjaan $lowongan)
+    /**
+     * API untuk mengambil potongan HTML detail lowongan (Dipakai AJAX saat klik list).
+     */
+    public function showDetailPartial($id)
     {
-        $detailLowongan = $lowongan->load('perusahaan');
+        // Gunakan findOrFail agar jika ID ngawur, dia throw 404
+        $detailLowongan = LowonganPekerjaan::with('perusahaan')->findOrFail($id);
         
         $saved_lowongan_ids = [];
         $sudahMelamar = false; 
 
         if (Auth::check() && Auth::user()->role === 'pelamar' && Auth::user()->profilePelamar) {
-            $saved_lowongan_ids = Auth::user()->profilePelamar->lowonganTersimpan()->pluck('lowongan_pekerjaan.id')->toArray();
+            // Ambil ID lowongan yang disimpan
+            $saved_lowongan_ids = Auth::user()->profilePelamar->lowonganTersimpan()
+                                            ->pluck('lowongan_pekerjaan.id')
+                                            ->toArray();
             
+            // Cek apakah pelamar SUDAH melamar di lowongan INI
             $sudahMelamar = Lamaran::where('pelamar_id', Auth::user()->profilePelamar->id)
                                     ->where('lowongan_id', $detailLowongan->id)
                                     ->exists();
         }
 
+        // Render hanya bagian partial view, bukan seluruh halaman
         return view('pelamar.lowongan.partials._job-detail', compact('detailLowongan', 'saved_lowongan_ids', 'sudahMelamar'))->render();
     }
 
-    public function toggleSimpan(LowonganPekerjaan $lowongan)
+    /**
+     * Fungsi Simpan/Hapus Simpanan (Support AJAX).
+     */
+    public function toggleSimpan(Request $request, LowonganPekerjaan $lowongan)
     {
         $pelamar = Auth::user()->profilePelamar;
+        
+        // 1. Validasi Profil
         if (!$pelamar) {
-            return redirect()->route('pelamar.profile.edit')->with('error', 'Silakan lengkapi profil Anda terlebih dahulu untuk menyimpan lowongan.');
+            // Jika AJAX, kirim JSON error
+            if ($request->wantsJson()) {
+                return response()->json(['status' => 'error', 'message' => 'Lengkapi profil dulu'], 403);
+            }
+            return redirect()->route('pelamar.profile.edit')->with('error', 'Silakan lengkapi profil Anda terlebih dahulu.');
         }
-        $pelamar->lowonganTersimpan()->toggle($lowongan->id);
+
+        // 2. Lakukan Toggle (Simpan/Hapus)
+        // toggle() mengembalikan array ['attached' => [], 'detached' => []]
+        $result = $pelamar->lowonganTersimpan()->toggle($lowongan->id);
+        
+        // Cek status: Jika ada ID di array 'attached', berarti baru disimpan. Jika tidak, berarti dihapus.
+        $status = count($result['attached']) > 0 ? 'saved' : 'removed';
+
+        // 3. RETURN JSON (INI KUNCINYA)
+        if ($request->wantsJson()) {
+            return response()->json([
+                'status' => 'success', 
+                'action' => $status,
+                'message' => $status == 'saved' ? 'Lowongan disimpan' : 'Simpanan dihapus'
+            ]);
+        }
+
+        // Fallback jika user mematikan Javascript (tetap reload)
         return back()->with('success', 'Status lowongan berhasil diperbarui.');
     }
     

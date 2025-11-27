@@ -1,5 +1,4 @@
 <?php
-// Simpan sebagai app/Http/Controllers/Pelamar/BeritaController.php
 
 namespace App\Http\Controllers\Pelamar;
 
@@ -11,24 +10,42 @@ use Illuminate\Http\Request;
 class BeritaController extends Controller
 {
     /**
-     * Menampilkan halaman utama Berita Terkini.
+     * Menampilkan halaman utama Berita Terkini dengan Fitur Pencarian.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Ambil 1 berita yang ditandai sebagai "featured"
+        // 1. Tangkap kata kunci pencarian dari URL (?search=...)
+        $search = $request->input('search');
+
+        // 2. Ambil 1 berita "featured" (Highlight Header)
+        // Kita ambil ini terpisah agar header tetap tampil cantik meskipun user sedang mencari berita lain di bawah.
         $featured = Berita::where('is_featured', true)
                             ->latest('published_at')
                             ->first();
 
-        // Ambil berita lainnya (selain yang featured) dengan paginasi
-        $beritaTerkini = Berita::where('is_featured', false)
-                                ->latest('published_at')
-                                ->paginate(4); // Tampilkan 4 berita per halaman
+        // 3. Query Dasar untuk Daftar Berita (List Bawah)
+        // Kita filter 'is_featured' false agar berita di header tidak muncul dobel di bawah
+        $query = Berita::where('is_featured', false);
 
-        // Ambil 5 berita terbaru untuk sidebar "Sedang Tren"
-        $beritaTrending = Berita::latest('published_at')->take(5)->get();
+        // --- LOGIKA PENCARIAN SAKTI ---
+        if ($search) {
+            $query->where(function($q) use ($search) {
+                $q->where('judul', 'like', "%{$search}%")
+                  ->orWhere('isi_berita', 'like', "%{$search}%")
+                  ->orWhere('kutipan', 'like', "%{$search}%");
+            });
+        }
+        // ------------------------------
 
-        // Ambil semua kategori untuk sidebar
+        // Eksekusi Query dengan Paginasi
+        // Saya ubah jadi 6 items per halaman supaya grid-nya lebih enak dilihat (genap)
+        $beritaTerkini = $query->latest('published_at')->paginate(6);
+
+        // Pertahankan query string saat pindah halaman (supaya saat klik page 2, hasil search ga ilang)
+        $beritaTerkini->appends(['search' => $search]);
+
+        // 4. Data Sidebar (Trending & Kategori)
+        $beritaTrending = Berita::inRandomOrder()->take(5)->get(); // Pakai random biar kelihatan dinamis
         $kategori = Kategori::all();
 
         return view('pelamar.berita.index', compact('featured', 'beritaTerkini', 'beritaTrending', 'kategori'));
@@ -40,7 +57,7 @@ class BeritaController extends Controller
     public function show($slug)
     {
         $berita = Berita::where('slug', $slug)->firstOrFail();
-        // Anda bisa menambahkan logika lain di sini, misal berita terkait
+        
         return view('pelamar.berita.show', compact('berita'));
     }
 }

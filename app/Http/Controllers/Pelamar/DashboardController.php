@@ -22,7 +22,7 @@ class DashboardController extends Controller
             ->where('status', 'aktif')
             // ->where('expires_at', '>', $now) // Uncomment jika ingin filter tanggal
             ->latest('published_at')
-            ->take(5)
+            ->take(40)
             ->get();
 
         // BAGIAN 2: Iklan Gratis (Untuk Slider Kedua/Tengah)
