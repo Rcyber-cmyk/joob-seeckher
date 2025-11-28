@@ -1,235 +1,301 @@
-{{-- /resources/views/pelamar/profile/edit.blade.php --}}
-
 @extends('pelamar.layouts.app')
 
 @section('title', 'Edit Profil Saya')
 
 @section('content')
-{{-- HAPUS FOOTER --}}
+{{-- HAPUS FOOTER (Biar fokus di form) --}}
 <style>footer.footer { display: none !important; }</style>
 
-<div class="profile-edit-page">
-    <div class="container py-4 mb-5"> {{-- Tambah margin bottom biar tidak mepet bawah --}}
+{{-- HERO BANNER (BACKGROUND) --}}
+<div class="profile-hero-bg">
+    <div class="container h-100 d-flex flex-column justify-content-center text-center text-white position-relative z-2">
+        <h2 class="fw-black mb-1 animate__animated animate__fadeInDown">Profil Profesional</h2>
+        <p class="text-white-50 animate__animated animate__fadeInUp">Kelola informasi Anda untuk menarik perhatian perekrut terbaik.</p>
+    </div>
+    {{-- Dekorasi Pattern --}}
+    <div class="hero-pattern"></div>
+</div>
+
+<div class="profile-content-wrapper">
+    <div class="container pb-5">
         <form action="{{ route('pelamar.profile.update') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            {{-- Hapus @method('PUT') karena kita pakai POST untuk upload file --}}
 
-            <div class="page-header mb-4 text-center text-lg-start">
-                <h1 class="page-title">Pengaturan Profil</h1>
-                <p class="page-subtitle">Perbarui informasi Anda agar profil lebih menarik bagi perusahaan.</p>
-            </div>
-            
+            {{-- ALERT MESSAGES (Floating) --}}
             @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="alert alert-success border-0 shadow-sm rounded-4 mb-4 d-flex align-items-center animate__animated animate__fadeInDown">
+                    <i class="bi bi-check-circle-fill fs-4 me-3 text-success"></i>
+                    <div>
+                        <h6 class="fw-bold mb-0">Berhasil!</h6>
+                        <small>{{ session('success') }}</small>
+                    </div>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
                 </div>
             @endif
             @if ($errors->any())
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong><i class="bi bi-exclamation-triangle-fill me-2"></i>Terdapat kesalahan pada input Anda.</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="alert alert-danger border-0 shadow-sm rounded-4 mb-4 d-flex align-items-center animate__animated animate__shakeX">
+                    <i class="bi bi-exclamation-triangle-fill fs-4 me-3 text-danger"></i>
+                    <div>
+                        <h6 class="fw-bold mb-0">Periksa Kembali</h6>
+                        <small>Ada beberapa input yang belum sesuai.</small>
+                    </div>
+                    <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
                 </div>
             @endif
 
             <div class="row g-4">
-                {{-- SIDEBAR (FOTO & NAVIGASI) --}}
+                
+                {{-- SIDEBAR KIRI (FOTO & NAVIGASI) --}}
                 <div class="col-lg-4">
-                    <div class="profile-sidebar sticky-lg-top" style="top: 20px; z-index: 10;">
-                        <div class="profile-picture-card text-center border-bottom pb-3">
-                            <div class="profile-picture-wrapper mx-auto shadow-sm">
-                                <img id="profileImagePreview" src="{{ $profile->foto_profil ? asset('storage/' . $profile->foto_profil) : 'https://placehold.co/150x150/EFEFEF/AAAAAA&text=Foto' }}" alt="Foto Profil">
-                                <label for="foto_profil_input" class="profile-picture-edit-button" title="Ganti Foto">
-                                    <i class="bi bi-camera-fill"></i>
-                                </label>
-                                <input type="file" name="foto_profil" id="foto_profil_input" class="d-none" accept="image/*">
-                            </div>
-                            <h5 class="mb-1 mt-3 fw-bold">{{ $profile->nama_lengkap }}</h5>
-                            <p class="text-muted small mb-3">{{ $user->email }}</p>
-                            
-                            <div class="progress-wrapper px-3">
-                                <div class="d-flex justify-content-between small mb-1 text-muted">
-                                    <span>Kelengkapan Profil</span>
-                                    <span class="fw-bold text-orange">{{ $profile->kelengkapan_profil ?? 0 }}%</span>
-                                </div>
-                                <div class="progress" style="height: 6px;">
-                                    <div class="progress-bar bg-orange" role="progressbar" style="width: {{ $profile->kelengkapan_profil ?? 0 }}%;" aria-valuenow="{{ $profile->kelengkapan_profil ?? 0 }}" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="sticky-sidebar">
                         
-                        <div class="profile-nav-wrapper">
-                            <ul class="list-group list-group-flush profile-nav">
-                                <li class="list-group-item"><a href="#pribadi" class="active"><i class="bi bi-person-badge"></i> Informasi Pribadi</a></li>
-                                <li class="list-group-item"><a href="#alamat"><i class="bi bi-geo-alt"></i> Alamat & Domisili</a></li>
-                                <li class="list-group-item"><a href="#pendidikan"><i class="bi bi-mortarboard"></i> Pendidikan & Profesional</a></li>
-                                <li class="list-group-item"><a href="#dokumen"><i class="bi bi-file-earmark-text"></i> Ringkasan & Dokumen</a></li>
-                                <li class="list-group-item"><a href="#keahlian"><i class="bi bi-tools"></i> Keahlian</a></li>
-                            </ul>
+                        {{-- 1. CARD FOTO PROFIL --}}
+                        <div class="card card-profile-sidebar border-0 shadow-lg text-center mb-4">
+                            <div class="card-body p-4">
+                                {{-- Foto Upload Wrapper --}}
+                                <div class="profile-upload-wrapper mx-auto mb-3">
+                                    <img id="profileImagePreview" 
+                                         src="{{ $profile->foto_profil ? asset('storage/' . $profile->foto_profil) : 'https://placehold.co/150x150/f1f5f9/cbd5e1?text=Upload' }}" 
+                                         alt="Foto Profil" class="profile-img">
+                                    
+                                    {{-- Tombol Edit Overlay --}}
+                                    <label for="foto_profil_input" class="upload-overlay">
+                                        <i class="bi bi-camera-fill fs-3 text-white"></i>
+                                        <span class="text-white small fw-bold mt-1">Ubah Foto</span>
+                                    </label>
+                                    <input type="file" name="foto_profil" id="foto_profil_input" class="d-none" accept="image/*">
+                                </div>
+
+                                <h5 class="fw-bold text-dark-blue mb-1">{{ $profile->nama_lengkap }}</h5>
+                                <p class="text-muted small mb-4">{{ $user->email }}</p>
+
+                                {{-- Progress Bar Kelengkapan --}}
+                                <div class="p-3 bg-light rounded-3 text-start">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="small fw-bold text-muted">Kelengkapan Profil</span>
+                                        <span class="small fw-bold text-orange">{{ $profile->kelengkapan_profil ?? 0 }}%</span>
+                                    </div>
+                                    <div class="progress" style="height: 8px; border-radius: 4px;">
+                                        <div class="progress-bar bg-gradient-orange" role="progressbar" 
+                                             style="width: {{ $profile->kelengkapan_profil ?? 0 }}%;"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+                        {{-- 2. CARD NAVIGASI (Scrollspy) --}}
+                        <div class="card border-0 shadow-sm d-none d-lg-block">
+                            <div class="card-body p-0">
+                                <div class="list-group list-group-flush rounded-3 overflow-hidden">
+                                    <a href="#section-pribadi" class="list-group-item list-group-item-action py-3 px-4 active-nav">
+                                        <i class="bi bi-person-bounding-box me-3"></i> Informasi Pribadi
+                                    </a>
+                                    <a href="#section-alamat" class="list-group-item list-group-item-action py-3 px-4">
+                                        <i class="bi bi-geo-alt-fill me-3"></i> Alamat & Kontak
+                                    </a>
+                                    <a href="#section-pendidikan" class="list-group-item list-group-item-action py-3 px-4">
+                                        <i class="bi bi-mortarboard-fill me-3"></i> Pendidikan & Karir
+                                    </a>
+                                    <a href="#section-dokumen" class="list-group-item list-group-item-action py-3 px-4">
+                                        <i class="bi bi-file-earmark-person-fill me-3"></i> Ringkasan & Dokumen
+                                    </a>
+                                    <a href="#section-keahlian" class="list-group-item list-group-item-action py-3 px-4">
+                                        <i class="bi bi-stars me-3"></i> Keahlian (Skills)
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
-                {{-- FORM UTAMA --}}
+                {{-- KONTEN KANAN (FORMULIR) --}}
                 <div class="col-lg-8">
-                    <div class="main-form-card">
-                        {{-- Bagian 1: Pribadi --}}
-                        <div class="form-section" id="pribadi">
-                            <h5 class="form-section-title text-orange">Informasi Pribadi</h5>
-                            <div class="row g-3">
+                    
+                    {{-- 1. INFORMASI PRIBADI --}}
+                    <div id="section-pribadi" class="card border-0 shadow-sm mb-4 form-card">
+                        <div class="card-body p-4 p-lg-5">
+                            <h5 class="fw-bold text-dark-blue mb-4 pb-2 border-bottom">Informasi Pribadi</h5>
+                            <div class="row g-4">
                                 <div class="col-md-6">
-                                    <label for="nama_depan" class="form-label fw-medium">Nama Depan</label>
-                                    <input type="text" class="form-control bg-light border-0" id="nama_depan" name="nama_depan" value="{{ old('nama_depan', explode(' ', $profile->nama_lengkap)[0]) }}" required>
+                                    <label class="form-label-custom">Nama Depan <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control form-control-modern" name="nama_depan" value="{{ old('nama_depan', explode(' ', $profile->nama_lengkap)[0]) }}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="nama_belakang" class="form-label fw-medium">Nama Belakang</label>
-                                    <input type="text" class="form-control bg-light border-0" id="nama_belakang" name="nama_belakang" value="{{ old('nama_belakang', explode(' ', $profile->nama_lengkap, 2)[1] ?? '') }}">
-                                </div>
-                                <div class="col-12">
-                                    <label for="nik" class="form-label fw-medium">Nomor Induk Kependudukan (NIK)</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-person-vcard text-muted"></i></span>
-                                        <input type="text" class="form-control bg-light border-start-0 ps-0" id="nik" value="{{ $profile->nik }}" disabled readonly>
-                                    </div>
-                                    <div class="form-text small">NIK tidak dapat diubah.</div>
+                                    <label class="form-label-custom">Nama Belakang</label>
+                                    <input type="text" class="form-control form-control-modern" name="nama_belakang" value="{{ old('nama_belakang', explode(' ', $profile->nama_lengkap, 2)[1] ?? '') }}">
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="tanggal_lahir" class="form-label fw-medium">Tanggal Lahir</label>
-                                    <input type="date" class="form-control bg-light border-0" id="tanggal_lahir" name="tanggal_lahir" value="{{ old('tanggal_lahir', $profile->tanggal_lahir) }}" required>
+                                    <label class="form-label-custom">Tanggal Lahir <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control form-control-modern" name="tanggal_lahir" value="{{ old('tanggal_lahir', $profile->tanggal_lahir) }}" required>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="gender" class="form-label fw-medium">Jenis Kelamin</label>
-                                    <select class="form-select bg-light border-0" id="gender" name="gender" required>
+                                    <label class="form-label-custom">Jenis Kelamin <span class="text-danger">*</span></label>
+                                    <select class="form-select form-select-modern" name="gender" required>
                                         <option value="Laki-laki" {{ old('gender', $profile->gender) == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
                                         <option value="Perempuan" {{ old('gender', $profile->gender) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                                     </select>
                                 </div>
+                                <div class="col-12">
+                                    <label class="form-label-custom">NIK (KTP)</label>
+                                    <input type="text" class="form-control form-control-modern bg-light text-muted cursor-not-allowed" value="{{ $profile->nik }}" readonly disabled>
+                                    <div class="form-text ms-1"><i class="bi bi-lock-fill me-1"></i>NIK tidak dapat diubah demi keamanan data.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- 2. ALAMAT & DOMISILI --}}
+                    <div id="section-alamat" class="card border-0 shadow-sm mb-4 form-card">
+                        <div class="card-body p-4 p-lg-5">
+                            <h5 class="fw-bold text-dark-blue mb-4 pb-2 border-bottom">Alamat & Kontak</h5>
+                            <div class="row g-4">
+                                <div class="col-12">
+                                    <label class="form-label-custom">Alamat Lengkap (Sesuai KTP)</label>
+                                    <textarea class="form-control form-control-modern" name="alamat" rows="3" required>{{ old('alamat', $profile->alamat) }}</textarea>
+                                </div>
                                 <div class="col-md-6">
-                                    <label for="no_hp" class="form-label fw-medium">Nomor Telepon</label>
+                                    <label class="form-label-custom">Domisili Saat Ini</label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-telephone text-muted"></i></span>
-                                        <input type="tel" class="form-control bg-light border-start-0 ps-0" id="no_hp" value="{{ $profile->no_hp }}" disabled readonly>
+                                        <span class="input-group-text bg-white border-end-0 rounded-start-pill ps-3"><i class="bi bi-geo-alt text-orange"></i></span>
+                                        <input type="text" class="form-control form-control-modern border-start-0 ps-0" name="domisili" value="{{ old('domisili', $profile->domisili) }}" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label-custom">Nomor Telepon / WhatsApp</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light text-muted border-end-0 rounded-start-pill ps-3"><i class="bi bi-telephone"></i></span>
+                                        <input type="tel" class="form-control form-control-modern bg-light border-start-0 ps-0 text-muted" value="{{ $profile->no_hp }}" readonly disabled>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        {{-- Bagian 2: Alamat --}}
-                        <div class="form-section" id="alamat">
-                            <h5 class="form-section-title text-orange">Alamat & Domisili</h5>
-                            <div class="row g-3">
-                                <div class="col-12">
-                                    <label for="alamat" class="form-label fw-medium">Alamat (Sesuai KTP)</label>
-                                    <textarea class="form-control bg-light border-0" id="alamat" name="alamat" rows="3" required>{{ old('alamat', $profile->alamat) }}</textarea>
-                                </div>
-                                <div class="col-12">
-                                    <label for="domisili" class="form-label fw-medium">Domisili Saat Ini</label>
-                                    <input type="text" class="form-control bg-light border-0" id="domisili" name="domisili" value="{{ old('domisili', $profile->domisili) }}" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Bagian 3: Pendidikan --}}
-                        <div class="form-section" id="pendidikan">
-                            <h5 class="form-section-title text-orange">Pendidikan & Profesional</h5>
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <label for="lulusan" class="form-label fw-medium">Pendidikan Terakhir</label>
-                                    <select class="form-select bg-light border-0" id="lulusan" name="lulusan" required>
-                                        <option value="SMA/SMK Sederajat" {{ old('lulusan', $profile->lulusan) == 'SMA/SMK Sederajat' ? 'selected' : '' }}>SMA/SMK Sederajat</option>
-                                        <option value="D1/D2/D3" {{ in_array(old('lulusan', $profile->lulusan), ['D1','D2','D3']) ? 'selected' : '' }}>D1/D2/D3</option>
-                                        <option value="S1" {{ old('lulusan', $profile->lulusan) == 'S1' ? 'selected' : '' }}>S1</option>
-                                        <option value="S2" {{ old('lulusan', $profile->lulusan) == 'S2' ? 'selected' : '' }}>S2</option>
-                                        <option value="S3" {{ old('lulusan', $profile->lulusan) == 'S3' ? 'selected' : '' }}>S3</option>
+                    {{-- 3. PENDIDIKAN & KARIR --}}
+                    <div id="section-pendidikan" class="card border-0 shadow-sm mb-4 form-card">
+                        <div class="card-body p-4 p-lg-5">
+                            <h5 class="fw-bold text-dark-blue mb-4 pb-2 border-bottom">Pendidikan & Karir</h5>
+                            <div class="row g-4">
+                                <div class="col-md-4">
+                                    <label class="form-label-custom">Pendidikan Terakhir</label>
+                                    <select class="form-select form-select-modern" name="lulusan" required>
+                                        @foreach(['SMA/SMK Sederajat', 'D1/D2/D3', 'S1', 'S2', 'S3'] as $edu)
+                                            <option value="{{ $edu }}" {{ old('lulusan', $profile->lulusan) == $edu ? 'selected' : '' }}>{{ $edu }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="tahun_lulus" class="form-label fw-medium">Tahun Lulus</label>
-                                    <input type="number" class="form-control bg-light border-0" id="tahun_lulus" name="tahun_lulus" value="{{ old('tahun_lulus', $profile->tahun_lulus) }}" placeholder="Contoh: 2022" required>
+                                <div class="col-md-4">
+                                    <label class="form-label-custom">Tahun Lulus</label>
+                                    <input type="number" class="form-control form-control-modern" name="tahun_lulus" value="{{ old('tahun_lulus', $profile->tahun_lulus) }}" placeholder="202X" required>
                                 </div>
-                                <div class="col-12">
-                                    <label for="pengalaman_kerja" class="form-label fw-medium">Pengalaman Kerja</label>
-                                    <select class="form-select bg-light border-0" id="pengalaman_kerja" name="pengalaman_kerja">
-                                        <option value="Fresh Graduate" {{ old('pengalaman_kerja', $profile->pengalaman_kerja) == 'Fresh Graduate' ? 'selected' : '' }}>Fresh Graduate</option>
-                                        <option value="< 1 Tahun" {{ old('pengalaman_kerja', $profile->pengalaman_kerja) == '< 1 Tahun' ? 'selected' : '' }}>< 1 Tahun</option>
-                                        <option value="1-3 Tahun" {{ old('pengalaman_kerja', $profile->pengalaman_kerja) == '1-3 Tahun' ? 'selected' : '' }}>1-3 Tahun</option>
-                                        <option value="3-5 Tahun" {{ old('pengalaman_kerja', $profile->pengalaman_kerja) == '3-5 Tahun' ? 'selected' : '' }}>3-5 Tahun</option>
-                                        <option value="> 5 Tahun" {{ old('pengalaman_kerja', $profile->pengalaman_kerja) == '> 5 Tahun' ? 'selected' : '' }}>> 5 Tahun</option>
+                                <div class="col-md-4">
+                                    <label class="form-label-custom">Pengalaman</label>
+                                    <select class="form-select form-select-modern" name="pengalaman_kerja">
+                                        @foreach(['Fresh Graduate', '< 1 Tahun', '1-3 Tahun', '3-5 Tahun', '> 5 Tahun'] as $exp)
+                                            <option value="{{ $exp }}" {{ old('pengalaman_kerja', $profile->pengalaman_kerja) == $exp ? 'selected' : '' }}>{{ $exp }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
-                        </div>
-                        
-                        {{-- Bagian 4: Dokumen --}}
-                        <div class="form-section" id="dokumen">
-                            <h5 class="form-section-title text-orange">Ringkasan & Dokumen</h5>
-                            <div class="row g-3">
-                                 <div class="col-12">
-                                    <label for="tentang_saya" class="form-label fw-medium">Ringkasan Pribadi</label>
-                                    <textarea class="form-control bg-light border-0" name="tentang_saya" rows="4" placeholder="Ceritakan sedikit tentang diri Anda...">{{ old('tentang_saya', $profile->tentang_saya) }}</textarea>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="foto_ktp" class="form-label fw-medium">Foto KTP</label>
-                                    <input type="file" class="form-control" name="foto_ktp" accept="image/*">
-                                    @if ($profile->foto_ktp)
-                                        <div class="mt-2 p-2 bg-light rounded border d-flex align-items-center">
-                                            <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                            <span class="small text-muted">KTP sudah diunggah.</span>
-                                            <a href="{{ asset('storage/' . $profile->foto_ktp) }}" target="_blank" class="ms-auto btn btn-sm btn-link text-decoration-none p-0">Lihat</a>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        {{-- Bagian 5: Keahlian --}}
-                        <div class="form-section border-bottom-0" id="keahlian">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <h5 class="form-section-title text-orange mb-0">Keahlian</h5>
-                                <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#keahlianModal">
-                                    <i class="bi bi-plus-lg me-1"></i> Tambah Keahlian
-                                </button>
-                            </div>
-                            <div class="keahlian-tags bg-light p-3 rounded-3 border border-dashed text-center">
-                                @forelse($profile->keahlian as $k)
-                                    <span class="badge skill-tag shadow-sm">{{ $k->nama_keahlian }}</span>
-                                @empty
-                                    <p class="text-muted small mb-0 py-2">Belum ada keahlian. Klik tombol tambah di atas.</p>
-                                @endforelse
-                            </div>
-                        </div>
-
-                        <div class="text-end mt-5 pt-4 border-top">
-                             <button type="submit" class="btn btn-orange btn-lg px-5 rounded-pill shadow-sm">
-                                Simpan Perubahan
-                            </button>
                         </div>
                     </div>
+
+                    {{-- 4. DOKUMEN --}}
+                    <div id="section-dokumen" class="card border-0 shadow-sm mb-4 form-card">
+                        <div class="card-body p-4 p-lg-5">
+                            <h5 class="fw-bold text-dark-blue mb-4 pb-2 border-bottom">Dokumen & Ringkasan</h5>
+                            <div class="row g-4">
+                                <div class="col-12">
+                                    <label class="form-label-custom">Tentang Saya (Ringkasan Profesional)</label>
+                                    <textarea class="form-control form-control-modern" name="tentang_saya" rows="4" placeholder="Jelaskan keahlian dan pengalaman singkat Anda...">{{ old('tentang_saya', $profile->tentang_saya) }}</textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label-custom">Upload Foto KTP</label>
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="flex-grow-1">
+                                            <input type="file" class="form-control form-control-modern" name="foto_ktp" accept="image/*">
+                                        </div>
+                                        @if ($profile->foto_ktp)
+                                            <a href="{{ asset('storage/' . $profile->foto_ktp) }}" target="_blank" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                                                <i class="bi bi-eye me-1"></i> Lihat KTP
+                                            </a>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- 5. KEAHLIAN (SKILLS) --}}
+                    <div id="section-keahlian" class="card border-0 shadow-sm mb-5 form-card">
+                        <div class="card-body p-4 p-lg-5">
+                            <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+                                <h5 class="fw-bold text-dark-blue mb-0">Keahlian (Skills)</h5>
+                                <button type="button" class="btn btn-orange-soft btn-sm rounded-pill px-3 fw-bold" data-bs-toggle="modal" data-bs-target="#keahlianModal">
+                                    <i class="bi bi-plus-lg me-1"></i> Tambah / Edit
+                                </button>
+                            </div>
+                            
+                            <div class="keahlian-container bg-light p-4 rounded-4 text-center border border-dashed-orange">
+                                @if($profile->keahlian->count() > 0)
+                                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                                        @foreach($profile->keahlian as $k)
+                                            <span class="badge bg-white text-dark border shadow-sm px-3 py-2 rounded-pill fw-normal">
+                                                {{ $k->nama_keahlian }}
+                                                <i class="bi bi-check-circle-fill text-success ms-2"></i>
+                                            </span>
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <div class="py-3">
+                                        <i class="bi bi-tools display-4 text-muted opacity-25 mb-2 d-block"></i>
+                                        <p class="text-muted small mb-0">Belum ada keahlian ditambahkan.</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- TOMBOL SIMPAN FLOATING DI BAWAH --}}
+                    <div class="sticky-save-bar d-flex justify-content-end p-3 rounded-pill shadow-lg bg-white border">
+                        <button type="button" class="btn btn-light rounded-pill px-4 me-2 fw-bold text-muted" onclick="window.history.back()">Batal</button>
+                        <button type="submit" class="btn btn-orange rounded-pill px-5 fw-bold shadow-sm">
+                            <i class="bi bi-save2 me-2"></i> Simpan Perubahan
+                        </button>
+                    </div>
+
                 </div>
             </div>
 
             {{-- MODAL KEAHLIAN --}}
             <div class="modal fade" id="keahlianModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                    <div class="modal-content rounded-4 border-0 shadow">
-                        <div class="modal-header border-bottom-0">
-                            <h5 class="modal-title fw-bold" id="keahlianModalLabel">Pilih Keahlian</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+                        <div class="modal-header bg-dark-blue text-white border-0 py-3">
+                            <h5 class="modal-title fw-bold"><i class="bi bi-stars me-2 text-orange"></i> Pilih Keahlian</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                         </div>
-                        <div class="modal-body pt-0">
-                            <div class="row g-4">
+                        <div class="modal-body p-4 bg-light">
+                            <div class="row g-3">
                                 @forelse ($bidangKeahlianGrouped as $bidang)
                                     <div class="col-md-6">
-                                        <div class="p-3 bg-light rounded-3 h-100">
-                                            <h6 class="fw-bold text-dark mb-3 border-bottom pb-2">{{ $bidang->nama_bidang }}</h6>
-                                            <div class="d-flex flex-wrap gap-2">
-                                                @foreach ($bidang->keahlian as $keahlian)
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" name="keahlian[]" id="keahlian-{{ $keahlian->id }}" value="{{ $keahlian->id }}" 
-                                                        {{ $profile->keahlian->contains($keahlian->id) ? 'checked' : '' }}>
-                                                        <label class="form-check-label small" for="keahlian-{{ $keahlian->id }}">{{ $keahlian->nama_keahlian }}</label>
-                                                    </div>
-                                                @endforeach
+                                        <div class="card h-100 border-0 shadow-sm rounded-4">
+                                            <div class="card-header bg-white border-0 fw-bold text-dark-blue pt-3 pb-0">
+                                                {{ $bidang->nama_bidang }}
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    @foreach ($bidang->keahlian as $keahlian)
+                                                        <div class="position-relative">
+                                                            <input type="checkbox" class="btn-check" name="keahlian[]" 
+                                                                   id="k-{{ $keahlian->id }}" value="{{ $keahlian->id }}" 
+                                                                   {{ $profile->keahlian->contains($keahlian->id) ? 'checked' : '' }}>
+                                                            <label class="btn btn-outline-secondary btn-sm rounded-pill border-0 bg-light text-dark small" 
+                                                                   for="k-{{ $keahlian->id }}">{{ $keahlian->nama_keahlian }}</label>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -240,13 +306,14 @@
                                 @endforelse
                             </div>
                         </div>
-                        <div class="modal-footer border-top-0">
-                            <button type="button" class="btn btn-light rounded-pill" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-orange rounded-pill px-4">Simpan Pilihan</button>
+                        <div class="modal-footer border-0 bg-white shadow-top justify-content-center py-3">
+                            <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-orange rounded-pill px-5 fw-bold shadow-sm">Simpan Pilihan</button>
                         </div>
                     </div>
                 </div>
             </div>
+
         </form>
     </div>
 </div>
@@ -254,102 +321,101 @@
 
 @push('styles')
 <style>
-    /* === General Profile Style === */
-    body { background-color: #f8f9fa; }
-    .text-orange { color: #F39C12 !important; }
-    .bg-orange { background-color: #F39C12 !important; }
-    .btn-orange { background-color: #F39C12; border-color: #F39C12; color: #fff; }
-    .btn-orange:hover { background-color: #d8890b; border-color: #d8890b; color: #fff; }
-
-    /* Sidebar Desktop */
-    .profile-sidebar {
-        background-color: #fff;
-        border-radius: 1rem;
-        border: 1px solid #e9ecef;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-        overflow: hidden;
+    :root {
+        --c-dark-blue: #22374e;
+        --c-orange: #F39C12;
+        --c-gray-bg: #f8f9fa;
     }
-    .profile-picture-card { padding: 2rem 1.5rem; }
-    .profile-picture-wrapper {
-        position: relative; width: 140px; height: 140px;
-        border-radius: 50%; overflow: hidden;
-        background-color: #f1f1f1; border: 4px solid white;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    .profile-picture-wrapper img { width: 100%; height: 100%; object-fit: cover; }
-    .profile-picture-edit-button {
-        position: absolute; bottom: 0; width: 100%; height: 40px;
-        background: rgba(0,0,0,0.5); color: white;
-        display: flex; align-items: center; justify-content: center;
-        cursor: pointer; transition: background 0.2s; opacity: 0;
-    }
-    .profile-picture-wrapper:hover .profile-picture-edit-button { opacity: 1; }
     
-    .profile-nav-wrapper { padding: 1rem; background-color: #fff; }
-    .profile-nav .list-group-item { border: none; padding: 0; margin-bottom: 5px; }
-    .profile-nav .list-group-item a {
-        display: block; padding: 0.8rem 1.2rem;
-        text-decoration: none; color: #6c757d; font-weight: 500;
-        border-radius: 0.5rem; transition: all 0.2s;
-    }
-    .profile-nav .list-group-item a:hover, .profile-nav .list-group-item a.active {
-        background-color: #FFF8E1; color: #F39C12; font-weight: 600;
-    }
-    .profile-nav .list-group-item a.active i { color: #F39C12; }
+    body { background-color: var(--c-gray-bg); }
 
-    /* Main Form */
-    .main-form-card {
-        background-color: #fff; border-radius: 1rem; padding: 2.5rem;
-        border: 1px solid #e9ecef; box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    /* HERO BANNER */
+    .profile-hero-bg {
+        background: linear-gradient(135deg, #1a2c3d 0%, #2c3e50 100%);
+        height: 280px; width: 100%;
+        position: relative; overflow: hidden;
+        border-radius: 0 0 50% 50% / 20px; /* Lengkungan halus di bawah */
     }
-    .form-section-title { margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 2px solid #f1f1f1; display: inline-block; }
-    .skill-tag {
-        background-color: #fff; border: 1px solid #e9ecef; color: #495057;
-        padding: 0.6em 1.2em; font-size: 0.9rem; border-radius: 50px;
-        font-weight: 500; transition: all 0.2s;
+    .hero-pattern {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 30px 30px; opacity: 0.6;
     }
-    .skill-tag:hover { border-color: #F39C12; color: #F39C12; }
+    
+    .profile-content-wrapper { margin-top: -100px; position: relative; z-index: 10; }
 
-    /* === RESPONSIVE MOBILE === */
+    /* SIDEBAR FOTO */
+    .sticky-sidebar { position: sticky; top: 20px; }
+    .card-profile-sidebar { border-radius: 20px; overflow: hidden; background: white; }
+    
+    .profile-upload-wrapper {
+        width: 140px; height: 140px; position: relative;
+        border-radius: 50%; overflow: hidden;
+        border: 5px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+        cursor: pointer;
+    }
+    .profile-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+    .upload-overlay {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6); display: flex; flex-direction: column;
+        justify-content: center; align-items: center; opacity: 0;
+        transition: opacity 0.3s; cursor: pointer;
+    }
+    .profile-upload-wrapper:hover .upload-overlay { opacity: 1; }
+    .profile-upload-wrapper:hover .profile-img { transform: scale(1.1); }
+
+    .bg-gradient-orange { background: linear-gradient(90deg, #F39C12, #ffc107); }
+
+    /* NAVIGASI SIDEBAR */
+    .active-nav {
+        background-color: #FFF8E1 !important;
+        color: var(--c-orange) !important;
+        border-left: 4px solid var(--c-orange) !important;
+        font-weight: 700;
+    }
+    .list-group-item { border: none; border-bottom: 1px solid #f1f1f1; transition: all 0.2s; }
+    .list-group-item:hover { background-color: #f8f9fa; padding-left: 1.8rem !important; }
+
+    /* FORM STYLES (MODERN) */
+    .form-card { border-radius: 20px; overflow: hidden; transition: transform 0.2s; }
+    .form-label-custom { font-weight: 600; font-size: 0.85rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    
+    .form-control-modern, .form-select-modern {
+        background-color: #f8fafc; border: 2px solid #e2e8f0;
+        border-radius: 12px; padding: 12px 16px;
+        font-size: 0.95rem; color: #334155; transition: all 0.3s;
+    }
+    .form-control-modern:focus, .form-select-modern:focus {
+        background-color: white; border-color: var(--c-orange);
+        box-shadow: 0 0 0 4px rgba(243, 156, 18, 0.1); outline: none;
+    }
+    .cursor-not-allowed { cursor: not-allowed !important; opacity: 0.7; }
+
+    /* KEAHLIAN STYLE */
+    .btn-check:checked + .btn-outline-secondary {
+        background-color: var(--c-orange); color: white; border-color: var(--c-orange);
+        box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3);
+    }
+    .border-dashed-orange { border: 2px dashed #fcd34d; background: #fffbeb; }
+    .btn-orange-soft { background: #fff7ed; color: var(--c-orange); border: 1px solid #ffedd5; }
+    .btn-orange-soft:hover { background: var(--c-orange); color: white; }
+
+    /* STICKY SAVE BAR */
+    .sticky-save-bar {
+        position: sticky; bottom: 20px; z-index: 99;
+        background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .btn-orange { background-color: var(--c-orange); border: none; color: white; transition: 0.3s; }
+    .btn-orange:hover { background-color: #e67e22; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(243, 156, 18, 0.3); }
+
+    /* RESPONSIVE */
     @media (max-width: 991.98px) {
-        /* Sidebar berubah jadi header profile di atas */
-        .profile-sidebar {
-            position: static; /* Reset sticky */
-            margin-bottom: 1.5rem;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-        }
-        .profile-picture-card { padding: 1.5rem; border-bottom: none; }
-        
-        /* Menu navigasi jadi horizontal scroll */
-        .profile-nav-wrapper {
-            padding: 0.5rem 1rem 1rem;
-            border-top: 1px solid #eee;
-            overflow-x: auto; /* Scroll samping */
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch; /* Smooth scroll iOS */
-        }
-        .profile-nav {
-            flex-direction: row; /* Ubah jadi baris */
-            display: flex;
-            padding-bottom: 5px;
-        }
-        .profile-nav .list-group-item {
-            margin-right: 10px;
-            width: auto;
-        }
-        .profile-nav .list-group-item a {
-            background-color: #f8f9fa;
-            border: 1px solid #eee;
-            padding: 0.6rem 1rem;
-            font-size: 0.9rem;
-        }
-        /* Hide scrollbar tapi tetap bisa scroll */
-        .profile-nav-wrapper::-webkit-scrollbar { height: 4px; }
-        .profile-nav-wrapper::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
-        
-        .main-form-card { padding: 1.5rem; }
+        .profile-hero-bg { height: 220px; margin-bottom: 2rem; }
+        .profile-content-wrapper { margin-top: -60px; }
+        .sticky-sidebar { position: static; }
+        .sticky-save-bar { bottom: 10px; flex-direction: column-reverse; gap: 10px; }
+        .sticky-save-bar button { width: 100%; }
     }
 </style>
 @endpush
@@ -357,34 +423,39 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Preview Image
-        const imageInput = document.getElementById('foto_profil_input');
-        const imagePreview = document.getElementById('profileImagePreview');
-        if (imageInput && imagePreview) {
-            imageInput.addEventListener('change', function(event) {
-                if (event.target.files && event.target.files[0]) {
+        // 1. Preview Image Realtime
+        const imgInput = document.getElementById('foto_profil_input');
+        const imgPreview = document.getElementById('profileImagePreview');
+        if(imgInput && imgPreview) {
+            imgInput.addEventListener('change', function(e) {
+                if(e.target.files && e.target.files[0]) {
                     const reader = new FileReader();
-                    reader.onload = function(e) { imagePreview.src = e.target.result; }
-                    reader.readAsDataURL(event.target.files[0]);
+                    reader.onload = function(e) { imgPreview.src = e.target.result; }
+                    reader.readAsDataURL(e.target.files[0]);
                 }
             });
         }
 
-        // Scrollspy Sederhana
-        const navLinks = document.querySelectorAll('.profile-nav a');
-        navLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
+        // 2. Smooth Scroll Navigasi (Desktop)
+        document.querySelectorAll('.list-group-item-action').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    // Update active state
-                    navLinks.forEach(nav => nav.classList.remove('active'));
-                    this.classList.add('active');
+                // Hapus active class semua
+                document.querySelectorAll('.list-group-item-action').forEach(el => el.classList.remove('active-nav'));
+                // Tambah ke yg diklik
+                this.classList.add('active-nav');
 
-                    // Scroll to element
-                    const offsetTop = targetElement.offsetTop - 100; // Offset untuk header
-                    window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+                const targetId = this.getAttribute('href');
+                const targetEl = document.querySelector(targetId);
+                if(targetEl) {
+                    // Scroll dengan offset header
+                    const offset = 100; 
+                    const bodyRect = document.body.getBoundingClientRect().top;
+                    const elementRect = targetEl.getBoundingClientRect().top;
+                    const elementPosition = elementRect - bodyRect;
+                    const offsetPosition = elementPosition - offset;
+
+                    window.scrollTo({ top: offsetPosition, behavior: "smooth" });
                 }
             });
         });

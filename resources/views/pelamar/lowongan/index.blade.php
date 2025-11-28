@@ -3,7 +3,6 @@
 @section('title', 'Cari Lowongan')
 
 @section('content')
-{{-- HAPUS FOOTER AGAR TAMPILAN FULL HEIGHT --}}
 <style>footer.footer { display: none !important; }</style>
 
 {{-- WRAPPER UTAMA --}}
@@ -11,10 +10,12 @@
     <div class="container-fluid h-100 p-0">
         <div class="row h-100 g-0">
             
-            {{-- SIDEBAR KIRI: LIST LOWONGAN --}}
+            {{-- ===================================
+                 SIDEBAR KIRI (LIST LOWONGAN)
+                 =================================== --}}
             <div class="col-lg-4 col-xl-3 border-end bg-white d-flex flex-column h-100 position-relative z-2 shadow-sm" id="jobSidebar">
                 
-                {{-- 1. Header Filter --}}
+                {{-- Header Filter --}}
                 <div class="sidebar-header p-3 border-bottom bg-white">
                     <h5 class="fw-bold text-dark-blue mb-3">Lowongan Kerja</h5>
                     <form action="{{ route('lowongan.index') }}" method="GET">
@@ -36,7 +37,7 @@
                     </form>
                 </div>
 
-                {{-- 2. List Lowongan (Scrollable) --}}
+                {{-- List Scrollable --}}
                 <div class="sidebar-list flex-grow-1 overflow-auto custom-scrollbar">
                     @forelse($lowonganList as $lowongan)
                         @php
@@ -44,7 +45,6 @@
                             $isActive = ($detailLowongan && $detailLowongan->id == $lowongan->id);
                         @endphp
 
-                        {{-- Perhatikan class 'job-card' ini dipakai di JS --}}
                         <div class="job-card p-3 border-bottom cursor-pointer position-relative {{ $isActive ? 'active-job' : '' }}" 
                              data-id="{{ $lowongan->id }}">
                             
@@ -56,15 +56,20 @@
                                 <img src="{{ $lowongan->perusahaan->logo_perusahaan ? asset('storage/' . $lowongan->perusahaan->logo_perusahaan) : 'https://placehold.co/60x60/f8f9fa/22374e?text=' . substr($lowongan->perusahaan->nama_perusahaan, 0, 1) }}" 
                                      class="rounded-3 object-fit-contain border bg-white" style="width: 48px; height: 48px;">
                                 
-                                <div class="overflow-hidden">
-                                    <h6 class="mb-1 fw-bold text-dark-blue text-truncate">{{ $lowongan->judul_lowongan }}</h6>
+                                <div class="overflow-hidden w-100">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <h6 class="mb-1 fw-bold text-dark-blue text-truncate">{{ $lowongan->judul_lowongan }}</h6>
+                                        @if($isPremium)
+                                            <i class="bi bi-patch-check-fill text-warning ms-1" style="font-size: 0.8rem;"></i>
+                                        @endif
+                                    </div>
                                     <p class="mb-1 text-muted small text-truncate">{{ $lowongan->perusahaan->nama_perusahaan }}</p>
                                     
                                     <div class="d-flex align-items-center gap-2 mt-2">
-                                        <span class="badge bg-light text-secondary border fw-normal px-2 py-1" style="font-size: 0.7rem;">
-                                            {{ Str::limit($lowongan->domisili, 12) }}
+                                        <span class="badge bg-light text-secondary border fw-normal px-2 py-1" style="font-size: 0.65rem;">
+                                            <i class="bi bi-geo-alt me-1"></i> {{ Str::limit($lowongan->domisili, 12) }}
                                         </span>
-                                        <small class="text-muted ms-auto" style="font-size: 0.7rem;">{{ $lowongan->created_at->diffForHumans(null, true) }}</small>
+                                        <small class="text-muted ms-auto" style="font-size: 0.65rem;">{{ $lowongan->created_at->diffForHumans(null, true) }}</small>
                                     </div>
                                 </div>
                             </div>
@@ -77,22 +82,15 @@
                 </div>
             </div>
 
-            {{-- PANEL KANAN: DETAIL CONTENT --}}
-            <div class="col-lg-8 col-xl-9 h-100 bg-light position-relative job-detail-panel" id="jobDetailPanel">
-                
-                {{-- Tombol Back Mobile --}}
-                <div class="d-lg-none p-3 bg-white border-bottom shadow-sm d-flex align-items-center sticky-top z-3">
-                    <button class="btn btn-sm btn-light border me-3" id="btnBackToList"><i class="bi bi-arrow-left"></i></button>
-                    <span class="fw-bold">Detail Lowongan</span>
-                </div>
-
-                {{-- Wrapper Konten (Ini yang di-update via AJAX) --}}
-                <div id="job-detail-wrapper" class="h-100 overflow-auto custom-scrollbar">
+            {{-- ===================================
+                 PANEL KANAN (DESKTOP ONLY)
+                 =================================== --}}
+            <div class="col-lg-8 col-xl-9 h-100 bg-light d-none d-lg-block position-relative" id="jobDetailPanelDesktop">
+                <div id="job-detail-wrapper-desktop" class="h-100 overflow-auto custom-scrollbar">
                     @include('pelamar.lowongan.partials._job-detail')
                 </div>
-
-                {{-- Loading Spinner --}}
-                <div id="loading-spinner" class="position-absolute top-50 start-50 translate-middle d-none">
+                {{-- Spinner Desktop --}}
+                <div id="loading-spinner-desktop" class="position-absolute top-50 start-50 translate-middle d-none">
                     <div class="spinner-border text-orange" role="status"></div>
                 </div>
             </div>
@@ -100,6 +98,29 @@
         </div>
     </div>
 </div>
+
+{{-- ===================================
+     MODAL DETAIL FULLSCREEN (MOBILE ONLY)
+     =================================== --}}
+<div class="modal fade" id="mobileJobDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content bg-light">
+            {{-- Tombol Close Floating (Akan menimpa banner) --}}
+            <button type="button" class="btn btn-light rounded-circle shadow position-fixed top-0 start-0 m-3 z-3 border" 
+                    data-bs-dismiss="modal" style="width: 40px; height: 40px;">
+                <i class="bi bi-arrow-left fs-5"></i>
+            </button>
+
+            <div class="modal-body p-0 position-relative" id="job-detail-wrapper-mobile">
+                {{-- Konten Detail akan di-load di sini via AJAX --}}
+                <div class="d-flex h-100 justify-content-center align-items-center">
+                    <div class="spinner-border text-orange" role="status"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('styles')
@@ -108,109 +129,105 @@
     body { overflow: hidden; }
     .job-dashboard-wrapper { height: calc(100vh - 76px); background-color: #f4f6f9; }
     .input-group-solid .input-group-text, .input-group-solid .form-control { background-color: #f8f9fa; }
+    
     .job-card { transition: all 0.2s; border-left: 4px solid transparent; }
     .job-card:hover { background-color: #f8f9fa; }
     .active-job { background-color: #f0f7ff !important; border-left-color: var(--c-dark-blue); }
     .premium-corner { position: absolute; top: 0; right: 0; width: 0; height: 0; border-top: 12px solid var(--c-orange); border-left: 12px solid transparent; }
-    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #ced4da; border-radius: 10px; }
-    @media (max-width: 991.98px) {
-        .job-detail-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1050; transform: translateX(100%); transition: transform 0.3s ease; background: white; }
-        .job-detail-panel.show { transform: translateX(0); }
-    }
+
+    /* Modal Fullscreen Fix */
+    .modal-fullscreen .modal-body { overflow-y: auto; }
 </style>
 @endpush
 
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Selector
-    const listContainer = document.querySelector('.sidebar-list'); 
-    const detailPanel = document.getElementById('jobDetailPanel');
-    const detailWrapper = document.getElementById('job-detail-wrapper');
-    const loadingSpinner = document.getElementById('loading-spinner');
-    const btnBack = document.getElementById('btnBackToList');
+    const listContainer = document.querySelector('.sidebar-list');
+    
+    // Desktop Elements
+    const detailWrapperDesktop = document.getElementById('job-detail-wrapper-desktop');
+    const loadingSpinnerDesktop = document.getElementById('loading-spinner-desktop');
+    
+    // Mobile Elements
+    const mobileModalElement = document.getElementById('mobileJobDetailModal');
+    const mobileModal = new bootstrap.Modal(mobileModalElement);
+    const detailWrapperMobile = document.getElementById('job-detail-wrapper-mobile');
 
-    // --- FUNGSI LOAD DETAIL (AJAX) ---
-    async function loadJobDetail(id) {
-        // UI Loading State
-        detailWrapper.style.opacity = '0.3';
-        detailWrapper.style.pointerEvents = 'none';
-        if(loadingSpinner) loadingSpinner.classList.remove('d-none');
+    // --- FUNGSI LOAD DATA AJAX ---
+    async function loadJobDetail(id, isMobile) {
+        const wrapper = isMobile ? detailWrapperMobile : detailWrapperDesktop;
+        const spinner = isMobile ? null : loadingSpinnerDesktop; // Mobile spinner built-in di HTML awal
+
+        // UI State
+        wrapper.style.opacity = isMobile ? '1' : '0.5'; // Mobile jgn transparan krn modal baru buka
+        if(!isMobile && spinner) spinner.classList.remove('d-none');
 
         try {
-            // Fetch Data
             const res = await fetch(`/lowongan/detail/${id}`);
-            if(!res.ok) throw new Error("Gagal load data");
+            if(!res.ok) throw new Error("Gagal");
             const html = await res.text();
             
-            // Masukkan HTML ke Wrapper
-            detailWrapper.innerHTML = html;
-            detailWrapper.scrollTop = 0; // Reset scroll ke atas
-
-            // === FIX MODAL HILANG ===
-            // Kita pindahkan Modal dari dalam wrapper (yg ada scrollnya) ke Body
-            // Supaya tidak kepotong/hidden
-            const modalEl = detailWrapper.querySelector('.modal');
-            if(modalEl) {
-                document.body.appendChild(modalEl);
+            wrapper.innerHTML = html;
+            
+            // PENTING: Scroll ke atas setelah load
+            if(isMobile) {
+                // Cari modal-body untuk di-scroll
+                const modalBody = mobileModalElement.querySelector('.modal-body');
+                if(modalBody) modalBody.scrollTop = 0;
+            } else {
+                wrapper.scrollTop = 0;
             }
+
+            // --- RE-INITIALIZE MODAL COMPANY ---
+            // Karena konten baru dimasukkan via AJAX, modal profil perusahaan yang ada di dalam detail
+            // harus dipindahkan ke document.body agar tidak tertutup container scroll.
+            const companyModals = wrapper.querySelectorAll('.modal');
+            companyModals.forEach(m => document.body.appendChild(m));
 
         } catch (err) {
             console.error(err);
-            detailWrapper.innerHTML = `<div class="h-100 d-flex flex-column justify-content-center align-items-center text-muted">
-                <i class="bi bi-wifi-off display-4 mb-3"></i>
-                <p>Gagal memuat lowongan. Periksa koneksi Anda.</p>
-            </div>`;
+            wrapper.innerHTML = '<div class="p-5 text-center text-muted">Gagal memuat data.</div>';
         } finally {
-            // Reset UI State
-            detailWrapper.style.opacity = '1';
-            detailWrapper.style.pointerEvents = 'auto';
-            if(loadingSpinner) loadingSpinner.classList.add('d-none');
+            wrapper.style.opacity = '1';
+            if(!isMobile && spinner) spinner.classList.add('d-none');
         }
     }
 
-    // --- EVENT LISTENER KLIK LOWONGAN ---
+    // --- EVENT LISTENER KLIK LIST ---
     if(listContainer) {
         listContainer.addEventListener('click', e => {
-            // Cari elemen kartu terdekat yang diklik
             const card = e.target.closest('.job-card'); 
-            
             if(card) {
-                // 1. Hapus 'active' dari semua kartu
+                const id = card.getAttribute('data-id');
+                const isMobile = window.innerWidth < 992;
+
+                // Update Active State (Visual)
                 document.querySelectorAll('.job-card').forEach(c => c.classList.remove('active-job'));
-                
-                // 2. Tambah 'active' ke kartu yang diklik
                 card.classList.add('active-job');
 
-                // 3. Panggil fungsi Load AJAX
-                // Pastikan attribute data-id ada di HTML
-                const jobId = card.getAttribute('data-id');
-                if(jobId) loadJobDetail(jobId);
-
-                // 4. (Mobile Only) Buka Panel Kanan
-                if(window.innerWidth < 992 && detailPanel) {
-                    detailPanel.classList.add('show');
+                if (isMobile) {
+                    // Mobile: Buka Modal Dulu, baru Load konten
+                    detailWrapperMobile.innerHTML = '<div class="d-flex h-100 justify-content-center align-items-center"><div class="spinner-border text-orange"></div></div>';
+                    mobileModal.show();
+                    loadJobDetail(id, true);
+                } else {
+                    // Desktop: Load ke panel kanan
+                    loadJobDetail(id, false);
                 }
             }
         });
     }
-
-    // Tombol Back (Mobile)
-    if(btnBack) {
-        btnBack.addEventListener('click', () => {
-            if(detailPanel) detailPanel.classList.remove('show');
-        });
-    }
 });
 
-// --- FUNGSI BOOKMARK (SIMPAN) ---
-// Taruh di global scope agar bisa dipanggil onclick=""
+// --- FUNGSI BOOKMARK (GLOBAL) ---
 async function toggleBookmark(id) {
-    const buttons = document.querySelectorAll(`.btn-bookmark-${id}`);
     const icons = document.querySelectorAll(`.icon-bookmark-${id}`);
-
-    // UI Optimistic Update (Ubah dulu sebelum request selesai)
+    
+    // Optimistic UI Update
     let isSaved = false;
     if(icons.length > 0) isSaved = icons[0].classList.contains('bi-bookmark-fill');
 
@@ -225,7 +242,7 @@ async function toggleBookmark(id) {
     });
 
     try {
-        const response = await fetch(`/lowongan/${id}/simpan`, { 
+        await fetch(`/lowongan/${id}/simpan`, { 
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -234,13 +251,8 @@ async function toggleBookmark(id) {
             },
             body: JSON.stringify({})
         });
-        if (!response.ok) throw new Error('Gagal');
     } catch (error) {
         alert('Gagal menyimpan status.');
-        // Revert UI jika gagal
-        icons.forEach(icon => {
-            // Logika balikkan icon...
-        });
     }
 }
 </script>
