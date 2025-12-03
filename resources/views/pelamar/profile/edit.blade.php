@@ -80,6 +80,11 @@
                                              style="width: {{ $profile->kelengkapan_profil ?? 0 }}%;"></div>
                                     </div>
                                 </div>
+                                <div class="mt-4 d-grid">
+                                    <a href="{{ route('pelamar.profile.download_cv') }}" class="btn btn-outline-dark rounded-pill fw-bold" target="_blank">
+                                        <i class="bi bi-file-earmark-pdf-fill text-danger me-2"></i> Download CV (PDF)
+                                    </a>
+                                </div>
                             </div>
                         </div>
 

@@ -21,29 +21,41 @@ class AktivitasController extends Controller
             return redirect()->route('pelamar.profile.edit')->with('error', 'Lengkapi profil Anda terlebih dahulu.');
         }
 
-        // Mengambil data pekerjaan yang disimpan dengan paginasi
+        // --- 1. DATA UTAMA (TABS) ---
         $pekerjaanDisimpan = $pelamar->lowonganTersimpan()
                                      ->with('perusahaan')
                                      ->latest()
                                      ->paginate(5, ['*'], 'disimpanPage');
 
-        // Mengambil data riwayat lamaran dengan paginasi
-        // Perbaikan: Menggunakan nama relasi yang benar, yaitu 'lowongan'
         $riwayatLamaran = $pelamar->lamaran()
                                  ->with('lowongan.perusahaan')
                                  ->latest()
                                  ->paginate(5, ['*'], 'lamaranPage');
 
-        // --- LOGIKA BARU UNTUK STATISTIK ---
-        $totalLamaran = $pelamar->lamaran()->count();
-        $dilihatPerusahaan = $pelamar->lamaran()->where('status', 'dilihat')->count();
-        // --- AKHIR LOGIKA BARU ---
+        // --- 2. DATA STATISTIK LENGKAP (UNTUK GRAFIK) ---
+        $stats = [
+            'total'     => $pelamar->lamaran()->count(),
+            'dilihat'   => $pelamar->lamaran()->where('status', 'dilihat')->count(),
+            'pending'   => $pelamar->lamaran()->where('status', 'pending')->count(),
+            'diterima'  => $pelamar->lamaran()->where('status', 'diterima')->count(),
+            'ditolak'   => $pelamar->lamaran()->where('status', 'ditolak')->count(),
+            // Jika ada status interview, tambahkan di sini
+            'interview' => $pelamar->lamaran()->where('status', 'interview')->count() 
+        ];
+
+        // Format data untuk ApexCharts (Array angka)
+        $chartData = [
+            $stats['pending'], 
+            $stats['dilihat'], // Kita anggap 'dilihat' sebagai progress
+            $stats['diterima'], 
+            $stats['ditolak']
+        ];
 
         return view('pelamar.aktivitas.index', compact(
             'pekerjaanDisimpan',
             'riwayatLamaran',
-            'totalLamaran',
-            'dilihatPerusahaan'
+            'stats',
+            'chartData'
         ));
     }
     public function destroyLamaran(Lamaran $lamaran) // Laravel otomatis mencari Lamaran berdasarkan ID di URL

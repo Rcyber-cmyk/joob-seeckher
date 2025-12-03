@@ -14,6 +14,7 @@ use App\Models\ProfilePelamar;
 use App\Models\ProfilePerusahaan;
 use App\Models\Keahlian;
 use App\Models\BidangKeahlian;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProfileController 
 {
@@ -215,5 +216,40 @@ class ProfileController
         }
 
         return Redirect::route('pelamar.profile.edit')->with('error', 'Foto KTP tidak ditemukan atau sudah dihapus.');
+    }
+    public function downloadCv()
+    {
+        $user = Auth::user();
+        $profile = $user->profilePelamar;
+
+        // Validasi
+        if (!$profile || !$profile->nama_lengkap) {
+            return redirect()->back()->with('error', 'Lengkapi profil Anda terlebih dahulu.');
+        }
+
+        // AMBIL PATH GAMBAR (PENTING UNTUK PDF)
+        $fotoPath = null;
+        if ($profile->foto_profil) {
+            // Kita pakai public_path() agar DomPDF bisa baca file di server lokal
+            $path = public_path('storage/' . $profile->foto_profil);
+            if (file_exists($path)) {
+                $fotoPath = $path;
+            }
+        }
+
+        // Masukkan ke data
+        $data = [
+            'profile' => $profile,
+            'email' => $user->email,
+            'keahlian' => $profile->keahlian,
+            'fotoPath' => $fotoPath // Kirim path gambar ke view
+        ];
+
+        $pdf = Pdf::loadView('pelamar.profile.cv_pdf', $data);
+        $pdf->setPaper('a4', 'portrait');
+
+        // Hilangkan spasi di nama file
+        $fileName = 'CV_' . preg_replace('/[^A-Za-z0-9\-]/', '_', $profile->nama_lengkap) . '.pdf';
+        return $pdf->stream($fileName);
     }
 }

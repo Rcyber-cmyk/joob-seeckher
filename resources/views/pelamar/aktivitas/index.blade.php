@@ -1,5 +1,3 @@
-{{-- /resources/views/pelamar/aktivitas/index.blade.php --}}
-
 @extends('pelamar.layouts.app')
 
 @section('title', 'Aktivitas Saya')
@@ -8,204 +6,241 @@
 {{-- HAPUS FOOTER --}}
 <style>footer.footer { display: none !important; }</style>
 
-<div class="activity-page bg-light" style="min-height: 100vh;">
-    <div class="container py-5">
+<div class="dashboard-activity bg-light-gray min-vh-100 pb-5">
+    
+    {{-- HEADER DASHBOARD --}}
+    <div class="dashboard-header bg-dark-blue text-white pt-5 pb-5 px-4 rounded-bottom-5 position-relative overflow-hidden">
+        <div class="container position-relative z-2">
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <div>
+                    <span class="badge bg-white bg-opacity-10 mb-2 px-3 py-1 rounded-pill fw-normal">Dashboard Pelamar</span>
+                    <h2 class="fw-black mb-1">Aktivitas & Lamaran</h2>
+                    <p class="text-white-50 mb-0">Pantau progres karirmu secara real-time.</p>
+                </div>
+            </div>
+        </div>
+        <div class="header-pattern"></div>
+    </div>
+
+    <div class="container mt-n5 position-relative z-3">
         
-        {{-- Header Halaman --}}
-        <div class="row mb-4 align-items-end">
-            <div class="col-md-8">
-                <h2 class="fw-bold text-dark mb-1">Aktivitas Saya</h2>
-                <p class="text-muted mb-0">Pantau status lamaran dan lowongan yang Anda simpan.</p>
+        {{-- 1. STATS & CHART SECTION --}}
+        {{-- 1. STATS CARDS (GRID 4) --}}
+        <div class="row g-3 mb-4">
+            {{-- Card Total --}}
+            <div class="col-6 col-md-3">
+                <div class="stat-card bg-white rounded-4 shadow-sm">
+                    <div class="icon-box bg-primary bg-opacity-10 text-primary">
+                        <i class="bi bi-briefcase-fill"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark-blue mb-0">{{ $stats['total'] }}</h3>
+                    <small class="text-muted fw-bold text-uppercase ls-1" style="font-size: 0.65rem;">Total Lamaran</small>
+                </div>
+            </div>
+
+            {{-- Card Interview --}}
+            <div class="col-6 col-md-3">
+                <div class="stat-card bg-white rounded-4 shadow-sm">
+                    <div class="icon-box bg-warning bg-opacity-10 text-warning">
+                        <i class="bi bi-calendar-check-fill"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark-blue mb-0">{{ $stats['interview'] }}</h3>
+                    <small class="text-muted fw-bold text-uppercase ls-1" style="font-size: 0.65rem;">Jadwal Interview</small>
+                </div>
+            </div>
+
+            {{-- Card Diterima --}}
+            <div class="col-6 col-md-3">
+                <div class="stat-card bg-white rounded-4 shadow-sm">
+                    <div class="icon-box bg-success bg-opacity-10 text-success">
+                        <i class="bi bi-trophy-fill"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark-blue mb-0">{{ $stats['diterima'] }}</h3>
+                    <small class="text-muted fw-bold text-uppercase ls-1" style="font-size: 0.65rem;">Lolos Seleksi</small>
+                </div>
+            </div>
+
+            {{-- Card Disimpan --}}
+            <div class="col-6 col-md-3">
+                <div class="stat-card bg-white rounded-4 shadow-sm">
+                    <div class="icon-box bg-secondary bg-opacity-10 text-secondary">
+                        <i class="bi bi-bookmark-fill"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark-blue mb-0">{{ $pekerjaanDisimpan->total() }}</h3>
+                    <small class="text-muted fw-bold text-uppercase ls-1" style="font-size: 0.65rem;">Disimpan</small>
+                </div>
             </div>
         </div>
 
-        {{-- Tab Navigasi --}}
-        <ul class="nav nav-pills nav-fill custom-nav-pills mb-4 bg-white p-1 rounded-pill shadow-sm border" id="aktivitasTab" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active rounded-pill py-2 fw-bold" id="disimpan-tab" data-bs-toggle="tab" data-bs-target="#disimpan-tab-pane" type="button" role="tab">
-                    <i class="bi bi-bookmark-fill me-2"></i> Pekerjaan Disimpan
+        {{-- 2. TABS NAVIGASI --}}
+        <ul class="nav nav-pills custom-nav-pills mb-4 bg-white p-1 rounded-pill shadow-sm border mx-auto" style="max-width: 600px;" id="aktivitasTab" role="tablist">
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link active rounded-pill py-2 fw-bold w-100" id="lamaran-tab" data-bs-toggle="tab" data-bs-target="#lamaran-tab-pane" type="button" role="tab">
+                    <i class="bi bi-send-fill me-2"></i> Riwayat Lamaran
                 </button>
             </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link rounded-pill py-2 fw-bold" id="lamaran-tab" data-bs-toggle="tab" data-bs-target="#lamaran-tab-pane" type="button" role="tab">
-                    <i class="bi bi-send-fill me-2"></i> Riwayat Lamaran
+            <li class="nav-item flex-fill" role="presentation">
+                <button class="nav-link rounded-pill py-2 fw-bold w-100" id="disimpan-tab" data-bs-toggle="tab" data-bs-target="#disimpan-tab-pane" type="button" role="tab">
+                    <i class="bi bi-bookmark-fill me-2"></i> Disimpan
                 </button>
             </li>
         </ul>
 
         <div class="tab-content" id="aktivitasTabContent">
             
-            {{-- TAB 1: PEKERJAAN DISIMPAN --}}
-            <div class="tab-pane fade show active" id="disimpan-tab-pane" role="tabpanel">
-                <div class="row g-3">
-                    @forelse($pekerjaanDisimpan as $lowongan)
-                    <div class="col-md-6 col-lg-12"> {{-- Grid di mobile, Full di desktop --}}
-                        <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
-                            <div class="card-body p-4 d-lg-flex align-items-center gap-4">
-                                {{-- Logo --}}
-                                <img src="{{ $lowongan->perusahaan->logo_perusahaan ? asset('storage/' . $lowongan->perusahaan->logo_perusahaan) : 'https://placehold.co/60x60/e9ecef/343a40?text=' . substr($lowongan->perusahaan->nama_perusahaan, 0, 1) }}" 
-                                     alt="Logo" class="rounded-3 border p-1 bg-white mb-3 mb-lg-0" style="width: 60px; height: 60px; object-fit: contain;">
-                                
-                                {{-- Detail --}}
-                                <div class="flex-grow-1">
-                                    <h5 class="fw-bold mb-1 text-dark">
-                                        <a href="{{ route('pelamar.lowongan.show', $lowongan->id) }}" class="text-decoration-none text-dark hover-orange">{{ $lowongan->judul_lowongan }}</a>
-                                    </h5>
-                                    <p class="text-muted mb-1 small">{{ $lowongan->perusahaan->nama_perusahaan }} • <i class="bi bi-geo-alt-fill text-orange"></i> {{ $lowongan->domisili }}</p>
-                                    <small class="text-muted fst-italic">Disimpan {{ $lowongan->pivot->created_at->diffForHumans() }}</small>
-                                </div>
-
-                                {{-- Aksi --}}
-                                <div class="d-flex flex-column gap-2 mt-3 mt-lg-0 action-buttons">
-                                    <a href="{{ route('pelamar.lowongan.show', $lowongan->id) }}" class="btn btn-orange btn-sm px-4 rounded-pill">Lihat Detail</a>
-                                    <form action="{{ route('lowongan.toggleSimpan', $lowongan->id) }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="btn btn-outline-danger btn-sm px-4 rounded-pill w-100">Hapus</button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    @empty
-                    <div class="col-12 text-center py-5">
-                        <img src="https://cdn-icons-png.flaticon.com/512/7486/7486754.png" alt="Empty" style="width: 150px; opacity: 0.5;">
-                        <p class="text-muted mt-3">Belum ada pekerjaan yang disimpan.</p>
-                        <a href="{{ route('lowongan.index') }}" class="btn btn-outline-orange rounded-pill px-4">Cari Lowongan</a>
-                    </div>
-                    @endforelse
-                </div>
-                
-                {{-- Pagination --}}
-                <div class="mt-4 d-flex justify-content-center">
-                    {{ $pekerjaanDisimpan->appends(['active_tab' => 'disimpan'])->links() }}
-                </div>
-            </div>
-
-            {{-- TAB 2: RIWAYAT LAMARAN --}}
-            <div class="tab-pane fade" id="lamaran-tab-pane" role="tabpanel">
-                
-                {{-- Statistik Ringkas --}}
-                <div class="row g-3 mb-4">
-                    <div class="col-6">
-                        <div class="card border-0 shadow-sm rounded-4 bg-white text-center p-3">
-                            <h3 class="fw-bold text-orange mb-0">{{ $totalLamaran }}</h3>
-                            <small class="text-muted fw-bold text-uppercase">Total Lamaran</small>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="card border-0 shadow-sm rounded-4 bg-white text-center p-3">
-                            <h3 class="fw-bold text-primary mb-0">{{ $dilihatPerusahaan }}</h3>
-                            <small class="text-muted fw-bold text-uppercase">Dilihat HRD</small>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row g-3">
+            {{-- TAB 1: RIWAYAT LAMARAN --}}
+            <div class="tab-pane fade show active" id="lamaran-tab-pane" role="tabpanel">
+                <div class="row g-4">
                     @forelse($riwayatLamaran as $lamaran)
                     <div class="col-12">
-                        <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 card-hover">
                             
-                            {{-- Header Kartu Lamaran --}}
-                            <div class="d-flex align-items-center justify-content-between mb-3">
+                            {{-- Header Kartu --}}
+                            <div class="d-flex align-items-start justify-content-between mb-4">
                                 <div class="d-flex align-items-center gap-3">
-                                    <img src="{{ $lamaran->lowongan->perusahaan->logo_perusahaan ? asset('storage/' . $lamaran->lowongan->perusahaan->logo_perusahaan) : asset('images/default-logo.png') }}" 
-                                         alt="Logo" class="rounded-3 border p-1 bg-white" style="width: 50px; height: 50px; object-fit: contain;">
+                                    <img src="{{ $lamaran->lowongan->perusahaan->logo_perusahaan ? asset('storage/' . $lamaran->lowongan->perusahaan->logo_perusahaan) : 'https://placehold.co/50x50/e9ecef/343a40?text=Logo' }}" 
+                                         alt="Logo" class="rounded-3 border p-1 bg-white shadow-sm" style="width: 55px; height: 55px; object-fit: contain;">
                                     <div>
-                                        <h6 class="fw-bold mb-0 text-dark">{{ $lamaran->lowongan->judul_lowongan }}</h6>
-                                        <small class="text-muted">{{ $lamaran->lowongan->perusahaan->nama_perusahaan }}</small>
+                                        <h6 class="fw-bold mb-0 text-dark-blue fs-5">{{ $lamaran->lowongan->judul_lowongan }}</h6>
+                                        <p class="text-muted small mb-0">{{ $lamaran->lowongan->perusahaan->nama_perusahaan }}</p>
                                     </div>
                                 </div>
                                 <div class="text-end d-none d-md-block">
-                                    <small class="text-muted d-block">Tanggal Lamar</small>
-                                    <span class="fw-medium text-dark">{{ $lamaran->created_at->format('d M Y') }}</span>
+                                    <span class="badge bg-light text-secondary border px-3 py-2 rounded-pill fw-normal">
+                                        <i class="bi bi-clock me-1"></i> {{ $lamaran->created_at->format('d M Y') }}
+                                    </span>
                                 </div>
                             </div>
 
-                            {{-- Timeline Status --}}
-                            <div class="timeline-wrapper my-4 px-2">
+                            {{-- TIMELINE STATUS (RESPONSIVE) --}}
+                            {{-- TIMELINE STATUS (FIXED ICON) --}}
+                            <div class="timeline-container px-2 mb-3">
                                 @php
-                                    $status = $lamaran->status;
-                                    $step1 = 'active'; // Terkirim selalu aktif
-                                    $step2 = in_array($status, ['dilihat', 'diterima', 'ditolak']) ? 'active' : '';
-                                    $step3 = in_array($status, ['diterima', 'ditolak']) ? 'active' : '';
+                                    $s = $lamaran->status; // pending, dilihat, diterima, ditolak, interview
                                     
-                                    // Warna Step 3
-                                    $step3Color = 'bg-secondary'; // Default
+                                    // Logika Step Aktif
+                                    // Step 1: Terkirim (Selalu Aktif)
+                                    $step1Class = 'active-orange'; 
+                                    
+                                    // Step 2: Dilihat
+                                    $isSeen = in_array($s, ['dilihat', 'interview', 'diterima', 'ditolak']);
+                                    $step2Class = $isSeen ? 'active-blue' : 'text-muted';
+                                    
+                                    // Step 3: Keputusan
+                                    $isDecided = in_array($s, ['diterima', 'ditolak']);
+                                    $step3Class = 'text-muted';
                                     $step3Icon = 'bi-question-lg';
-                                    $step3Label = 'Keputusan';
-                                    
-                                    if ($status == 'diterima') {
-                                        $step3Color = 'bg-success'; $step3Icon = 'bi-check-lg'; $step3Label = 'Diterima';
-                                    } elseif ($status == 'ditolak') {
-                                        $step3Color = 'bg-danger'; $step3Icon = 'bi-x-lg'; $step3Label = 'Ditolak';
-                                    } elseif ($step2 == 'active' && $status != 'dilihat') {
-                                         // Pending keputusan
+                                    $step3Text = 'Keputusan';
+
+                                    if ($s == 'diterima') {
+                                        $step3Class = 'active-green'; $step3Icon = 'bi-check-lg'; $step3Text = 'Diterima';
+                                    } elseif ($s == 'ditolak') {
+                                        $step3Class = 'active-red'; $step3Icon = 'bi-x-lg'; $step3Text = 'Ditolak';
                                     }
                                 @endphp
 
-                                <div class="position-relative">
-                                    {{-- Garis Progress --}}
-                                    <div class="progress" style="height: 2px;">
-                                        <div class="progress-bar bg-orange" role="progressbar" style="width: {{ $status == 'pending' ? '0%' : ($status == 'dilihat' ? '50%' : '100%') }};"></div>
-                                    </div>
+                                <div class="d-flex justify-content-between position-relative align-items-center timeline-flex">
+                                    {{-- Garis Background --}}
+                                    <div class="position-absolute top-50 start-0 w-100 translate-middle-y timeline-line"></div>
                                     
-                                    {{-- Titik-titik Timeline --}}
-                                    <div class="position-absolute top-0 start-0 translate-middle-y w-100 d-flex justify-content-between">
-                                        
-                                        {{-- Step 1: Terkirim --}}
-                                        <div class="text-center timeline-point">
-                                            <div class="rounded-circle bg-orange text-white d-flex align-items-center justify-content-center shadow-sm" style="width: 30px; height: 30px;">
-                                                <i class="bi bi-send-fill small"></i>
-                                            </div>
-                                            <small class="d-block mt-2 fw-bold text-orange">Terkirim</small>
-                                        </div>
+                                    {{-- Garis Progress (Warna Oranye) --}}
+                                    <div class="position-absolute top-50 start-0 translate-middle-y timeline-line-active" 
+                                         style="width: {{ $s == 'pending' ? '0%' : ($isSeen && !$isDecided ? '50%' : '100') }}%;"></div>
 
-                                        {{-- Step 2: Dilihat --}}
-                                        <div class="text-center timeline-point">
-                                            <div class="rounded-circle {{ $step2 ? 'bg-primary text-white' : 'bg-light text-muted border' }} d-flex align-items-center justify-content-center shadow-sm" style="width: 30px; height: 30px;">
-                                                <i class="bi bi-eye-fill small"></i>
-                                            </div>
-                                            <small class="d-block mt-2 fw-bold {{ $step2 ? 'text-primary' : 'text-muted' }}">Dilihat</small>
+                                    {{-- Step 1: Terkirim --}}
+                                    <div class="timeline-step text-center position-relative z-1">
+                                        <div class="step-icon {{ $step1Class }}">
+                                            <i class="bi bi-send-fill"></i>
                                         </div>
+                                        <span class="step-label text-dark">Terkirim</span>
+                                    </div>
 
-                                        {{-- Step 3: Keputusan --}}
-                                        <div class="text-center timeline-point">
-                                            <div class="rounded-circle {{ $step3 ? $step3Color . ' text-white' : 'bg-light text-muted border' }} d-flex align-items-center justify-content-center shadow-sm" style="width: 30px; height: 30px;">
-                                                <i class="bi {{ $step3Icon }} small"></i>
-                                            </div>
-                                            <small class="d-block mt-2 fw-bold {{ $step3 ? ($status == 'diterima' ? 'text-success' : 'text-danger') : 'text-muted' }}">{{ $step3Label }}</small>
+                                    {{-- Step 2: Dilihat --}}
+                                    <div class="timeline-step text-center position-relative z-1">
+                                        <div class="step-icon {{ $step2Class }}">
+                                            <i class="bi bi-eye-fill"></i>
                                         </div>
+                                        <span class="step-label {{ $isSeen ? 'text-dark' : 'text-muted' }}">Dilihat</span>
+                                    </div>
 
+                                    {{-- Step 3: Keputusan --}}
+                                    <div class="timeline-step text-center position-relative z-1">
+                                        <div class="step-icon {{ $step3Class }}">
+                                            <i class="bi {{ $step3Icon }}"></i>
+                                        </div>
+                                        <span class="step-label {{ $isDecided ? 'text-dark' : 'text-muted' }}">{{ $step3Text }}</span>
                                     </div>
                                 </div>
                             </div>
 
-                            {{-- Footer Kartu (Batal Lamar) --}}
-                            @if(in_array($lamaran->status, ['pending', 'dilihat']))
-                            <div class="text-end border-top pt-3 mt-2">
-                                <form action="{{ route('pelamar.lamaran.destroy', $lamaran->id) }}" method="POST" onsubmit="return confirm('Yakin ingin membatalkan lamaran ini?');">
-                                    @csrf @method('DELETE')
-                                    <button type="submit" class="btn btn-link text-danger text-decoration-none p-0 small">
-                                        <i class="bi bi-x-circle me-1"></i> Batalkan Lamaran
-                                    </button>
-                                </form>
+                            {{-- Footer Actions --}}
+                            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-light">
+                                <a href="{{ route('pelamar.lowongan.show', $lamaran->lowongan->id) }}" class="text-decoration-none text-muted small hover-orange">
+    <i class="bi bi-box-arrow-up-right me-1"></i> Lihat Lowongan
+</a>
+                                @if(in_array($lamaran->status, ['pending', 'dilihat']))
+                                    <form action="{{ route('pelamar.lamaran.destroy', $lamaran->id) }}" method="POST" onsubmit="return confirm('Batalkan lamaran ini?');">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-light text-danger rounded-pill px-3 border-0">
+                                            <i class="bi bi-trash me-1"></i> Batalkan
+                                        </button>
+                                    </form>
+                                @endif
                             </div>
-                            @endif
 
                         </div>
                     </div>
                     @empty
                     <div class="col-12 text-center py-5">
-                        <img src="https://cdn-icons-png.flaticon.com/512/7486/7486754.png" alt="Empty" style="width: 150px; opacity: 0.5;">
+                        <i class="bi bi-inbox text-muted display-1 opacity-25"></i>
                         <p class="text-muted mt-3">Belum ada riwayat lamaran.</p>
-                        <a href="{{ route('lowongan.index') }}" class="btn btn-outline-orange rounded-pill px-4">Mulai Melamar</a>
+                        <a href="{{ route('lowongan.index') }}" class="btn btn-orange rounded-pill px-4">Cari Lowongan</a>
                     </div>
                     @endforelse
                 </div>
-
+                
                 {{-- Pagination --}}
-                <div class="mt-4 d-flex justify-content-center">
+                <div class="mt-5 d-flex justify-content-center">
                     {{ $riwayatLamaran->appends(['active_tab' => 'lamaran'])->links() }}
+                </div>
+            </div>
+
+            {{-- TAB 2: PEKERJAAN DISIMPAN --}}
+            <div class="tab-pane fade" id="disimpan-tab-pane" role="tabpanel">
+                <div class="row g-3">
+                    @forelse($pekerjaanDisimpan as $lowongan)
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm rounded-4 h-100 card-hover">
+                            <div class="card-body p-4 d-flex flex-column">
+                                <div class="d-flex justify-content-between mb-3">
+                                    <img src="{{ $lowongan->perusahaan->logo_perusahaan ? asset('storage/' . $lowongan->perusahaan->logo_perusahaan) : 'https://placehold.co/50x50/e9ecef/343a40?text=L' }}" 
+                                         class="rounded-3 border p-1 bg-white" width="50" height="50">
+                                    <form action="{{ route('lowongan.toggleSimpan', $lowongan->id) }}" method="POST">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-light text-danger rounded-circle shadow-sm" title="Hapus">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                                <h5 class="fw-bold text-dark-blue mb-1 text-truncate">{{ $lowongan->judul_lowongan }}</h5>
+                                <p class="text-muted small mb-3">{{ $lowongan->perusahaan->nama_perusahaan }}</p>
+                                
+                                <div class="mt-auto pt-3 border-top">
+                                    <div class="d-grid">
+                                        <a href="{{ route('pelamar.lowongan.show', $lowongan->id) }}" class="btn btn-outline-primary btn-sm rounded-pill fw-bold">Lihat Detail</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @empty
+                    <div class="col-12 text-center py-5">
+                        <p class="text-muted">Belum ada pekerjaan disimpan.</p>
+                    </div>
+                    @endforelse
+                </div>
+                <div class="mt-4 d-flex justify-content-center">
+                    {{ $pekerjaanDisimpan->appends(['active_tab' => 'disimpan'])->links() }}
                 </div>
             </div>
 
@@ -216,127 +251,139 @@
 
 @push('styles')
 <style>
-    /* === Base Styles (Global) === */
-    .main-content { background-color: #f8f9fa; min-height: 100vh; }
-    .text-orange { color: #F39C12 !important; }
-    .bg-orange { background-color: #F39C12 !important; }
+    :root {
+        --c-dark-blue: #22374e;
+        --c-orange: #F39C12;
+        --c-bg-light: #f4f6f9;
+    }
+    .bg-dark-blue { background-color: var(--c-dark-blue); }
+    .bg-light-gray { background-color: var(--c-bg-light); }
+    .text-dark-blue { color: var(--c-dark-blue); }
+    .text-orange { color: var(--c-orange); }
+    .bg-orange { background-color: var(--c-orange); }
     
-    /* Buttons */
-    .btn-orange { background-color: #F39C12; border-color: #F39C12; color: white; }
-    .btn-orange:hover { background-color: #d8890b; border-color: #d8890b; color: white; }
-    .btn-outline-orange { color: #F39C12; border-color: #F39C12; }
-    .btn-outline-orange:hover { background-color: #F39C12; color: white; }
+    /* Header */
+    .dashboard-header { border-bottom-left-radius: 2.5rem; border-bottom-right-radius: 2.5rem; }
+    .header-pattern {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+        background-size: 20px 20px; pointer-events: none; opacity: 0.5;
+    }
+    .mt-n5 { margin-top: -4rem; }
 
-    /* Tab Menu Desktop */
-    .custom-nav-pills {
-        background-color: #fff; padding: 0.5rem; border-radius: 50px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid #dee2e6;
-        display: flex; gap: 0.5rem;
+    /* --- PERBAIKAN CARD STATISTIK --- */
+    .stat-card { 
+        transition: transform 0.2s, box-shadow 0.2s; 
+        border: 1px solid rgba(0,0,0,0.05) !important;
+        display: flex; flex-direction: column; 
+        align-items: center; justify-content: center; /* Konten di tengah */
+        padding: 1.5rem !important;
+        height: 100%;
     }
-    .custom-nav-pills .nav-link {
-        color: #6c757d; transition: all 0.3s; border-radius: 50px;
-        font-weight: 600; padding: 0.6rem 1rem; flex: 1; text-align: center;
-    }
-    .custom-nav-pills .nav-link:hover { background-color: #f8f9fa; color: #F39C12; }
-    .custom-nav-pills .nav-link.active {
-        background-color: #F39C12; color: white;
-        box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3);
+    .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important; }
+    
+    .icon-box { 
+        width: 50px; height: 50px; /* Lebih besar dikit */
+        border-radius: 12px; 
+        display: flex; align-items: center; justify-content: center; 
+        margin-bottom: 10px;
+        font-size: 1.4rem;
     }
 
-    /* === TIMELINE DESKTOP (Update: Hapus Garis) === */
-    .timeline-wrapper { 
-        padding: 0 3rem; 
-        margin-top: 2rem; 
-        margin-bottom: 1rem;
+    /* Tabs */
+    .custom-nav-pills .nav-link { color: #6c757d; transition: all 0.3s; }
+    .custom-nav-pills .nav-link.active { background-color: var(--c-orange); color: white; box-shadow: 0 4px 10px rgba(243, 156, 18, 0.3); }
+
+    /* --- PERBAIKAN TIMELINE ICONS --- */
+    .timeline-container { padding: 0 1rem; margin-bottom: 1rem; }
+    
+    .timeline-line {
+        height: 3px !important; background-color: #e9ecef; z-index: 0;
+    }
+    .timeline-line-active {
+        height: 3px !important; background-color: var(--c-orange); z-index: 0;
+    }
+
+    .step-icon {
+        width: 40px; height: 40px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 0.5rem auto; font-size: 1.1rem; 
+        transition: all 0.3s;
+        z-index: 2; position: relative; /* Pastikan di atas garis */
+        background-color: white; /* Wajib ada background biar garis ketutup */
+        border: 2px solid #e9ecef;
     }
     
-    /* Hapus Garis Progress Bar di Desktop */
-    .timeline-wrapper .progress {
-        display: none !important; /* <-- HAPUS GARIS INI */
+    /* Warna Khusus Step Active */
+    .step-icon.active-orange {
+        background-color: var(--c-orange); 
+        color: white; 
+        border-color: var(--c-orange);
+        box-shadow: 0 0 0 4px rgba(243, 156, 18, 0.2); /* Efek glowing */
+    }
+    .step-icon.active-blue {
+        background-color: #0dcaf0; color: white; border-color: #0dcaf0;
+        box-shadow: 0 0 0 4px rgba(13, 202, 240, 0.2);
+    }
+    .step-icon.active-green {
+        background-color: #198754; color: white; border-color: #198754;
+        box-shadow: 0 0 0 4px rgba(25, 135, 84, 0.2);
+    }
+    .step-icon.active-red {
+        background-color: #dc3545; color: white; border-color: #dc3545;
+        box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.2);
     }
 
-    .timeline-point { 
-        position: relative; 
-        z-index: 2; 
-        width: 100px; 
-        text-align: center; 
-    }
-    .timeline-point .rounded-circle { 
-        margin: 0 auto; 
-        background-color: #fff; 
-        width: 40px; /* Ikon sedikit diperbesar biar jelas */
-        height: 40px; 
-        border: 2px solid #e9ecef; 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.1rem;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Tambah shadow biar menonjol */
-    }
-    .timeline-point small { 
-        display: block; 
-        margin-top: 0.8rem; 
-        font-size: 0.85rem;
-        font-weight: 600;
-    }
-    
-    /* Statistik Card */
-    .stats-card h3 { font-size: 1.8rem; }
+    .step-label { font-size: 0.75rem; font-weight: 700; display: block; margin-top: 5px; }
 
-    /* === MOBILE RESPONSIVE (Update: Hapus Garis Vertikal) === */
+    /* Mobile Timeline Fix */
     @media (max-width: 767.98px) {
-        .custom-nav-pills {
-            border-radius: 12px; padding: 5px; margin-bottom: 1.5rem !important;
+        .timeline-flex { flex-direction: column; align-items: flex-start; gap: 1.5rem; padding-left: 1rem; }
+        .timeline-line, .timeline-line-active {
+            width: 3px !important; height: 100% !important; 
+            top: 0 !important; left: 29px !important; transform: none !important;
         }
-        .custom-nav-pills .nav-link {
-            font-size: 0.85rem; padding: 8px 5px; border-radius: 8px;
-        }
-        .stats-card { padding: 1rem !important; }
-        .stats-card h3 { font-size: 1.4rem; }
-        .stats-card small { font-size: 0.65rem; }
-
-        /* Header Kartu Mobile */
-        .company-info { align-items: flex-start !important; }
-        .company-logo { width: 45px; height: 45px; margin-right: 12px; border-radius: 8px; flex-shrink: 0; }
-        .company-details h5 { font-size: 1rem; margin-bottom: 2px; line-height: 1.3; }
-        .company-details p { font-size: 0.85rem; }
-
-        /* Timeline Mobile */
-        .timeline-wrapper {
-            margin-top: 1.5rem; padding-left: 0; padding-right: 0;
-            display: flex; flex-direction: column; gap: 0;
-        }
-        
-        /* Hapus elemen absolut (garis) di mobile */
-        .timeline-wrapper .position-absolute {
-            display: none !important; /* <-- HAPUS GARIS VERTIKAL INI */
-        }
-
-        .timeline-point {
-            width: 100%; text-align: left !important; margin-bottom: 1rem;
-            display: flex; align-items: center;
-        }
-        .timeline-point:last-child { margin-bottom: 0; }
-
-        .timeline-point .rounded-circle {
-            /* Reset posisi absolute */
-            position: static; 
-            margin-right: 12px; /* Jarak ikon ke teks */
-            width: 32px; height: 32px; 
-            background-color: white; border: 1px solid #e9ecef; 
-            z-index: 2; font-size: 0.9rem;
-        }
-        .timeline-point small { margin-top: 0 !important; font-size: 0.9rem; }
-
-        /* Tombol Batal Mobile */
-        .job-actions {
-            text-align: center !important; border-top: 1px solid #f0f0f0;
-            padding-top: 1rem; margin-top: 1rem; width: 100%;
-        }
-        .job-actions form { width: 100%; }
-        .job-actions .btn-outline-danger {
-            width: 100%; border-radius: 50px; font-size: 0.85rem; padding: 8px;
-        }
+        .timeline-step { display: flex; align-items: center; gap: 1rem; width: 100%; text-align: left !important; }
+        .step-icon { margin: 0; } 
+        .step-label { margin-top: 0; font-size: 0.9rem; }
     }
 </style>
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const chartData = @json($chartData);
+        const total = {{ $stats['total'] }};
+
+        if (total > 0) {
+            var options = {
+                series: chartData, // [Pending, Dilihat, Diterima, Ditolak]
+                chart: { type: 'donut', height: 280, fontFamily: 'Segoe UI, sans-serif' },
+                labels: ['Pending', 'Dilihat', 'Diterima', 'Ditolak'],
+                colors: ['#adb5bd', '#0dcaf0', '#198754', '#dc3545'],
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '75%',
+                            labels: {
+                                show: true,
+                                total: {
+                                    show: true, label: 'Total', fontSize: '14px', fontWeight: 600, color: '#22374e',
+                                    formatter: function (w) { return w.globals.seriesTotals.reduce((a, b) => a + b, 0) }
+                                }
+                            }
+                        }
+                    }
+                },
+                dataLabels: { enabled: false },
+                legend: { position: 'bottom', markers: { radius: 12 } },
+                stroke: { show: false }
+            };
+            var chart = new ApexCharts(document.querySelector("#statusChart"), options);
+            chart.render();
+        }
+    });
+</script>
 @endpush
