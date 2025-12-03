@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB; // Wajib ada
 
 class NotifikasiController extends Controller
 {
@@ -15,6 +16,7 @@ class NotifikasiController extends Controller
     public function index(): View
     {
         $user = Auth::user();
+        // Mengambil notifikasi terbaru dengan pagination
         $notifications = $user->notifications()->latest()->paginate(15);
 
         return view('perusahaan.notifikasi', [
@@ -23,33 +25,74 @@ class NotifikasiController extends Controller
     }
     
     /**
-     * Menandai semua notifikasi belum dibaca sebagai sudah dibaca.
+     * Menandai semua notifikasi sebagai terbaca.
      */
     public function markAllAsRead()
     {
-        Auth::user()->unreadNotifications->markAsRead();
-        return back()->with('success', 'Semua notifikasi telah ditandai sebagai terbaca.');
+        $user = Auth::user();
+        
+        // Update langsung ke tabel database tanpa perantara Model
+        // Ini menghindari bug pada cache model atau observer
+        DB::table('notifications')
+            ->where('notifiable_id', $user->id)
+            ->where('notifiable_type', get_class($user))
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
+
+        // Redirect keras ke URL index
+        return redirect('/perusahaan/notifikasi')
+                ->with('success', 'Semua notifikasi telah ditandai sebagai terbaca.');
     }
 
     /**
-     * Menandai notifikasi spesifik sudah dibaca dan redirect ke URL aksi.
-     * Menggunakan data 'action_url' yang disimpan di notifikasi.
+     * BACA SATU & REDIRECT (VERSI PINTAR)
      */
     public function readAndRedirect($notificationId)
     {
-        // Cari notifikasi milik user yang sedang login
-        $notification = Auth::user()->notifications()->find($notificationId);
+        $user = Auth::user();
 
-        if ($notification) {
-            // Tandai sebagai sudah dibaca
-            $notification->markAsRead();
+        $notification = DB::table('notifications')
+            ->where('id', $notificationId)
+            ->first();
 
-            // Redirect ke link tujuan yang sudah disimpan di data notifikasi
-            // Ini membuat link lebih fleksibel (bisa ke detail pelamar, jadwal, dll.)
-            return redirect($notification->data['action_url'] ?? route('perusahaan.notifikasi.index'));
+        if (!$notification) {
+            return redirect()->route('perusahaan.notifikasi.index');
         }
 
-        // Jika notifikasi tidak ditemukan, kembali ke halaman notifikasi
-        return redirect()->route('perusahaan.notifikasi.index')->with('error', 'Notifikasi tidak ditemukan.');
+        // Tandai sudah dibaca
+        DB::table('notifications')
+            ->where('id', $notificationId)
+            ->update(['read_at' => now()]);
+
+        $data = json_decode($notification->data, true);
+        $type = $data['type'] ?? null;
+
+        // --- LOGIKA REDIRECT BERDASARKAN TYPE ---
+
+        // 1. Pelamar Baru
+        if ($type === 'new_application' && isset($data['lowongan_id'])) {
+            return redirect()->route('perusahaan.lowongan.pelamar.index', [
+                'lowongan_id' => $data['lowongan_id'],
+            ]);
+        }
+
+        // 2. VIP Iklan
+        if ($type === 'vip_iklan') {
+            return redirect('/perusahaan/iklan/pasang-baru');
+        }
+
+        // 3. VIP Kandidat
+        if ($type === 'vip_kandidat') {
+            return redirect('/perusahaan/kandidat/premium');
+        }
+
+        // 4. Jika punya action_url → Redirect ke sana
+        if (!empty($data['action_url'])) {
+            return redirect($data['action_url']);
+        }
+
+        // Fallback: kembali ke daftar notifikasi
+        return redirect()->route('perusahaan.notifikasi.index');
     }
+
 }

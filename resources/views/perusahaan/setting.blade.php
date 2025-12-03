@@ -2,205 +2,296 @@
 
 @section('title', 'Pengaturan Akun')
 
-{{-- CSS khusus untuk halaman pengaturan ini tetap diperlukan --}}
 @push('styles')
 <style>
-    /* Card khusus untuk sidebar pengaturan */
+    /* ---------------------------------------------------------
+       SIDEBAR
+    ----------------------------------------------------------*/
     .settings-sidebar-card {
-        background-color: white;
+        background-color: #ffffff;
         border: none;
         border-radius: 1rem;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
         padding: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
     }
+
     .profile-logo {
-        width: 100px; /* Ukuran sesuai gambar */
-        height: 100px;
-        object-fit: contain; /* Agar logo tidak terpotong */
-        border-radius: 50%; /* Bentuk lingkaran */
-        background-color: #fceee3; /* Warna latar belakang lingkaran */
-        padding: 10px; /* Padding di dalam lingkaran */
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 50%;
+        background: #fdf1e7;
+        padding: 12px;
     }
+
     .settings-sidebar-card .nav-pills .nav-link {
         color: #6c757d;
         padding: 0.75rem 1rem;
-        text-align: left;
         border-radius: 0.5rem;
         font-weight: 500;
         display: flex;
         align-items: center;
+        transition: 0.2s;
     }
+
     .settings-sidebar-card .nav-pills .nav-link .bi {
         margin-right: 0.75rem;
         font-size: 1.1rem;
     }
+
     .settings-sidebar-card .nav-pills .nav-link.active {
-        background-color: #ff7b00;
-        color: white;
-    }
-    .settings-sidebar-card .nav-pills .nav-link:hover:not(.active) {
-        background-color: #f0f0f0; /* Hover effect untuk non-active link */
+        background: #ff7b00;
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(255,123,0,0.25);
     }
 
-    /* Card khusus untuk konten utama pengaturan */
-    .settings-content-card {
-        background-color: white;
-        border: none;
-        border-radius: 1rem;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.05);
-        padding: 2.5rem;
+    .settings-sidebar-card .nav-pills .nav-link:hover:not(.active) {
+        background-color: #f7f7f7;
     }
+
+    /* ---------------------------------------------------------
+       CONTENT CARD
+    ----------------------------------------------------------*/
+    .settings-content-card {
+        background-color: #ffffff;
+        border-radius: 1rem;
+        padding: 2.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    }
+
     .form-label {
         font-weight: 600;
-        color: #495057;
+        color: #333;
     }
+
     .form-control {
         border-radius: 0.5rem;
         padding: 0.75rem 1rem;
-        border: 1px solid #dee2e6;
+        border: 1px solid #dcdcdc;
     }
+
     .form-control:focus {
         border-color: #ff7b00;
         box-shadow: 0 0 0 0.25rem rgba(255,123,0,0.25);
     }
+
+    /* Show / Hide Password */
+    .password-wrapper {
+        position: relative;
+    }
+    .toggle-password {
+        position: absolute;
+        right: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #666;
+        font-size: 1.1rem;
+    }
+
     .btn-simpan {
         background-color: #ff7b00;
-        color: white;
-        font-weight: 600;
+        color: #ffffff;
         padding: 0.75rem 2rem;
         border-radius: 0.5rem;
         border: none;
-        display: flex; /* Untuk ikon */
-        align-items: center;
-        justify-content: center;
+        font-weight: 600;
+        width: 100%;
+        transition: 0.2s;
     }
     .btn-simpan:hover {
         background-color: #e66f00;
-        color: white;
     }
-    .faq-link {
-        display: block;
-        text-decoration: none;
-        color: #6c757d; /* Warna teks FAQ */
-        padding: 0.5rem 0;
+
+    /* FAQ ACCORDION */
+    .faq-accordion .accordion-button {
         font-weight: 500;
-        font-size: 0.95rem; /* Ukuran teks FAQ */
+        color: #444;
     }
-    .faq-link:hover {
-        color: #ff7b00; /* Warna hover FAQ */
-    }
-    .search-input-group {
-        position: relative;
-    }
-    .search-input-group .form-control {
-        padding-left: 2.5rem;
-    }
-    .search-input-group .bi-search {
-        position: absolute;
-        left: 0.8rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: #6c757d;
-    }
-    .btn-hubungi-kami {
-        background-color: #ff7b00;
-        color: white;
-        font-weight: 600;
-        padding: 0.5rem 1.5rem;
-        border-radius: 0.5rem;
-        border: none;
-    }
-    .btn-hubungi-kami:hover {
-        background-color: #e66f00;
-    }
-    .form-text {
-        font-size: 0.875em; /* Ukuran teks bantuan di bawah input */
-        color: #6c757d;
-    }
-    .status-verified {
-        color: #28a745; /* Warna hijau untuk Verified */
-        font-weight: 500;
-        font-size: 0.85rem;
+    .faq-accordion .accordion-button:not(.collapsed) {
+        background-color: #ffe5cc;
+        color: #ff7b00;
+        box-shadow: none;
     }
 </style>
 @endpush
 
 @section('content')
-    {{-- Header Halaman --}}
-    <div class="header-dashboard d-flex flex-wrap justify-content-between align-items-center mb-4">
-        <div class="w-100 w-md-auto mb-3 mb-md-0">
-            <h1>Pengaturan Perusahaan</h1>
-            {{-- Mengubah teks subtitle sesuai gambar --}}
-        </div>
+    <div class="header-dashboard mb-4">
+        <h1>Pengaturan Perusahaan</h1>
     </div>
 
-    {{-- Konten unik untuk halaman pengaturan --}}
-    <div class="row g-4 align-items-start">
+    {{-- ALERT SUCCESS --}}
+    @if(session('status'))
+        <div class="alert alert-success">
+            <i class="bi bi-check-circle me-2"></i> {{ session('status') }}
+        </div>
+    @endif
+
+    {{-- ALERT ERROR --}}
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <strong><i class="bi bi-exclamation-circle me-2"></i>Terjadi Kesalahan:</strong>
+            <ul class="mb-0 mt-2">
+                @foreach($errors->all() as $error)
+                    <li>- {{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <div class="row g-4">
+
+        {{-- SIDEBAR --}}
         <div class="col-lg-3">
-            <div class="settings-sidebar-card">
-                <div class="text-center mb-4">
-                    {{-- Ganti dengan path logo perusahaan dari database --}}
-                    <img src="{{ Auth::user()->profilePerusahaan->logo_perusahaan ? asset('storage/' . Auth::user()->profilePerusahaan->logo_perusahaan) : asset('images/default-company-profile.png') }}"
-                     alt="Logo Perusahaan" class="rounded-circle me-10" style="width: 200px; height: 200px; object-fit: cover;">
-                    <h5 class="mt-3 mb-1">{{ Auth::user()->profilePerusahaan->nama_perusahaan ?? 'Perusahaan' }}</h5>
-                </div>
+            <div class="settings-sidebar-card text-center">
+
+                <img src="{{ Auth::user()->profilePerusahaan->logo_perusahaan 
+                        ? asset('storage/' . Auth::user()->profilePerusahaan->logo_perusahaan)
+                        : asset('images/default-company-profile.png') }}"
+                     class="profile-logo" alt="Logo Perusahaan">
+
+                <h5 class="mt-3">{{ Auth::user()->profilePerusahaan->nama_perusahaan }}</h5>
+
                 <ul class="nav nav-pills flex-column mt-4">
                     <li class="nav-item mb-2">
                         <a class="nav-link" href="{{ route('perusahaan.profile.edit') }}">
-                            <i class="bi bi-person"></i>Edit Profil
+                            <i class="bi bi-person"></i> Edit Profil
                         </a>
                     </li>
+
                     <li class="nav-item mb-2">
                         <a class="nav-link active" href="{{ route('perusahaan.settings.edit') }}">
-                            <i class="bi bi-lock"></i>Email & Password
+                            <i class="bi bi-lock"></i> Email & Password
                         </a>
                     </li>
                 </ul>
             </div>
         </div>
 
+        {{-- MAIN CONTENT --}}
         <div class="col-lg-9">
             <div class="settings-content-card">
+
                 <form method="POST" action="{{ route('perusahaan.settings.update') }}">
                     @csrf
                     @method('PATCH')
-                    
+
                     <div class="row g-4">
-                        {{-- Kolom Kiri untuk Email & Password --}}
                         <div class="col-md-7">
+
+                            {{-- EMAIL --}}
                             <h5 class="mb-3">Alamat Email</h5>
+
                             <div class="mb-4">
-                                <label for="email" class="form-label visually-hidden">Alamat Email</label>
-                                <input type="email" class="form-control" id="email" name="email" value="{{ Auth::user()->email ?? 'contact@perusahaan.com' }}">
+                                <input 
+                                    type="email" 
+                                    class="form-control" 
+                                    name="email"
+                                    value="{{ old('email', Auth::user()->email) }}"
+                                    required
+                                >
+                                <div class="form-text">Email utama untuk notifikasi & akses akun.</div>
                             </div>
-                            <div class="mb-4">
-                                <input type="password" class="form-control" id="password" name="password" placeholder="********">
+
+                            {{-- PASSWORD --}}
+                            <h5 class="mb-3 mt-4">Ubah Password</h5>
+
+                            <div class="mb-4 password-wrapper">
+                                <label class="form-label">Password Saat Ini</label>
+                                <input type="password" class="form-control" name="current_password" required>
                             </div>
-                            <div class="form-text">Email utama untuk notifikasi dan komunikasi</div>
+
+                            <div class="mb-4 password-wrapper">
+                                <label class="form-label">Password Baru</label>
+                                <input type="password" class="form-control" name="new_password" required>
+                            </div>
+
+                            <div class="mb-4 password-wrapper">
+                                <label class="form-label">Konfirmasi Password Baru</label>
+                                <input type="password" class="form-control" name="new_password_confirmation" required>
+                            </div>
+
+                            <button type="submit" class="btn-simpan">
+                                <i class="bi bi-save me-2"></i> Simpan Perubahan
+                            </button>
+
                         </div>
 
-                        {{-- Kolom Kanan untuk Bantuan --}}
+                        {{-- FAQ --}}
                         <div class="col-md-5">
-                            <h5 class="mb-3">Butuh Bantuan Langsung?</h5>
-                            <div class="search-input-group mb-4">
-                                <i class="bi bi-search"></i>
-                                <input type="search" class="form-control" placeholder="Cari topik atau pertanyaan...">
-                            </div>
-                            <div class="mb-4">
-                                <h5 class="mb-3">Hubungi Kami</h5>
-                                <a href="#" class="btn btn-hubungi-kami">Hubungi Kami</a>
+
+                            <h5 class="mb-3">Bantuan Cepat</h5>
+
+                            <div class="accordion faq-accordion" id="faqAccordion">
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="faq1">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaq1">
+                                            Bagaimana menempatkan posisi organisasi?
+                                        </button>
+                                    </h2>
+                                    <div id="collapseFaq1" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                            Atur struktur organisasi melalui menu Profil Perusahaan.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="faq2">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFaq2">
+                                            Bisakah saya mengatur ulang lamaran pelamar?
+                                        </button>
+                                    </h2>
+                                    <div id="collapseFaq2" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                            Semua lamaran dikelola di menu *Pelamar* pada Lowongan.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="faq3">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#collapseFaq3">
+                                            Bagaimana melihat riwayat lamaran?
+                                        </button>
+                                    </h2>
+                                    <div id="collapseFaq3" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                            Riwayat lamaran dapat dilihat dalam halaman Pelamar.
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 p-3" style="background: #fff7ef; border-radius: 0.75rem; border: 1px solid #ffe2c6;">
+                                        <h6 class="mb-2" style="color:#ff7b00; font-weight:600;">
+                                            <i class="bi bi-envelope-open me-2"></i>Hubungi Admin
+                                        </h6>
+
+                                        <p class="mb-2" style="color:#444; font-size:0.95rem;">
+                                            Jika Anda membutuhkan bantuan lebih lanjut, Anda dapat menghubungi admin melalui email berikut:
+                                        </p>
+
+                                        <a href="mailto:admin@joblink.id" class="fw-bold" 
+                                        style="color:#ff7b00; text-decoration:none; font-size:1rem;">
+                                            admin@joblink.id
+                                        </a>
+
+                                        <p class="mt-2 mb-0" style="font-size:0.85rem; color:#6c757d;">
+                                            Waktu respon rata-rata: 5–30 menit
+                                        </p>
+                                    </div>
+                                </div>
+
                             </div>
 
-                            <h5 class="mb-2 mt-5">Pertanyaan Umum</h5>
-                            <div>
-                                <a href="#" class="faq-link"><i class="bi bi-chevron-right me-2"></i>Bagaimana menempatkan posisi atau jabatan di struktur organisasi?</a>
-                                <a href="#" class="faq-link"><i class="bi bi-chevron-right me-2"></i>Apakah saya bisa mengatur ulang lamaran yang sudah dikirim?</a>
-                                <a href="#" class="faq-link"><i class="bi bi-chevron-right me-2"></i>Bagaimana mengelola kembali lamaran yang sudah dibuat sebelumnya?</a>
-                            </div>
-                        </div>
-                    </div> {{-- End row --}}
+                        </div> {{-- End FAQ --}}
+                    </div>
+
                 </form>
+
             </div>
         </div>
+
     </div>
 @endsection

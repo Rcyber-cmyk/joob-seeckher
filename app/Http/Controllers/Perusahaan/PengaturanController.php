@@ -15,7 +15,6 @@ class PengaturanController extends Controller
      */
     public function edit()
     {
-        // Method ini hanya bertugas menampilkan view-nya.
         return view('perusahaan.setting');
     }
 
@@ -24,23 +23,51 @@ class PengaturanController extends Controller
      */
     public function update(Request $request)
     {
-        // 1. Ambil data pengguna yang sedang login
         $user = Auth::user();
 
-        // 2. Validasi input dari form
+        // Validasi email + password baru
         $request->validate([
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'password' => ['nullable', 'confirmed', Password::defaults()],
+
+            // Password lama tidak wajib, tapi jika diisi harus benar
+            'current_password' => 'nullable|min:6',
+
+            // Password baru + konfirmasi
+            'new_password' => ['nullable', 'confirmed', Password::defaults()],
         ]);
 
-        // 3. Update data pengguna
+        // -------------------------
+        // 1️⃣ Update Email
+        // -------------------------
         $user->email = $request->email;
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+
+        // -------------------------
+        // 2️⃣ Update Password Jika Diisi
+        // -------------------------
+        if ($request->filled('current_password') || $request->filled('new_password')) {
+
+            // Cek apakah current password benar
+            if (!Hash::check($request->current_password, $user->password)) {
+                return back()->withErrors([
+                    'current_password' => 'Password lama tidak sesuai.',
+                ]);
+            }
+
+            // Validasi password baru harus diisi ketika ingin mengubah password
+            if (!$request->filled('new_password')) {
+                return back()->withErrors([
+                    'new_password' => 'Password baru wajib diisi.',
+                ]);
+            }
+
+            // Simpan password baru
+            $user->password = Hash::make($request->new_password);
         }
+
         $user->save();
 
-        // 4. Redirect kembali ke halaman pengaturan dengan pesan sukses
-        return redirect()->route('perusahaan.settings.edit')->with('status', 'Pengaturan berhasil diperbarui!');
+        return redirect()
+            ->route('perusahaan.settings.edit')
+            ->with('status', 'Pengaturan akun berhasil diperbarui!');
     }
 }
