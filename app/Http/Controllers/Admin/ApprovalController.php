@@ -9,16 +9,12 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Models\IklanLowongan;
 use App\Models\ProfilePerusahaan;
+use App\Notifications\PaymentApprovedNotification; // <--- 1. WAJIB IMPORT INI
 
 class ApprovalController extends Controller
 {
     /**
      * Tampilkan halaman manajemen iklan.
-     *
-     * Logika BARU (Sesuai Permintaan):
-     * - Tab 1 (Pending): status = pending
-     * - Tab 2 (Aktif): status = aktif DAN expires_at > sekarang
-     * - Tab 3 (Riwayat): status != pending (SEMUA keputusan: aktif, ditolak, kedaluwarsa)
      */
     public function index()
     {
@@ -34,29 +30,23 @@ class ApprovalController extends Controller
         // 2. DATA UNTUK TAB 2: Iklan Aktif (Yang sedang tayang)
         $activeIklan = IklanLowongan::with('perusahaan')
             ->where('status', 'aktif')
-            ->where('expires_at', '>', $now) // Tetap gunakan ini agar Tab Aktif bersih
+            ->where('expires_at', '>', $now)
             ->orderByRaw("FIELD(paket, 'vip', 'gratis') DESC") 
             ->orderBy('published_at', 'desc') 
             ->get();
 
         // 3. DATA UNTUK TAB 3: Riwayat Iklan (SEMUA KEPUTUSAN)
-        // Ini adalah perubahan utama yang Anda minta
         $historyIklan = IklanLowongan::with('perusahaan')
-            ->where('status', '!=', 'pending') // Ambil semua yang statusnya BUKAN pending
-            // Ini akan mengambil: 'aktif', 'ditolak', 'kedaluwarsa'
-            ->orderBy('updated_at', 'desc') // Urutkan berdasarkan kapan terakhir diubah
+            ->where('status', '!=', 'pending')
+            ->orderBy('updated_at', 'desc')
             ->get();
         
-        // 4. KIRIM SEMUA DATA KE VIEW
         return view('admin.iklan.index', compact( 
             'pendingIklan', 
             'activeIklan', 
             'historyIklan'
         ));
     }
-
-    // Fungsi approve() dan reject() Anda sudah benar, tidak perlu diubah
-    // Kita biarkan seperti kode sebelumnya.
 
     /**
      * Menyetujui iklan VIP atau Gratis.
@@ -78,8 +68,19 @@ class ApprovalController extends Controller
             
             $iklan->save();
             
+            // --- 2. LOGIKA NOTIFIKASI TAMBAHAN ---
+            // Ambil User Perusahaan dari relasi iklan -> perusahaan -> user
+            $perusahaanProfile = $iklan->perusahaan; 
+            
+            if ($perusahaanProfile && $perusahaanProfile->user) {
+                // Kirim notifikasi ke user perusahaan
+                // Kita kirim objek $iklan agar notifikasi tahu ini tentang iklan
+                $perusahaanProfile->user->notify(new PaymentApprovedNotification($iklan));
+            }
+            // -------------------------------------
+            
             DB::commit();
-            return redirect()->route('admin.iklan.index')->with('success', 'Iklan disetujui dan telah diaktifkan.');
+            return redirect()->route('admin.iklan.index')->with('success', 'Iklan disetujui, diaktifkan, dan notifikasi terkirim.');
 
         } catch (\Exception $e) {
             DB::rollBack();

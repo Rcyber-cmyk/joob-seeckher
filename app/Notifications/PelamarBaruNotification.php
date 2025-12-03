@@ -4,36 +4,58 @@ namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use App\Models\Lamaran; // <-- Import model Lamaran
-use Illuminate\Contracts\Queue\ShouldQueue; // <--- TAMBAHKAN INI
+use App\Models\Lamaran;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class PelamarBaruNotification extends Notification implements ShouldQueue // <--- IMPLEMENT ShouldQueue
+class PelamarBaruNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
     protected $lamaran;
 
+    /**
+     * Create a new notification instance.
+     */
     public function __construct(Lamaran $lamaran)
     {
         $this->lamaran = $lamaran;
     }
 
-    // Menentukan channel pengiriman notifikasi
+    /**
+     * Get the notification's delivery channels.
+     */
     public function via(object $notifiable): array
     {
-        return ['database']; // <-- Artinya notifikasi akan disimpan di tabel database
+        return ['database']; // Simpan di database
     }
 
-    // Menentukan data apa saja yang akan disimpan
+    /**
+     * Get the array representation of the notification.
+     * Data ini disimpan di kolom 'data' tabel notifications.
+     */
     public function toArray(object $notifiable): array
     {
+        // Ambil data untuk pesan
+        $namaPelamar = $this->lamaran->pelamar->user->name ?? 'Pelamar';
+        $judulLowongan = $this->lamaran->lowongan->judul_lowongan ?? 'Lowongan';
+
         return [
-            'type' => 'new_application', // <--- BARIS KRITIS BARU: Identifikasi jenis notifikasi
+            // 1. Identifikasi Tipe (Penting untuk Ikon di View)
+            'type' => 'new_application', 
+
+            // 2. Data Standar untuk Tampilan
+            'title' => 'Lamaran Baru Masuk',
+            'message' => "{$namaPelamar} telah melamar untuk posisi {$judulLowongan}.",
+            
+            // 3. Action URL (KUNCI UTAMA AGAR REDIRECT BERHASIL)
+            // Mengarahkan ke halaman daftar pelamar untuk lowongan tersebut
+            'action_url' => route('perusahaan.lowongan.pelamar.index', ['lowongan_id' => $this->lamaran->lowongan->id]),
+            
+            // 4. Data Tambahan/Legacy (Opsional, untuk kebutuhan lain)
             'lamaran_id' => $this->lamaran->id,
-            'nama_pelamar' => $this->lamaran->pelamar->user->name,
             'lowongan_id' => $this->lamaran->lowongan->id,
-            'judul_lowongan' => $this->lamaran->lowongan->judul_lowongan,
-            'message' => "{$this->lamaran->pelamar->user->name} telah melamar untuk posisi {$this->lamaran->lowongan->judul_lowongan}.",
+            'nama_pelamar' => $namaPelamar,
+            'judul_lowongan' => $judulLowongan,
         ];
     }
 }
