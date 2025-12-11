@@ -18,24 +18,35 @@
             background: #f0f2f5;
             color: #333;
             overflow-x: hidden;
+            padding-top: 70px; /* sesuaikan dengan tinggi navbar */
             background-color: #f0f2f5;
             -webkit-tap-highlight-color: transparent;
         }
 
         /* --- Navbar Styles --- */
-        .navbar { padding: 1rem 0; z-index: 1000; position: relative; background-color: #071b2f; color: white; }
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1rem 0;
+            z-index: 9999;
+            background-color: #071b2f;
+            color: white;
+        }
+
         .navbar-brand { font-weight: bold; font-size: 1.5rem; letter-spacing: 2px; color: white; }
         .navbar-nav .nav-link { margin-right: 1rem; color: white; }
-        .navbar-nav .nav-link:hover { color: #071b2f; }
-        .navbar-nav .highlight-text { color: #071b2f !important; font-weight: bold; }
+        .navbar-nav .nav-link:hover { color: #FFFFFFFF; }
+        .navbar-nav .highlight-text { color: #FFFFFFFF !important; font-weight: bold; }
          #offcanvasNavbar.offcanvas {
-            background-color: #ff7a00 !important;
+            background-color: #001f3f !important;
             width: 70% !important;
             max-width: 320px;
             box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
         }
         #offcanvasNavbar .offcanvas-header {
-            background-color: #ff7a00 !important;
+            background-color: #001f3f !important;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
         #offcanvasNavbar .offcanvas-title {
@@ -43,7 +54,7 @@
             font-weight: bold;
         }
         #offcanvasNavbar .offcanvas-body {
-            background-color: #ff7a00 !important;
+            background-color: #001f3f !important;
             color: white !important;
             padding-top: 1rem;
             display: flex;
@@ -118,42 +129,101 @@
         .btn-dark:hover { background-color: #343a40; color: white; }
 
         /* --- Hero Section --- */
-        .hero-section {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            padding: 4rem 0;
-            background-color: #ff7a00;
-            color: white;
+        .hero-wrapper {
+            background: linear-gradient(180deg, #DFEDFDFF 0%, #FFF7EEFF 100%);
+            padding: 90px 0 120px;
+            overflow: hidden;
         }
-        .hero-section h1 { font-size: 2.5rem; font-weight: 800; line-height: 1.3; }
-        .hero-section p { font-size: 1.4rem; line-height: 1.3;}
-        .hero-img { max-width: 350px; height: auto; filter: drop-shadow(0 0 15px rgba(0,0,0,0.3)); }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.25;
+            color: #0d1b2a;
+        }
+
+        .hero-desc {
+            font-size: 20px;
+            color: #555;
+            max-width: 550px;
+            margin-bottom: 30px;
+        }
+
+        .hero-btn-primary {
+            background: #001f3f;
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+
+        .hero-btn-primary:hover {
+            background: #001f3f;
+        }
+
+        .hero-btn-secondary {
+            background: white;
+            color: #0d1b2a;
+            border: 2px solid #e8e8e8;
+            padding: 12px 32px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 12px;
+            margin-left: 12px;
+            transition: 0.3s;
+        }
+
+        .hero-btn-secondary:hover {
+            background: #f8f8f8;
+        }
+
+        .hero-stats-card {
+            background: white;
+            border-radius: 18px;
+            padding: 18px 26px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            min-width: 180px;
+        }
+
+        .hero-stats-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #0d1b2a;
+        }
+
+        .hero-stats-text {
+            font-size: 17px;
+            color: #666;
+        }
+
 
         /* --- Main Content Wrapper --- */
-        .main-content { background: white; color: black; padding-top: 4rem; padding-bottom: 4rem; }
-        .main-content h4 { color: #ff7b00; font-weight: bold; margin-bottom: 2rem; }
+        .main-content { background: linear-gradient(180deg, #FFF7EEFF 0%, #FCF7F1FF 100%); color: black; padding-top: 4rem; padding-bottom: 4rem; }
+        .main-content h4 { color: #001f3f; font-weight: bold; margin-bottom: 2rem; }
         .main-content h4 img { vertical-align: middle; height: 50px; margin-right: 10px; }
-        .main-content h1 { color: #ff7b00; font-weight: bold; margin-bottom: 1rem; font-size: 1.5rem }
+        .main-content h1 { color: #001f3f; font-weight: bold; margin-bottom: 1rem; font-size: 1.5rem }
         .main-content p { color: #000000FF; margin-bottom: 1rem; font-size: 1rem }
-        .info-section .card { border: none; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 1.5rem; text-align: center; background-color: #f8f9fa; color: #333; height: 100%; }
+        .info-section .card { border: none; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 1.5rem; text-align: center; background-color: #FFFFFFFF; color: #333; height: 100%; }
         .info-section h6 { color: #001f3f; font-weight: bold; }
         .info-section p.fw-semibold { color: #ff7b00; font-size: 1.1rem; }
         .info-section .rounded-circle { background-color: #ff7b00 !important; color: white !important; width: 50px; height: 50px; font-weight: bold; font-size: 1.5rem; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; }
         .info-section .fa-hands-helping { color: #ff7b00 !important; font-size: 2.5rem; margin-bottom: 10px;}
         .steps-section .p-4 { background-color: #22374e !important; color: white !important; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); height: 100%; display: flex; flex-direction: column; justify-content: flex-start; }
-        .steps-section .rounded-circle { background-color: #ff7b00 !important; color: white !important; width: 35px; height: 35px; font-weight: bold; font-size: 1rem; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+        .steps-section .rounded-circle { background-color: #2153E9FF !important; color: white !important; width: 35px; height: 35px; font-weight: bold; font-size: 1rem; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
         .steps-section h6 { color: white !important; font-size: 1.1rem; font-weight: bold; margin-bottom: 0.5rem; }
         .steps-section p { color: rgba(255,255,255,0.7) !important; font-size: 0.95rem;}
         
         /* --- CTA Section --- */
-        .cta-section { background-color: white; color: #000; padding: 4rem 0; text-align: left; }
+        .cta-section { background: linear-gradient(180deg, #FCF7F1FF 0%, #FFFCF8FF 100%); color: #000; padding: 4rem 0; text-align: left; }
         .cta-section h2 { font-size: 2.5rem; font-weight: bold; line-height: 1.2; margin-bottom: 1.5rem; color: #000000; }
         .cta-section p { font-size: 1.1rem; margin-bottom: 2rem; color: #666; }
         .cta-section .cta-img { max-width: 400px; height: auto; filter: drop-shadow(0 0 20px rgba(0,0,0,0.5)); }
 
         /* --- Footer --- */
-        footer.footer { background-color: #071b2f; color: white; width: 100%; padding: 4rem 0; }
+        footer.footer { background-color: #001f3f; color: white; width: 100%; padding: 4rem 0; }
         footer.footer ul { list-style-type: none; padding-left: 0; }
         footer.footer .text-white-50 { color: rgba(255, 255, 255, 0.5); }
         footer.footer a { color: #ff7b00; text-decoration: none; transition: text-decoration 0.3s ease; }
@@ -179,80 +249,78 @@
             .navbar .ms-auto { display: none !important; }
         }
             @media (max-width: 767.98px) {
-            .hero-section {
-                min-height: 40vh; /* Pastikan tinggi penuh untuk centering vertikal */
-                padding: 2rem 1rem;
-                display: flex; /* Aktifkan flexbox */
-                flex-direction: column; /* Susun item secara vertikal */
-                justify-content: center; /* Pusatkan konten vertikal */
-                align-items: center; /* Pusatkan seluruh konten hero section secara horizontal */
-            }
-            .hero-section .container {
-                display: flex;
-                flex-direction: column;
-                width: 100%; /* Pastikan container mengambil lebar penuh */
-                align-items: center; /* Pusatkan konten container secara horizontal */
-            }
-            .hero-section .row {
-                width: 100%; /* Pastikan baris mengambil lebar penuh */
-                display: flex; /* Make the row a flex container */
-                flex-direction: row !important; /* Paksa kolom berdampingan */
-                flex-wrap: nowrap !important; /* Mencegah kolom menumpuk */
-                justify-content: flex-start !important; /* Mulai dari kiri */
-                align-items: center !important; /* Pusatkan konten secara vertikal di dalam baris */
+
+                .hero-wrapper {
+                    padding: 100px 0px 0px; /* sedikit lebih kecil dari desktop */
+                    text-align: left; /* tetap gaya desktop */
+                }
+
+                .hero-title {
+                    font-size: 14px;      /* versi kecil dari 48px */
+                    line-height: 1.3;
+                    font-weight: 800;
+                }
+
+                .hero-desc {
+                    font-size: 10px;      /* versi kecil dari 20px */
+                    max-width: 100%;
+                    margin-bottom: 20px;
+                }
+
+                /* Container tetap layout desktop (kiri teks, kanan gambar) */
+                .hero-wrapper .row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+
+                /* Kolom teks */
+                .hero-wrapper .col-md-6 {
+                    width: 55%;
+                }
+
+                /* Kolom gambar */
+                .hero-wrapper .col-md-5 {
+                    width: 45%;
+                    text-align: center;
+                }
+
+                /* Gambar */
+                .hero-image {
+                    width: 100%;
+                    max-width: 260px; /* supaya pas seperti desktop mini */
+                    height: auto;
+                }
+
+                /* Tombol */
+                .hero-btn-primary {
+                    font-size: 7px;
+                    font-weight: 700;
+                    padding: 8px 19px;
+                    border-radius: 2px;
+                }
+                .hero-btn-secondary {
+                    font-size: 7px;
+                    font-weight: 700;
+                    padding: 8px 14px;
+                    border-radius: 2px;
+                }
+
+                .hero-stats-card {
+                    padding: 2px 5px;
+                    min-width: 20px;
+                    border-radius: 2px;
+                }
+
+                .hero-stats-title {
+                    font-size: 8px;
+                }
+
+                .hero-stats-text {
+                    font-size: 6px;
+                }
             }
 
-            /* Gaya untuk kolom teks/tombol (kolom pertama) */
-            .hero-section .col-md-6:first-child {
-                flex: 0 0 50% !important; /* Memaksa lebar 50% */
-                max-width: 50% !important;
-                text-align: left !important; /* Teks rata kiri */
-                display: flex;
-                flex-direction: column;
-                align-items: flex-start !important; /* Elemen di dalam kolom (h1, p, div tombol) rata kiri */
-                justify-content: center;
-                margin-bottom: 2rem !important;
-            }
-
-            /* Gaya untuk kolom gambar (kolom kedua) */
-            .hero-section .col-md-6.text-center {
-                flex: 0 0 40% !important; /* Memaksa lebar 50% */
-                max-width: 40% !important;
-                text-align: center !important; /* Pusatkan gambar */
-                display: flex; /* Gunakan flexbox untuk kolom gambar */
-                flex-direction: column;
-                align-items: center !important; /* Pusatkan gambar secara horizontal menggunakan flexbox */
-                justify-content: center;
-                margin-top: 0 !important;
-                margin-bottom: 0 !important;
-            }
-
-            .hero-section h1 {
-                font-size: 0.5rem;
-            }
-            .hero-section p {
-                font-size: 0.5rem;
-            }
-            .hero-img {
-                max-width: 150%;
-            }
-            .hero-section .mt-3 { /* Div yang berisi tombol-tombol */
-                display: flex;
-                flex-direction: row !important; /* Susun tombol secara horizontal */
-                gap: 1rem !important; /* Jarak antar tombol */
-                width: 90% !important; /* Tombol kontainer mengambil lebar sesuai konten */
-                align-items: flex-start !important; /* Rata kiri tombol */
-            }
-            .hero-section .mt-3 .btn {
-                width: 40% !important; /* Tombol mengambil lebar sesuai kontennya */
-            }
-            .hero-section .btn-navy {
-                width: 80%;          /* tombol lebih lebar agar nyaman di-sentuh */
-                font-size: 0.4rem;   /* sedikit lebih kecil */
-                padding: 0.4rem 0.8rem;
-                border-radius: 5px;
-            }
-        }
 
         /* Penyesuaian Main Content untuk Mobile */
         @media (max-width: 700.98px) {
@@ -268,8 +336,13 @@
             .main-content h4 img {
                 height: 30px !important;
             }
+            .main-content h2 {
+                font-size: 1rem;
+                text-align: center;
+                justify-content: center !important;
+            }
             .main-content h1 {
-                font-size: 0.75rem;
+                font-size: 0.6rem;
                 text-align: center;
                 justify-content: center !important;
             }
@@ -328,28 +401,29 @@
                 align-items: center;
             }
             .cta-section .col-md-7 {
-                flex: 0 0 40% !important;
-                max-width: 40% !important;
+                flex: 0 0 55% !important;
+                max-width: 55% !important;
                 padding-right: 1rem;
                 text-align: left;
             }
             .cta-section .col-md-5 {
                 flex: 0 0 40% !important;
                 max-width: 40% !important;
+                text-align: center;
             }
             .cta-section h2 {
-                font-size: 1.2rem;
+                font-size: 1.0rem;
                 margin-top: 0;
             }
             .cta-section p {
-                font-size: 0.6rem;
+                font-size: 0.5rem;
             }
             .cta-section .btn {
-                font-size: 0.8rem;
+                font-size: 0.6rem;
                 padding: 0.4rem 0.8rem;
             }
             .cta-section .cta-img {
-                max-width: 140%;
+                max-width: 130%;
                 margin-bottom: 0;
                 margin-left: auto;
                 margin-right: auto;
@@ -363,7 +437,18 @@
                 justify-content: flex-start !important;
                 padding-bottom: 2rem;
             }
-            footer.footer .col-lg-8,
+            footer.footer .col-lg-8 h3 {
+                font-size: 0.75rem;
+            }
+            footer.footer .col-lg-8 .row h6 {
+                font-size: 0.7rem;
+            }
+            footer.footer .col-lg-8 .row ul {
+                font-size: 0.5rem;
+            }
+            footer.footer .col-lg-8 .mt-4 {
+                font-size: 0.7rem;
+            }
             footer.footer .col-lg-4 {
                 flex: 0 0 auto !important;
                 max-width: none !important;
@@ -375,6 +460,7 @@
             }
             footer.footer .col-lg-4 img {
                 margin-left: 2rem;
+                max-width: 150px;
             }
 
             footer.footer .col-lg-8 .row {
@@ -383,10 +469,11 @@
                 justify-content: flex-start !important;
             }
             footer.footer .col-lg-8 .col-md-4 {
-                flex: 0 0 33.33% !important;
-                max-width: 33.33% !important;
+                flex: 0 0 28.33% !important;
+                max-width: 28.33% !important;
                 text-align: left !important;
                 margin-bottom: 0 !important;
+                margin: 0.05rem;
                 padding-right: 1rem;
                 padding-left: 1rem;
             }
@@ -425,7 +512,7 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #ff7b00;">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0E3052FF;">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">MESSARI</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
@@ -451,9 +538,9 @@
                                      alt="Logo Perusahaan" class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
                                 {{ Auth::user()->name }}
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                            <ul class="dropdown-menu dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="{{ Auth::user()->role === 'pelamar' ? route('pelamar.profile.edit') : (Auth::user()->role === 'perusahaan' ? route('perusahaan.profile.edit') : route('admin.profile.edit')) }}">Profil Perusahaan</a></li>
-                                <li><a class="dropdown-item" href="#">Pengaturan</a></li>
+                                <li><a class="dropdown-item" href="{{ route('perusahaan.settings.edit') }}">Pengaturan</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}">
@@ -465,8 +552,8 @@
                         </div>
                     @else
                         <a href="{{ route('login') }}" class="btn btn-outline-light me-2">MASUK</a>
-                        <a href="{{ route('home') }}" class="btn btn-dark me-2">PELAMAR</a>
-                        <a href="{{ route('toko-umkm.index') }}" class="btn btn-dark">UMKM</a>
+                        <a href="{{ route('home') }}" class="btn btn-primary me-2">PELAMAR</a>
+                        <a href="{{ route('toko-umkm.index') }}" class="btn btn-primary">UMKM</a>
                     @endauth
                 </div>
             </div>
@@ -493,7 +580,7 @@
                     </ul>
                     <div class="mt-auto">
                         <div class="d-grid gap-2">
-                            <a href="{{ route('perusahaan.dashboard') }}" class="btn btn-light">Pengaturan</a>
+                            <a href="{{ route('perusahaan.settings.edit') }}" class="btn btn-primary">Pengaturan</a>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit" class="btn btn-danger w-100">Log Out</button>
@@ -503,8 +590,8 @@
                     </div>
                     <div class="offcanvas-buttons mt-3">
                         <a href="{{ route('login') }}" class="btn btn-outline-light">MASUK</a>
-                        <a href="{{ route('home') }}" class="btn btn-dark">PELAMAR</a>
-                        <a href="{{ route('toko-umkm.index') }}" class="btn btn-dark">UMKM</a>
+                        <a href="{{ route('home') }}" class="btn btn-primary">PELAMAR</a>
+                        <a href="{{ route('toko-umkm.index') }}" class="btn btn-primary">UMKM</a>
                     </div>  
                     @endauth
                 </div>
@@ -513,72 +600,80 @@
     </nav>
     <main>
         {{-- Hero Section --}}
-        @auth
-            <div class="hero-section bg-orange text-white py-5">
-                <div class="container">
-                    <div class="row align-items-center">
-                        <div class="col-md-6 mb-4 mb-md-0" data-aos="fade-right">
-                            <h1 class="fw-bold mb-3">
-                                REKRUT KANDIDAT <br>
-                                YANG TEPAT UNTUK <br>
-                                PERUSAHAAN ANDA
-                            </h1>
-                            <p class="text-light mb-2">Dapatkan akses ke ribuan pelamar berkualitas yang siap bergabung dengan tim Anda.</p>
-                            <div class="mt-1">
-                            <a href="{{ route('perusahaan.kandidat-pelamar.index') }}" class="btn btn-navy">Dashboard Perusahaan</a>
+        <div class="hero-wrapper">
+            <div class="container">
+                <div class="row align-items-center justify-content-between">
+
+                    <!-- LEFT TEXT -->
+                    <div class="col-md-6">
+
+                        <h1 class="hero-title">
+                            Rekrut kandidat tepat, cepat, dan efisien untuk perusahaan Anda
+                        </h1>
+
+                        <p class="hero-desc">
+                            Akses database pelamar berkualitas, pasang iklan VIP, dan gunakan fitur pencarian kandidat premium — semua dalam satu platform yang mudah digunakan.
+                        </p>
+
+                        @auth
+                            <a href="{{ route('perusahaan.kandidat-pelamar.index') }}" class="hero-btn-primary">
+                                Dashboard
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}" class="hero-btn-primary">
+                                Masuk
+                            </a>
+                            <a href="{{ route('register') }}" class="hero-btn-secondary">
+                                Daftar
+                            </a>
+                        @endauth
+
+                        <!-- STATS -->
+                        <div class="d-flex gap-3 mt-4 flex-wrap">
+                            <div class="hero-stats-card">
+                                <div class="hero-stats-title">Efektivitas</div>
+                                <div class="hero-stats-text">Fitur & Sistem</div>
+                            </div>
+
+                            <div class="hero-stats-card">
+                                <div class="hero-stats-title">1K+</div>
+                                <div class="hero-stats-text">Pelamar</div>
+                            </div>
+
+                            <div class="hero-stats-card">
+                                <div class="hero-stats-title">98%</div>
+                                <div class="hero-stats-text">Kepuasan</div>
                             </div>
                         </div>
-                        <div class="col-md-6 text-center" data-aos="fade-left">
-                            <img src="{{ asset('images/gambar1.png') }}" alt="We Are Hiring" class="img-fluid hero-img">
-                        </div>
+                    </div>
+
+                    <!-- RIGHT IMAGE -->
+                    <div class="col-md-5 text-center">
+                        <img src="{{ asset('images/Logo Perusahaan.png') }}" class="hero-image img-fluid" alt="Hero Image">
                     </div>
                 </div>
             </div>
-        @else
-            <div class="hero-section bg-orange text-white py-5">
-                <div class="container">
-                    <div class="row align-items-center">
-                        <div class="col-md-6 mb-4 mb-md-0" data-aos="fade-right">
-                            <h1 class="fw-bold mb-3">
-                                REKRUT KANDIDAT <br>
-                                YANG TEPAT UNTUK <br>
-                                PERUSAHAAN ANDA
-                            </h1>
-                            <p class="text-light mb-2">Daftarkan Perusahaan Anda Disini</p>
-                            <div class="mt-3">
-                                <a href="{{ route('login') }}" class="btn btn-navy">MASUK</a>
-                                <a href="{{ route('register') }}" class="btn btn-navy">DAFTAR</a>
-                            </div>
-                        </div>
-                        <div class="col-md-6 text-center" data-aos="fade-left">
-                            <img src="{{ asset('images/gambar1.png') }}" alt="We Are Hiring" class="img-fluid hero-img">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endauth
+        </div>
     
         <div class="main-content">
             <div class="container" >
-                <div class="info-section container py-5 bg-white text-center text-dark">
+                <div class="info-section container py-5 text-center text-dark">
                     <h4 class="fw-bold mb-4" data-aos="zoom-in">Mencari kandidat untuk perusahaan anda menjadi<br>lebih mudah dan cepat</h4>
                     <div class="row justify-content-center align-items-center mb-5 g-4" data-aos="zoom-in" data-aos-delay="200">
                         <div class="col-md-4">
                             <h2 class="fw-bold text-primary">250+</h2>
-                            <h1 class="fw-semibold">Perusahaan Terdaftar</h1>
+                            <h1 class="fw-semibold">Perusahaan</h1>
                             <p class="text-muted small">Lebih dari 250 perusahaan telah bergabung di platform kami.</p>
                         </div>
                         <div class="col-md-4">
-                            <div class="rounded-circle bg-warning text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px; font-weight: bold;">1</div>
-                            <h1 class="fw-semibold">Pilihan no.1 untuk pencari kerja</h1>
+                            <h2 class="fw-bold text-primary">No.1</h2>
+                            <h1 class="fw-semibold">Pencari kerja</h1>
                             <p class="text-muted small">Dikenal sebagai platform pilihan utama bagi para pencari kerja untuk menemukan peluang terbaik.</p>
                         </div>
                         <div class="col-md-4">
-                            <div class="mb-2">
-                                <i class="fa-solid fa-hands-helping fa-2x text-warning"></i>
-                            </div>
-                            <h1 class="fw-semibold">Siap membantu</h1>
-                            <p class="text-muted small">Hubungi kontak tertera untuk mengajukan pertanyaan</p>
+                            <h2 class="fw-bold text-primary">Sistem</h2>
+                            <h1 class="fw-semibold">Auto-Ranking</h1>
+                            <p class="text-muted small">Layanan sistem unggul, mencari pekerja sesuai dengan kriteria lowongan dengan sistem Auto-Ranking</p>
                         </div>
                     </div>
                     <hr class="my-4" style="border-color: #ccc;">
@@ -618,12 +713,12 @@
                         <p>Dapatkan iklan lowongan dan temukan kandidat yang tepat di platform rekrutmen #1 di Indonesia.</p>
                         @auth
                             @if(Auth::user()->role === 'perusahaan')
-                                <a href="/perusahaan/iklan/pasang-baru" class="btn btn-orange">Pasang Iklan</a>
+                                <a href="/perusahaan/iklan/pasang-baru" class="btn btn-navy">Pasang Iklan</a>
                             @else
-                                <a href="#" class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Pasang Iklan</a>
+                                <a href="#" class="btn btn-navy" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Pasang Iklan</a>
                             @endif
                         @else
-                            <a href="#" class="btn btn-orange" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Pasang Iklan</a>
+                            <a href="#" class="btn btn-navy" data-bs-toggle="modal" data-bs-target="#loginRequiredModal">Pasang Iklan</a>
                         @endauth
                     </div>
                     <div class="col-md-5 text-center" data-aos="fade-left">
