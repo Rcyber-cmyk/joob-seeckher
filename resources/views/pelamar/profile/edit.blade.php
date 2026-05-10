@@ -16,10 +16,16 @@
     <div class="hero-pattern"></div>
 </div>
 
-<div class="profile-content-wrapper">
-    <div class="container pb-5">
-        <form action="{{ route('pelamar.profile.update') }}" method="POST" enctype="multipart/form-data">
-            @csrf
+{{-- 
+    PERUBAHAN STRUKTUR: 
+    Form dibuka DI SINI agar membungkus seluruh konten + modal 
+--}}
+<form action="{{ route('pelamar.profile.update') }}" method="POST" enctype="multipart/form-data">
+    @csrf
+
+    {{-- WRAPPER KONTEN UTAMA --}}
+    <div class="profile-content-wrapper">
+        <div class="container pb-5">
 
             {{-- ALERT MESSAGES (Floating) --}}
             @if (session('success'))
@@ -272,56 +278,62 @@
 
                 </div>
             </div>
+        </div>
+    </div> 
+    {{-- TUTUP DIV CONTENT WRAPPER DISINI --}}
 
-            {{-- MODAL KEAHLIAN --}}
-            <div class="modal fade" id="keahlianModal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                    <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
-                        <div class="modal-header bg-dark-blue text-white border-0 py-3">
-                            <h5 class="modal-title fw-bold"><i class="bi bi-stars me-2 text-orange"></i> Pilih Keahlian</h5>
-                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body p-4 bg-light">
-                            <div class="row g-3">
-                                @forelse ($bidangKeahlianGrouped as $bidang)
-                                    <div class="col-md-6">
-                                        <div class="card h-100 border-0 shadow-sm rounded-4">
-                                            <div class="card-header bg-white border-0 fw-bold text-dark-blue pt-3 pb-0">
-                                                {{ $bidang->nama_bidang }}
-                                            </div>
-                                            <div class="card-body">
-                                                <div class="d-flex flex-wrap gap-2">
-                                                    @foreach ($bidang->keahlian as $keahlian)
-                                                        <div class="position-relative">
-                                                            <input type="checkbox" class="btn-check" name="keahlian[]" 
-                                                                   id="k-{{ $keahlian->id }}" value="{{ $keahlian->id }}" 
-                                                                   {{ $profile->keahlian->contains($keahlian->id) ? 'checked' : '' }}>
-                                                            <label class="btn btn-outline-secondary btn-sm rounded-pill border-0 bg-light text-dark small" 
-                                                                   for="k-{{ $keahlian->id }}">{{ $keahlian->nama_keahlian }}</label>
-                                                        </div>
-                                                    @endforeach
+    {{-- 
+        PERUBAHAN POSISI MODAL: 
+        Modal diletakkan DI LUAR wrapper tapi DI DALAM Form 
+        agar z-index tidak konflik dan data tetap tersubmit.
+    --}}
+    <div class="modal fade" id="keahlianModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
+                <div class="modal-header bg-dark-blue text-white border-0 py-3">
+                    <h5 class="modal-title fw-bold"><i class="bi bi-stars me-2 text-orange"></i> Pilih Keahlian</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4 bg-light">
+                    <div class="row g-3">
+                        @forelse ($bidangKeahlianGrouped as $bidang)
+                            <div class="col-md-6">
+                                <div class="card h-100 border-0 shadow-sm rounded-4">
+                                    <div class="card-header bg-white border-0 fw-bold text-dark-blue pt-3 pb-0">
+                                        {{ $bidang->nama_bidang }}
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @foreach ($bidang->keahlian as $keahlian)
+                                                <div class="position-relative">
+                                                    <input type="checkbox" class="btn-check" name="keahlian[]" 
+                                                           id="k-{{ $keahlian->id }}" value="{{ $keahlian->id }}" 
+                                                           {{ $profile->keahlian->contains($keahlian->id) ? 'checked' : '' }}>
+                                                    <label class="btn btn-outline-secondary btn-sm rounded-pill border-0 bg-light text-dark small" 
+                                                           for="k-{{ $keahlian->id }}">{{ $keahlian->nama_keahlian }}</label>
                                                 </div>
-                                            </div>
+                                            @endforeach
                                         </div>
                                     </div>
-                                @empty
-                                    <div class="col-12 text-center py-5">
-                                        <p class="text-muted">Tidak ada data keahlian.</p>
-                                    </div>
-                                @endforelse
+                                </div>
                             </div>
-                        </div>
-                        <div class="modal-footer border-0 bg-white shadow-top justify-content-center py-3">
-                            <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-orange rounded-pill px-5 fw-bold shadow-sm">Simpan Pilihan</button>
-                        </div>
+                        @empty
+                            <div class="col-12 text-center py-5">
+                                <p class="text-muted">Tidak ada data keahlian.</p>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
+                <div class="modal-footer border-0 bg-white shadow-top justify-content-center py-3">
+                    <button type="button" class="btn btn-light rounded-pill px-4 fw-bold" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-orange rounded-pill px-5 fw-bold shadow-sm">Simpan Pilihan</button>
+                </div>
             </div>
-
-        </form>
+        </div>
     </div>
-</div>
+
+</form> {{-- TUTUP FORM DI PALING BAWAH --}}
+
 @endsection
 
 @push('styles')
