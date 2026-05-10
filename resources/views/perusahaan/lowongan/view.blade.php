@@ -126,6 +126,14 @@
             <div class="col-8">: {{ $lowongan->gender ?? 'Tidak ditentukan' }}</div>
         </div>
         <div class="row">
+            <div class="col-4">Domisili</div>
+            <div class="col-8">: {{ $lowongan->domisili ?? 'Tidak ditentukan' }}</div>
+        </div>
+        <div class="row">
+            <div class="col-4">Nilai Akhir</div>
+            <div class="col-8">: {{ $lowongan->nilai_pendidikan_terakhir ?? 'Tidak ditentukan' }}</div>
+        </div>
+        <div class="row">
             <div class="col-4">Pendidikan</div>
             <div class="col-8">: Minimal {{ $lowongan->pendidikan_terakhir ?? 'Tidak ditentukan' }}</div>
         </div>

@@ -127,11 +127,6 @@
                 <input type="text" name="judul_lowongan" id="judul_lowongan" class="form-control" 
                        value="{{ old('judul_lowongan', $lowongan->judul_lowongan) }}">
             </div>
-            <div class="col-12 col-md-6">
-                <label for="domisili" class="form-label">Domisili</label>
-                <input type="text" name="domisili" id="domisili" class="form-control" 
-                       value="{{ old('domisili', $lowongan->domisili) }}">
-            </div>
             <div class="col-12">
                 <label for="tipe_pekerjaan" class="form-label">Tipe Pekerjaan</label>
                 <select name="tipe_pekerjaan" id="tipe_pekerjaan" class="form-select">
@@ -160,6 +155,11 @@
                     <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
                     <option value="Semua" {{ old('gender') == 'Semua' ? 'selected' : '' }}>Semua</option>
                 </select>
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="domisili" class="form-label">Domisili</label>
+                <input type="text" name="domisili" id="domisili" class="form-control" 
+                       value="{{ old('domisili', $lowongan->domisili) }}">
             </div>
             <div class="col-12 col-md-6">
                 <label for="pendidikan_terakhir" class="form-label fw-semibold">Pendidikan Terakhir</label>
