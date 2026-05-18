@@ -17,26 +17,22 @@ class RankingService
      */
     public function calculateScores(ProfilePelamar $pelamar, LowonganPekerjaan $lowongan): array
     {
-        // --- SKOR PENGALAMAN KERJA (LOGIKA BARU DENGAN RENTANG MIN/MAKS) ---
+        // --- SKOR PENGALAMAN KERJA (HANYA SYARAT MINIMAL) ---
         $pengalamanMin = (int)$lowongan->pengalaman_kerja;
-        $pengalamanMaks = (int)$lowongan->pengalaman_kerja_maks;
         $pengalamanPelamar = (int)$pelamar->pengalaman_kerja;
         $skorPengalaman = 0;
 
-        if ($pengalamanMin > 0 && $pengalamanMaks > 0) {
-            if ($pengalamanPelamar >= $pengalamanMin && $pengalamanPelamar <= $pengalamanMaks) {
-                $skorPengalaman = 100;
-            }
-        } elseif ($pengalamanMin > 0) { // Jika hanya minimal yang diatur
+        if ($pengalamanMin > 0) {
             if ($pengalamanPelamar >= $pengalamanMin) {
                 $skorPengalaman = 100;
             }
-        } else { // Jika tidak ada syarat pengalaman
+        } else { // Jika tidak ada syarat minimal pengalaman (0 tahun)
             $skorPengalaman = 100;
         }
 
         // --- SKOR PENDIDIKAN (SEBAGAI SYARAT MINIMAL) ---
-        $levelPendidikan = ['SMA' => 1, 'D3' => 2, 'S1' => 3, 'S2' => 4, 'S3' => 5];
+        // Penambahan jengjang SD dan SMP agar sinkron dengan form lowongan
+        $levelPendidikan = ['SD' => 1, 'SMP' => 2, 'SMA' => 3, 'D3' => 4, 'S1' => 5, 'S2' => 6, 'S3' => 7];
         $levelPelamar = $levelPendidikan[$pelamar->lulusan] ?? 0;
         $levelLowongan = $levelPendidikan[$lowongan->pendidikan_terakhir] ?? 0;
         $skorPendidikan = 0;
@@ -48,19 +44,34 @@ class RankingService
             $skorPendidikan = 100;
         }
 
-        // --- SKOR NILAI (SEBAGAI SYARAT MINIMAL) ---
+        // --- SKOR NILAI (SINKRON PENDIDIKAN & SAW KONTINU) ---
         $nilaiPelamar = (float)str_replace(',', '.', $pelamar->nilai_akhir);
         $nilaiLowongan = (float)str_replace(',', '.', $lowongan->nilai_pendidikan_terakhir);
         $skorNilai = 0;
+
         if ($nilaiLowongan > 0) {
+            // Syarat Utama: Nilai pelamar wajib di atas atau sama dengan syarat minimal lowongan
             if ($nilaiPelamar >= $nilaiLowongan) {
-                $skorNilai = 100;
+                $pendidikanSyarat = $lowongan->pendidikan_terakhir;
+                
+                if (in_array($pendidikanSyarat, ['SMA', 'SMP', 'SD'])) {
+                    // Jika kelompok sekolah, nilai dihitung proporsional dari skala nilai maksimal 100
+                    $skorNilai = ($nilaiPelamar / 100) * 100; 
+                } else {
+                    // Jika kelompok perguruan tinggi, nilai dihitung proporsional dari skala IPK maksimal 4.00
+                    $skorNilai = ($nilaiPelamar / 4.00) * 100;
+                }
+
+                // Memastikan skor tidak melampaui 100 jika ada kelebihan input data
+                if ($skorNilai > 100) {
+                    $skorNilai = 100;
+                }
             }
-        } else { // Jika tidak ada syarat nilai
+        } else { // Jika lowongan tidak memberikan syarat nilai minimal
             $skorNilai = 100;
         }
 
-        // --- SKOR USIA (LOGIKA BARU DENGAN RENTANG MIN/MAKS) ---
+        // --- SKOR USIA (RENTANG MIN/MAKS) ---
         $usiaMin = (int)$lowongan->usia_min;
         $usiaMaks = (int)$lowongan->usia;
         $usiaPelamar = $pelamar->tanggal_lahir ? Carbon::parse($pelamar->tanggal_lahir)->age : 99;
@@ -74,7 +85,7 @@ class RankingService
             $skorUsia = 100;
         }
 
-        // --- SKOR GENDER & DOMISILI (TETAP SAMA) ---
+        // --- SKOR GENDER & DOMISILI ---
         $skorGender = ($lowongan->gender === 'Semua' || $pelamar->gender === $lowongan->gender) ? 100 : 0;
         $skorDomisili = (strtolower($pelamar->domisili) == strtolower($lowongan->domisili)) ? 100 : 0;
 
@@ -102,4 +113,3 @@ class RankingService
         ];
     }
 }
-

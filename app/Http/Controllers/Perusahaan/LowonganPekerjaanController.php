@@ -38,8 +38,7 @@ class LowonganPekerjaanController extends Controller
             'usia' => ['required', 'integer', 'min:0'], // usia_maks
             'usia_min' => ['required', 'integer', 'min:0', 'lte:usia'], // lte:less than or equal to usia_maks
             'nilai_pendidikan_terakhir' => ['nullable', 'string', 'max:255'],
-            'pengalaman_kerja' => ['required', 'integer', 'min:0'], // pengalaman_kerja_min
-            'pengalaman_kerja_maks' => ['required', 'integer', 'min:0', 'gte:pengalaman_kerja'], // gte:greater than or equal to pengalaman_kerja_min
+            'pengalaman_kerja' => ['required', 'integer', 'min:0'], 
             
             // Bobot E-Ranking
             'bobot_domisili' => ['required', 'integer', 'min:0', 'max:100'],
@@ -51,11 +50,31 @@ class LowonganPekerjaanController extends Controller
         ]);
         // ===================== AKHIR VALIDASI BARU =====================
 
+        // ==================== VALIDASI SINKRONISASI NILAI & PENDIDIKAN ====================
+        $pendidikan = $validatedData['pendidikan_terakhir'] ?? null;
+        $nilaiInput = (float)str_replace(',', '.', $request->input('nilai_pendidikan_terakhir', 0));
+
+        if ($pendidikan && $nilaiInput > 0) {
+            if (in_array($pendidikan, ['SMA', 'SMP', 'SD'])) { // Kelompok sekolah menengah
+                if ($nilaiInput > 100) {
+                    return back()->withErrors(['nilai_pendidikan_terakhir' => 'Untuk lulusan SMA/sederajat, masukkan nilai rata-rata dengan rentang maksimal 100 (Contoh: 81.50).'])->withInput();
+                }
+            } else { // Kelompok Perguruan Tinggi (D1, D2, D3, D4, S1, S2, S3)
+                if ($nilaiInput > 4.00) {
+                    return back()->withErrors(['nilai_pendidikan_terakhir' => 'Untuk lulusan Diploma/Sarjana, masukkan nilai IPK dengan rentang maksimal 4.00 (Contoh: 3.21).'])->withInput();
+                }
+            }
+        }
+        // ==================================================================================
+
         // Validasi kustom untuk memastikan total bobot adalah 100
         $totalBobot = $validatedData['bobot_domisili'] + $validatedData['bobot_usia'] + $validatedData['bobot_gender'] + $validatedData['bobot_pendidikan'] + $validatedData['bobot_nilai'] + $validatedData['bobot_pengalaman'];
         if ($totalBobot !== 100) {
             return back()->withErrors(['total_bobot' => 'Total persentase bobot harus tepat 100%.'])->withInput();
         }
+
+        // Set nilai default jika pengalaman_kerja_maks dikosongkan oleh user
+        $validatedData['pengalaman_kerja_maks'] = $validatedData['pengalaman_kerja_maks'] ?? 0;
 
         $user = Auth::user();
         $perusahaan = $user->profilePerusahaan;
@@ -106,7 +125,6 @@ class LowonganPekerjaanController extends Controller
             'usia_min' => ['required', 'integer', 'min:0', 'lte:usia'],
             'nilai_pendidikan_terakhir' => ['nullable', 'string', 'max:255'],
             'pengalaman_kerja' => ['required', 'integer', 'min:0'],
-            'pengalaman_kerja_maks' => ['required', 'integer', 'min:0', 'gte:pengalaman_kerja'],
             'bobot_domisili' => ['required', 'integer', 'min:0', 'max:100'],
             'bobot_usia' => ['required', 'integer', 'min:0', 'max:100'],
             'bobot_gender' => ['required', 'integer', 'min:0', 'max:100'],
@@ -116,11 +134,31 @@ class LowonganPekerjaanController extends Controller
         ]);
         // ===================== AKHIR VALIDASI UPDATE =====================
 
+        // ==================== VALIDASI SINKRONISASI NILAI & PENDIDIKAN ====================
+        $pendidikan = $validatedData['pendidikan_terakhir'] ?? null;
+        $nilaiInput = (float)str_replace(',', '.', $request->input('nilai_pendidikan_terakhir', 0));
+
+        if ($pendidikan && $nilaiInput > 0) {
+            if (in_array($pendidikan, ['SMA', 'SMP', 'SD'])) {
+                if ($nilaiInput > 100) {
+                    return back()->withErrors(['nilai_pendidikan_terakhir' => 'Untuk lulusan SMA/sederajat, masukkan nilai rata-rata dengan rentang maksimal 100 (Contoh: 81.50).'])->withInput();
+                }
+            } else {
+                if ($nilaiInput > 4.00) {
+                    return back()->withErrors(['nilai_pendidikan_terakhir' => 'Untuk lulusan Diploma/Sarjana, masukkan nilai IPK dengan rentang maksimal 4.00 (Contoh: 3.21).'])->withInput();
+                }
+            }
+        }
+        // ==================================================================================
+
         // Validasi kustom untuk total bobot
         $totalBobot = $validatedData['bobot_domisili'] + $validatedData['bobot_usia'] + $validatedData['bobot_gender'] + $validatedData['bobot_pendidikan'] + $validatedData['bobot_nilai'] + $validatedData['bobot_pengalaman'];
         if ($totalBobot !== 100) {
             return back()->withErrors(['total_bobot' => 'Total persentase bobot harus tepat 100%.'])->withInput();
         }
+
+        // Set nilai default jika pengalaman_kerja_maks dikosongkan oleh user saat update
+        $validatedData['pengalaman_kerja_maks'] = $validatedData['pengalaman_kerja_maks'] ?? 0;
 
         $user = Auth::user();
         $perusahaan = $user->profilePerusahaan;
@@ -147,4 +185,3 @@ class LowonganPekerjaanController extends Controller
         return Redirect::route('perusahaan.lowongan-saya.index')->with('success', 'Lowongan berhasil dihapus!');
     }
 }
-

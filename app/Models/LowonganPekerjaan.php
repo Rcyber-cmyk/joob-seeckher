@@ -28,11 +28,10 @@ class LowonganPekerjaan extends Model
         'tipe_pekerjaan',
         'gender',
         'pendidikan_terakhir',
-        'usia_maks', // [DIUBAH] Mengganti 'usia' menjadi 'usia_maks' agar konsisten
+        'usia', // [DIUBAH] Mengganti 'usia' menjadi 'usia_maks' agar konsisten
         'usia_min',
         'nilai_pendidikan_terakhir',
-        'pengalaman_kerja', // Ini adalah min
-        'pengalaman_kerja_maks',
+        'pengalaman_kerja',
         'keahlian_bidang_pekerjaan',
 
         // Semua bobot harus ada di sini

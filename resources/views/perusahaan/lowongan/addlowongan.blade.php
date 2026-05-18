@@ -165,15 +165,15 @@
                 <label for="pendidikan_terakhir" class="form-label fw-semibold">Pendidikan Terakhir</label>
                 <select name="pendidikan_terakhir" id="pendidikan_terakhir" class="form-select" required>
                     <option value="">-- Pilih Pendidikan --</option>
-                    <option value="SD">SD</option>
-                    <option value="SMP">SMP</option>
-                    <option value="SMA/SMK">SMA/SMK</option>
-                    <option value="D1">D1</option>
-                    <option value="D2">D2</option>
-                    <option value="D3">D3</option>
-                    <option value="S1">S1</option>
-                    <option value="S2">S2</option>
-                    <option value="S3">S3</option>
+                    <option value="SD" {{ old('pendidikan_terakhir') == 'SD' ? 'selected' : '' }}>SD</option>
+                    <option value="SMP" {{ old('pendidikan_terakhir') == 'SMP' ? 'selected' : '' }}>SMP</option>
+                    <option value="SMA" {{ old('pendidikan_terakhir') == 'SMA' ? 'selected' : '' }}>SMA/SMK</option>
+                    <option value="D1" {{ old('pendidikan_terakhir') == 'D1' ? 'selected' : '' }}>D1</option>
+                    <option value="D2" {{ old('pendidikan_terakhir') == 'D2' ? 'selected' : '' }}>D2</option>
+                    <option value="D3" {{ old('pendidikan_terakhir') == 'D3' ? 'selected' : '' }}>D3</option>
+                    <option value="S1" {{ old('pendidikan_terakhir') == 'S1' ? 'selected' : '' }}>S1</option>
+                    <option value="S2" {{ old('pendidikan_terakhir') == 'S2' ? 'selected' : '' }}>S2</option>
+                    <option value="S3" {{ old('pendidikan_terakhir') == 'S3' ? 'selected' : '' }}>S3</option>
                 </select>
             </div>
             <div class="col-12 col-md-3">
@@ -187,22 +187,18 @@
                        value="{{ old('usia') }}" placeholder="Contoh: 35">
             </div>
             <div class="col-12 col-md-6">
-                <label for="nilai_pendidikan_terakhir" class="form-label">Nilai Pendidikan Terakhir</label>
-                <input type="text" name="nilai_pendidikan_terakhir" id="nilai_pendidikan_terakhir" class="form-control" placeholder="Contoh: IPK 3.00" value="{{ old('nilai_pendidikan_terakhir') }}">
+                <label for="nilai_pendidikan_terakhir" id="label_nilai" class="form-label">Nilai Standar Kelulusan</label>
+                <input type="text" name="nilai_pendidikan_terakhir" id="nilai_pendidikan_terakhir" class="form-control" placeholder="Pilih pendidikan terlebih dahulu" value="{{ old('nilai_pendidikan_terakhir') }}">
+                <small id="help_nilai" class="form-text text-muted mt-1 d-block"></small>
             </div>
             <div class="col-12 col-md-3">
-                <label for="pengalaman_kerja" class="form-label">Pengalaman Min (Tahun)</label>
+                <label for="pengalaman_kerja" class="form-label">Pengalaman (Tahun)</label>
                 <input type="number" name="pengalaman_kerja" id="pengalaman_kerja" class="form-control" 
                        value="{{ old('pengalaman_kerja') }}" placeholder="Contoh: 1">
             </div>
-            <div class="col-12 col-md-3">
-                <label for="pengalaman_kerja_maks" class="form-label">Pengalaman Maks (Tahun)</label>
-                <input type="number" name="pengalaman_kerja_maks" id="pengalaman_kerja_maks" class="form-control" 
-                       value="{{ old('pengalaman_kerja_maks') }}" placeholder="Contoh: 5">
-            </div>
         </div>
     </div>
-        {{-- ========================== BLOK BOBOT E-RANKING (BARU) ========================== --}}
+
     <div class="form-section p-4 mb-4">
         <h5 class="mb-3"><i class="bi bi-sliders me-2"></i> Atur Bobot Penilaian (E-Ranking)</h5>
         <p class="text-muted">Tentukan persentase penilaian untuk setiap kriteria. **Pastikan totalnya adalah 100%**.</p>
@@ -245,9 +241,11 @@
         <button type="submit" class="btn btn-submit">Tambahkan</button>
     </div>
 </form>
+
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // --- LOGIKA HITUNG BOBOT E-RANKING ---
         const container = document.getElementById('ranking-weights');
         const totalWeightEl = document.getElementById('total-weight');
         const weightInputs = container.querySelectorAll('.weight-input');
@@ -269,6 +267,38 @@
 
         container.addEventListener('input', calculateTotal);
         calculateTotal(); // Hitung total saat halaman dimuat
+
+
+        // --- LOGIKA DINAMIS INTERAKTIF (SINKRONISASI PENDIDIKAN & INPUT NILAI) ---
+        const pendidikanSelect = document.getElementById('pendidikan_terakhir');
+        const nilaiInput = document.getElementById('nilai_pendidikan_terakhir');
+        const labelNilai = document.getElementById('label_nilai');
+        const helpNilai = document.getElementById('help_nilai');
+
+        function updateNilaiPlaceholder() {
+            const pendidikan = pendidikanSelect.value;
+
+            if (pendidikan === "") {
+                labelNilai.textContent = "Nilai Pendidikan Terakhir";
+                nilaiInput.placeholder = "Pilih pendidikan terlebih dahulu";
+                helpNilai.textContent = "";
+            } else if (['SD', 'SMP', 'SMA'].includes(pendidikan)) {
+                // Konfigurasi jika Sekolah Menengah Kebawah terpilih
+                labelNilai.textContent = "Nilai Rata-Rata Kelulusan";
+                nilaiInput.placeholder = "Contoh: 82.50";
+                helpNilai.innerHTML = "<i class='bi bi-info-circle-fill me-1'></i> Masukkan nilai rata-rata ijazah sekolah dengan rentang <strong>0 - 100</strong>.";
+            } else {
+                // Konfigurasi jika Perguruan Tinggi terpilih (D1 - S3)
+                labelNilai.textContent = "Minimal IPK Kelulusan";
+                nilaiInput.placeholder = "Contoh: 3.25";
+                helpNilai.innerHTML = "<i class='bi bi-info-circle-fill me-1'></i> Masukkan standar minimal standar IPK dengan rentang <strong>0.00 - 4.00</strong>.";
+            }
+        }
+
+        // Jalankan fungsi saat dropdown diganti pilihannya
+        pendidikanSelect.addEventListener('change', updateNilaiPlaceholder);
+        // Jalankan fungsi saat halaman direfresh/load pertama kali untuk menjaga nilai 'old()' Laravel
+        updateNilaiPlaceholder();
     });
 </script>
 @endpush

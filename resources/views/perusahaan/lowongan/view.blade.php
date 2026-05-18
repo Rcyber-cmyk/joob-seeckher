@@ -142,8 +142,8 @@
             <div class="col-8">: {{ $lowongan->usia_min ?? 'Tidak ada batas' }} - {{ $lowongan->usia ?? 'Tidak ada batas' }} Tahun</div>
         </div>
         <div class="row">
-            <div class="col-4">Rentang Pengalaman</div>
-            <div class="col-8">: {{ $lowongan->pengalaman_kerja ?? '0' }} - {{ $lowongan->pengalaman_kerja_maks ?? 'Tidak ada batas' }} Tahun</div>
+            <div class="col-4">Pengalaman Kerja</div>
+            <div class="col-8">: {{ $lowongan->pengalaman_kerja ?? '0' }} Tahun</div>
         </div>
     </div>
     

@@ -65,7 +65,7 @@
         background-color: #f1f1f1;
     }
     .btn-cancel {
-        background-color: #6c757d; /* Warna abu-abu untuk batal */
+        background-color: #6c757d;
         color: white;
         padding: 0.75rem 1.5rem;
         font-weight: 600;
@@ -98,7 +98,6 @@
     <p class="text-muted">Edit detail lowongan pekerjaan untuk: <strong>{{ $lowongan->judul_lowongan }}</strong></p>
 </div>
 
-{{-- Menampilkan error validasi jika ada --}}
 @if ($errors->any())
     <div class="alert alert-danger mb-4">
         <strong>Terjadi Kesalahan!</strong>
@@ -112,11 +111,11 @@
 
 <form action="{{ route('perusahaan.lowongan.update', $lowongan->id) }}" method="POST">
     @csrf
-    @method('PATCH') {{-- Method untuk update --}}
+    @method('PATCH')
     
     <div class="form-section p-4 mb-4">
         <h5 class="mb-3"><i class="bi bi-briefcase-fill me-2"></i> Detail Lowongan</h5>
-        <div class="row g-4">
+        <div class="row g-4 mb-4">
             <div class="col-12">
                 <label for="nama_perusahaan" class="form-label">Nama Perusahaan</label>
                 <input type="text" id="nama_perusahaan" class="form-control" 
@@ -144,16 +143,16 @@
         </div>
     </div>
 
-     <div class="form-section p-4 mb-4">
+    <div class="form-section p-4 mb-4">
         <h5 class="mb-3"><i class="bi bi-card-checklist me-2"></i> Kualifikasi Pelamar</h5>
         <div class="row g-4">
             <div class="col-12 col-md-6">
                 <label for="gender" class="form-label">Gender</label>
                 <select name="gender" id="gender" class="form-select">
                     <option value="">Pilih Gender</option>
-                    <option value="Laki-laki" {{ old('gender') == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-                    <option value="Perempuan" {{ old('gender') == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
-                    <option value="Semua" {{ old('gender') == 'Semua' ? 'selected' : '' }}>Semua</option>
+                    <option value="Laki-laki" {{ old('gender', $lowongan->gender) == 'Laki-laki' ? 'selected' : '' }}>Laki-laki</option>
+                    <option value="Perempuan" {{ old('gender', $lowongan->gender) == 'Perempuan' ? 'selected' : '' }}>Perempuan</option>
+                    <option value="Semua" {{ old('gender', $lowongan->gender) == 'Semua' ? 'selected' : '' }}>Semua</option>
                 </select>
             </div>
             <div class="col-12 col-md-6">
@@ -165,45 +164,41 @@
                 <label for="pendidikan_terakhir" class="form-label fw-semibold">Pendidikan Terakhir</label>
                 <select name="pendidikan_terakhir" id="pendidikan_terakhir" class="form-select" required>
                     <option value="">-- Pilih Pendidikan --</option>
-                    <option value="SD">SD</option>
-                    <option value="SMP">SMP</option>
-                    <option value="SMA/SMK">SMA/SMK</option>
-                    <option value="D1">D1</option>
-                    <option value="D2">D2</option>
-                    <option value="D3">D3</option>
-                    <option value="S1">S1</option>
-                    <option value="S2">S2</option>
-                    <option value="S3">S3</option>
+                    <option value="SD" {{ old('pendidikan_terakhir', $lowongan->pendidikan_terakhir) == 'SD' ? 'selected' : '' }}>SD</option>
+                    <option value="SMP" {{ old('pendidikan_terakhir', $lowongan->pendidikan_terakhir) == 'SMP' ? 'selected' : '' }}>SMP</option>
+                    <option value="SMA" {{ old('pendidikan_terakhir', $lowongan->pendidikan_terakhir) == 'SMA' ? 'selected' : '' }}>SMA/SMK</option>
+                    <option value="D1" {{ old('pendidikan_terakhir', $lowongan->pendidikan_terakhir) == 'D1' ? 'selected' : '' }}>D1</option>
+                    <option value="D2" {{ old('pendidikan_terakhir', $lowongan->pendidikan_terakhir) == 'D2' ? 'selected' : '' }}>D2</option>
+                    <option value="D3" {{ old('pendidikan_terakhir', $lowongan->pendidikan_terakhir) == 'D3' ? 'selected' : '' }}>D3</option>
+                    <option value="S1" {{ old('pendidikan_terakhir', $lowongan->pendidikan_terakhir) == 'S1' ? 'selected' : '' }}>S1</option>
+                    <option value="S2" {{ old('pendidikan_terakhir', $lowongan->pendidikan_terakhir) == 'S2' ? 'selected' : '' }}>S2</option>
+                    <option value="S3" {{ old('pendidikan_terakhir', $lowongan->pendidikan_terakhir) == 'S3' ? 'selected' : '' }}>S3</option>
                 </select>
             </div>
             <div class="col-12 col-md-3">
                 <label for="usia_min" class="form-label">Usia Minimal</label>
                 <input type="number" name="usia_min" id="usia_min" class="form-control" 
-                       value="{{ old('usia_min') }}" placeholder="Contoh: 21">
+                       value="{{ old('usia_min', $lowongan->usia_min) }}" placeholder="Contoh: 21">
             </div>
             <div class="col-12 col-md-3">
                 <label for="usia" class="form-label">Usia Maksimal</label>
                 <input type="number" name="usia" id="usia" class="form-control" 
-                       value="{{ old('usia') }}" placeholder="Contoh: 35">
+                       value="{{ old('usia', $lowongan->usia) }}" placeholder="Contoh: 35">
             </div>
             <div class="col-12 col-md-6">
-                <label for="nilai_pendidikan_terakhir" class="form-label">Nilai Pendidikan Terakhir</label>
-                <input type="text" name="nilai_pendidikan_terakhir" id="nilai_pendidikan_terakhir" class="form-control" placeholder="Contoh: IPK 3.00" value="{{ old('nilai_pendidikan_terakhir') }}">
+                <label for="nilai_pendidikan_terakhir" id="label_nilai" class="form-label">Nilai Pendidikan Terakhir</label>
+                <input type="text" name="nilai_pendidikan_terakhir" id="nilai_pendidikan_terakhir" class="form-control" 
+                       value="{{ old('nilai_pendidikan_terakhir', $lowongan->nilai_pendidikan_terakhir) }}" placeholder="Pilih pendidikan terlebih dahulu">
+                <small id="help_nilai" class="form-text text-muted mt-1 d-block"></small>
             </div>
             <div class="col-12 col-md-3">
-                <label for="pengalaman_kerja" class="form-label">Pengalaman Min (Tahun)</label>
+                <label for="pengalaman_kerja" class="form-label">Pengalaman (Tahun)</label>
                 <input type="number" name="pengalaman_kerja" id="pengalaman_kerja" class="form-control" 
-                       value="{{ old('pengalaman_kerja') }}" placeholder="Contoh: 1">
-            </div>
-            <div class="col-12 col-md-3">
-                <label for="pengalaman_kerja_maks" class="form-label">Pengalaman Maks (Tahun)</label>
-                <input type="number" name="pengalaman_kerja_maks" id="pengalaman_kerja_maks" class="form-control" 
-                       value="{{ old('pengalaman_kerja_maks') }}" placeholder="Contoh: 5">
+                       value="{{ old('pengalaman_kerja', $lowongan->pengalaman_kerja) }}" placeholder="Contoh: 1">
             </div>
         </div>
     </div>
 
-    {{-- ========================== BLOK BOBOT E-RANKING (DISESUAIKAN) ========================== --}}
     <div class="form-section p-4 mb-4">
         <h5 class="mb-3"><i class="bi bi-sliders me-2"></i> Atur Bobot Penilaian (E-Ranking)</h5>
         <p class="text-muted">Tentukan persentase penilaian untuk setiap kriteria. **Pastikan totalnya adalah 100%**.</p>
@@ -241,8 +236,6 @@
             </div>
         </div>
     </div>
-    {{-- ======================= AKHIR BLOK BOBOT E-RANKING ======================= --}}
-
 
     <div class="d-flex justify-content-end gap-2">
         <a href="{{ route('perusahaan.lowongan-saya.index') }}" class="btn btn-cancel">Batal</a>
@@ -254,6 +247,7 @@
 @push('scripts')
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // --- LOGIKA HITUNG BOBOT E-RANKING ---
         const container = document.getElementById('ranking-weights');
         const totalWeightEl = document.getElementById('total-weight');
         const weightInputs = container.querySelectorAll('.weight-input');
@@ -265,9 +259,8 @@
             });
             totalWeightEl.textContent = total + '%';
             
-            // Mengubah warna alert berdasarkan total
             const alertBox = totalWeightEl.parentElement;
-            alertBox.classList.remove('alert-success', 'alert-danger', 'alert-info'); // Hapus semua kelas warna
+            alertBox.classList.remove('alert-success', 'alert-danger', 'alert-info');
             if (total === 100) {
                 alertBox.classList.add('alert-success');
             } else {
@@ -275,11 +268,36 @@
             }
         }
 
-        // Jalankan event listener setiap kali ada input
         container.addEventListener('input', calculateTotal);
-        
-        // Panggil fungsi sekali saat halaman dimuat untuk menampilkan total awal
-        calculateTotal(); 
+        calculateTotal();
+
+
+        // --- LOGIKA DINAMIS SINKRONISASI PENDIDIKAN & INPUT NILAI ---
+        const pendidikanSelect = document.getElementById('pendidikan_terakhir');
+        const nilaiInput = document.getElementById('nilai_pendidikan_terakhir');
+        const labelNilai = document.getElementById('label_nilai');
+        const helpNilai = document.getElementById('help_nilai');
+
+        function updateNilaiPlaceholder() {
+            const pendidikan = pendidikanSelect.value;
+
+            if (pendidikan === "") {
+                labelNilai.textContent = "Nilai Pendidikan Terakhir";
+                nilaiInput.placeholder = "Pilih pendidikan terlebih dahulu";
+                helpNilai.textContent = "";
+            } else if (['SD', 'SMP', 'SMA'].includes(pendidikan)) {
+                labelNilai.textContent = "Nilai Rata-Rata Kelulusan";
+                nilaiInput.placeholder = "Contoh: 82.50";
+                helpNilai.innerHTML = "<i class='bi bi-info-circle-fill me-1'></i> Masukkan nilai rata-rata ijazah sekolah dengan rentang <strong>0 - 100</strong>.";
+            } else {
+                labelNilai.textContent = "Minimal IPK Kelulusan";
+                nilaiInput.placeholder = "Contoh: 3.25";
+                helpNilai.innerHTML = "<i class='bi bi-info-circle-fill me-1'></i> Masukkan standar minimal standar IPK dengan rentang <strong>0.00 - 4.00</strong>.";
+            }
+        }
+
+        pendidikanSelect.addEventListener('change', updateNilaiPlaceholder);
+        updateNilaiPlaceholder(); // Jalankan otomatis saat halaman edit dimuat data lamanya
     });
 </script>
 @endpush
