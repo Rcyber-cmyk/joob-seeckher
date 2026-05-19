@@ -59,11 +59,6 @@
 
             <div class="form-step" id="step-2">
                 <h5 class="step-title">Jawab Pertanyaan Perusahaan</h5>
-                
-                {{-- ========================================================== --}}
-                {{-- [MODIFIKASI 1] Input Gaji Dihapus --}}
-                {{-- ========================================================== --}}
-                <div class="mb-3"><label class="form-label">Berapa gaji pokok bulanan yang Anda inginkan?</label><input type="text" name="gaji_diharapkan" placeholder="Contoh: 2" class="form-control" required></div>
                 <div class="mb-3"><label class="form-label">Apa Pendidikan terakhir yang Anda tempuh?</label>
                     <select name="pendidikan_terakhir" class="form-select">
                         <option value="SMA/SMK Sederajat" {{ $pelamar->lulusan == 'SMA/SMK Sederajat' ? 'selected' : '' }}>SMA/SMK Sederajat</option>
@@ -73,8 +68,7 @@
                         <option value="S3" {{ $pelamar->lulusan == 'S3' ? 'selected' : '' }}>S3</option>
                     </select>
                 </div>
-                <div class="mb-3"><label class="form-label">Nilai Akhir Pendidikan Terakhir</label><input type="text" name="nilai_akhir" placeholder="88,8" class="form-control" required></div>
-
+                <div class="mb-3"><label class="form-label">Nilai Akhir Pendidikan Terakhir</label><input type="text" name="nilai_akhir" placeholder="88,8" class="form-control" value="{{ $pelamar->nilai_akhir }}" required></div>
                 
                 {{-- ========================================================== --}}
                 {{-- [MODIFIKASI 2] Placeholder Ditambahkan --}}

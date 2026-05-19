@@ -190,7 +190,7 @@
                             <div class="row g-4">
                                 <div class="col-md-4">
                                     <label class="form-label-custom">Pendidikan Terakhir</label>
-                                    <select class="form-select form-select-modern" name="lulusan" required>
+                                    <select id="pendidikan-select" class="form-select form-select-modern" name="lulusan" required>
                                         @foreach(['SMA/SMK Sederajat', 'D1/D2/D3', 'S1', 'S2', 'S3'] as $edu)
                                             <option value="{{ $edu }}" {{ old('lulusan', $profile->lulusan) == $edu ? 'selected' : '' }}>{{ $edu }}</option>
                                         @endforeach
@@ -199,6 +199,10 @@
                                 <div class="col-md-4">
                                     <label class="form-label-custom">Tahun Lulus</label>
                                     <input type="number" class="form-control form-control-modern" name="tahun_lulus" value="{{ old('tahun_lulus', $profile->tahun_lulus) }}" placeholder="202X" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label id="label-nilai" class="form-label-custom">Nilai Akhir Pendidikan</label>
+                                    <input id="input-nilai" type="number" step="0.01" class="form-control form-control-modern" name="nilai_akhir" value="{{ old('nilai_akhir', $profile->nilai_akhir) }}" placeholder="Misal: 88.50" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label class="form-label-custom">Pengalaman</label>
@@ -477,5 +481,33 @@
             });
         });
     });
+    document.addEventListener('DOMContentLoaded', function () {
+    const pendidikanSelect = document.getElementById('pendidikan-select');
+    const labelNilai = document.getElementById('label-nilai');
+    const inputNilai = document.getElementById('input-nilai');
+
+    function updateNilaiField() {
+        const selectedValue = pendidikanSelect.value;
+        
+        // Cek apakah pilihan user adalah level perguruan tinggi
+        if (['D1/D2/D3', 'S1', 'S2', 'S3'].includes(selectedValue)) {
+            labelNilai.textContent = 'IPK (Skala 4.00)';
+            inputNilai.placeholder = 'Misal: 3.85';
+            inputNilai.max = '4.00'; // Membatasi input maksimal 4.00
+        } else {
+            // Jika pilihan adalah SMA/SMK Sederajat
+            labelNilai.textContent = 'Nilai Akhir / Ijazah (Skala 100)';
+            inputNilai.placeholder = 'Misal: 88.50';
+            inputNilai.max = '100.00'; // Membatasi input maksimal 100
+        }
+    }
+
+    // Eksekusi fungsi sekali saat halaman baru dimuat 
+    // (berguna saat mode edit agar label langsung menyesuaikan data lama)
+    updateNilaiField();
+
+    // Jalankan fungsi setiap kali dropdown pendidikan diubah oleh user
+    pendidikanSelect.addEventListener('change', updateNilaiField);
+});
 </script>
 @endpush

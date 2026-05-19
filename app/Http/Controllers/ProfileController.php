@@ -76,6 +76,7 @@ class ProfileController
                 'lulusan' => ['required', 'string', 'max:255'],
                 'tanggal_lahir' => ['required', 'date'],
                 'gender' => ['required', 'in:Laki-laki,Perempuan'],
+                'nilai_akhir' => ['required', 'numeric'],
                 'tahun_lulus' => ['required', 'digits:4', 'integer', 'min:1980'],
                 'pengalaman_kerja' => ['nullable', 'string', 'max:255'],
                 'tentang_saya' => ['nullable', 'string'],
