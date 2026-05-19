@@ -31,7 +31,8 @@
                 <div class="row g-3">
                     <div class="col-md-6"><label class="form-label">Nama Depan</label><input type="text" name="nama_depan" class="form-control" value="{{ explode(' ', $pelamar->nama_lengkap)[0] }}" required></div>
                     <div class="col-md-6"><label class="form-label">Nama Belakang</label><input type="text" name="nama_belakang" class="form-control" value="{{ explode(' ', $pelamar->nama_lengkap, 2)[1] ?? '' }}" required></div>
-                    <div class="col-12"><label class="form-label">Lokasi Rumah</label><input type="text" name="lokasi_rumah" class="form-control" value="{{ $pelamar->alamat }}" required></div>
+                    <div class="col-12"><label class="form-label">Tanggal Lahir</label><input type="text" name="tanggal_lahir" class="form-control" value="{{ $pelamar->tanggal_lahir }}" required></div>
+                    <div class="col-12"><label class="form-label">Domisili</label><input type="text" name="lokasi_rumah" class="form-control" value="{{ $pelamar->domisili }}" required></div>
                     <div class="col-12"><label class="form-label">Nomor Telepon</label><input type="tel" name="nomor_telepon" class="form-control" value="{{ $pelamar->no_hp }}" required></div>
                 </div>
 
@@ -62,8 +63,7 @@
                 {{-- ========================================================== --}}
                 {{-- [MODIFIKASI 1] Input Gaji Dihapus --}}
                 {{-- ========================================================== --}}
-                {{-- <div class="mb-3"><label class="form-label">Berapa gaji pokok bulanan yang Anda inginkan?</label><input type="text" name="gaji_diharapkan" class="form-control" required></div> --}}
-                
+                <div class="mb-3"><label class="form-label">Berapa gaji pokok bulanan yang Anda inginkan?</label><input type="text" name="gaji_diharapkan" placeholder="Contoh: 2" class="form-control" required></div>
                 <div class="mb-3"><label class="form-label">Apa Pendidikan terakhir yang Anda tempuh?</label>
                     <select name="pendidikan_terakhir" class="form-select">
                         <option value="SMA/SMK Sederajat" {{ $pelamar->lulusan == 'SMA/SMK Sederajat' ? 'selected' : '' }}>SMA/SMK Sederajat</option>
@@ -73,12 +73,14 @@
                         <option value="S3" {{ $pelamar->lulusan == 'S3' ? 'selected' : '' }}>S3</option>
                     </select>
                 </div>
+                <div class="mb-3"><label class="form-label">Nilai Akhir Pendidikan Terakhir</label><input type="text" name="nilai_akhir" placeholder="88,8" class="form-control" required></div>
+
                 
                 {{-- ========================================================== --}}
                 {{-- [MODIFIKASI 2] Placeholder Ditambahkan --}}
                 {{-- ========================================================== --}}
                 <div class="mb-3"><label class="form-label">Berapa tahun pengalaman Anda mendalami peran ini?</label>
-                    <input type="number" name="pengalaman_tahun" class="form-control" placeholder="Contoh: 3 tahun"> {{-- Placeholder ditambahkan --}}
+                    <input type="number" name="pengalaman_tahun" class="form-control" placeholder="Contoh: 3"> {{-- Placeholder ditambahkan --}}
                 </div>
                 <div class="mb-4">
                     <h6 class="form-section-title">Deskripsi Kemampuan & Keahlian</h6>

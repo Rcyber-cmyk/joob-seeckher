@@ -126,9 +126,6 @@
                 <li class="nav-item">
                     <a class="nav-link {{ Request::routeIs('perusahaan.index') ? 'active' : '' }}" href="{{ route('lowongan.index') }}">Cari Lowongan</a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{ route('marketplace.index') }}" class="nav-link">MarketPlace</a>
-                </li>
                 @endif
             </ul>
 
@@ -268,9 +265,6 @@
                             <div class="row g-2">
                                 <div class="col-6">
                                     <a href="{{ route('perusahaan') }}" class="btn btn-orange w-100 rounded-pill py-2 small-text">Perusahaan</a>
-                                </div>
-                                <div class="col-6">
-                                    <a href="{{ route('toko-umkm.index') }}" class="btn btn-orange w-100 rounded-pill py-2 small-text">UMKM</a>
                                 </div>
                             </div>
                         </div>

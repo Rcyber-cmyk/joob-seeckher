@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('lowongan_pekerjaan', function (Blueprint $table) {
             // Menambahkan kolom sesuai form di gambar Anda
-            $table->unsignedTinyInteger('bobot_domisili')->default(0)->after('deskripsi');
+            $table->unsignedTinyInteger('bobot_domisili')->default(0)->after('deskripsi_pekerjaan');
             $table->unsignedTinyInteger('bobot_usia')->default(0)->after('bobot_domisili');
             $table->unsignedTinyInteger('bobot_gender')->default(0)->after('bobot_usia');
             $table->unsignedTinyInteger('bobot_pendidikan')->default(0)->after('bobot_gender');
