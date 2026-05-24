@@ -187,6 +187,7 @@ Route::post('/kirim-link-form/{jadwal}', [JadwalWawancaraAdminController::class,
         Route::get('/notifikasi', [App\Http\Controllers\Pelamar\UndanganController::class, 'index'])->name('notifikasi.index');
         Route::get('/notifikasi/{id}/baca', [App\Http\Controllers\Pelamar\UndanganController::class, 'markAsRead'])->name('notifikasi.read');
         Route::get('/profile/download-cv', [App\Http\Controllers\ProfileController::class, 'downloadCv'])->name('profile.download_cv');
+        Route::get('/pelamar/cetak-rekomendasi', [App\Http\Controllers\Pelamar\DashboardController::class, 'cetakPdf'])->name('pelamar.cetak_rekomendasi');
     });
     Route::delete('/lamaran/{lamaran}', [AktivitasController::class, 'destroyLamaran'])
          // Middleware 'auth' sudah otomatis dari grup luar

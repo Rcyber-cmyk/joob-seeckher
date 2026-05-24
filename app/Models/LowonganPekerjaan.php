@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Keahlian;
+use App\Models\PmTargetLowongan;
 
 
 class LowonganPekerjaan extends Model
@@ -57,6 +58,10 @@ class LowonganPekerjaan extends Model
     public function lamaran()
     {
         return $this->hasMany(Lamaran::class, 'lowongan_id');
+    }
+    public function targetSpk()
+    {
+        return $this->hasMany(PmTargetLowongan::class, 'lowongan_id');
     }
 }
 

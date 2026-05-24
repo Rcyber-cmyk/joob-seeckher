@@ -191,7 +191,132 @@
             <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
         </div>
     </section>
+    @if(Auth::check() && isset($pelamar) && isset($rekomendasiPekerjaan) && $rekomendasiPekerjaan->count() > 0)
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <section class="section-rekomendasi py-5" style="background-color: #fff; border-bottom: 1px solid #e9ecef;">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 gap-3">
+                <div>
+                    <h3 class="section-title"><i class="bi bi-stars text-orange me-2"></i>Cocok Untukmu, {{ explode(' ', $pelamar->nama_lengkap)[0] }}</h3>
+                    <p class="section-desc mb-0">Rekomendasi hasil analisis profil menggunakan kecerdasan sistem kami.</p>
+                </div>
+                <div>
+                    <a href="{{ route('pelamar.pelamar.cetak_rekomendasi') }}" target="_blank" class="btn btn-orange rounded-pill shadow-sm">
+                        <i class="bi bi-file-earmark-pdf-fill me-2"></i>Cetak Laporan SPK
+                    </a>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                @foreach($rekomendasiPekerjaan as $rek)
+                <div class="col-md-6 col-lg-3">
+                    <div class="card h-100 border-0 shadow-sm" style="border-radius: 16px; transition: all 0.3s; background: #f8f9fa;">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                @if($rek['lowongan']->perusahaan->logo_perusahaan)
+                                    <img src="{{ asset('storage/' . $rek['lowongan']->perusahaan->logo_perusahaan) }}" alt="Logo" width="45" height="45" class="rounded">
+                                @else
+                                    <div class="bg-light rounded p-2 text-primary"><i class="bi bi-building fs-4"></i></div>
+                                @endif
+                                
+                                <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 fw-bold border border-success border-opacity-25">
+                                    <i class="bi bi-check-circle-fill me-1"></i> {{ $rek['persentase'] }}% Match
+                                </span>
+                            </div>
+                            <h5 class="fw-bold mb-1 text-dark">{{ Str::limit($rek['lowongan']->judul_lowongan, 40) }}</h5>
+                            <p class="text-muted small mb-3">{{ $rek['lowongan']->perusahaan->nama_perusahaan }}</p>
+                            
+                            <div class="mt-auto">
+                                <div class="d-flex gap-2 mb-3 small text-secondary">
+                                    <span><i class="bi bi-geo-alt"></i> {{ $rek['lowongan']->domisili }}</span>
+                                    <span><i class="bi bi-briefcase"></i> {{ $rek['lowongan']->tipe_pekerjaan }}</span>
+                                </div>
+                                <div class="d-flex flex-column gap-2">
+                                    <a href="{{ route('pelamar.lowongan.show', $rek['lowongan']->id) }}" class="btn btn-orange btn-sm w-100 rounded-pill">Lihat Detail</a>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#modalChart-{{ $rek['lowongan']->id }}">
+                                        <i class="bi bi-bar-chart-fill me-1"></i>Analisis Grafik
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="modalChart-{{ $rek['lowongan']->id }}" isset tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content" style="border-radius: 20px;">
+                            <div class="modal-header border-0 pb-0">
+                                <h5 class="modal-title fw-bold text-dark"><i class="bi bi-pie-chart-fill text-orange me-2"></i>Kesesuaian Kompetensi</h5>
+                                <button type="button" class="btn-close" data-bs-shadow data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body text-center p-4">
+                                <p class="text-muted small mb-3">Grafik perbandingan nilai profil kamu dengan target kriteria yang ditentukan oleh {{ $rek['lowongan']->perusahaan->nama_perusahaan }}</p>
+                                <div style="max-width: 350px; margin: 0 auto;">
+                                    <canvas id="radarChart-{{ $rek['lowongan']->id }}"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @foreach($rekomendasiPekerjaan as $rek)
+                const ctx_{{ $rek['lowongan']->id }} = document.getElementById('radarChart-{{ $rek['lowongan']->id }}').getContext('2d');
+                
+                new Chart(ctx_{{ $rek['lowongan']->id }}, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Pendidikan', 'Pengalaman', 'IPK', 'Keahlian', 'Usia', 'Domisili', 'Gender'],
+                        datasets: [
+                            {
+                                label: 'Profil Kamu',
+                                data: @json($rek['chart_kandidat']),
+                                fill: true,
+                                backgroundColor: 'rgba(243, 156, 18, 0.2)',
+                                borderColor: '#F39C12',
+                                pointBackgroundColor: '#F39C12',
+                                pointBorderColor: '#fff',
+                                pointHoverBackgroundColor: '#fff',
+                                pointHoverBorderColor: '#F39C12'
+                            },
+                            {
+                                label: 'Target Jabatan',
+                                data: @json($rek['chart_target']),
+                                fill: true,
+                                backgroundColor: 'rgba(34, 55, 78, 0.15)',
+                                borderColor: '#22374e',
+                                pointBackgroundColor: '#22374e',
+                                pointBorderColor: '#fff',
+                                pointHoverBackgroundColor: '#fff',
+                                pointHoverBorderColor: '#22374e'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            r: {
+                                angleLines: { display: true },
+                                min: 0,
+                                max: 5,
+                                ticks: { stepSize: 1, display: false }
+                            }
+                        },
+                        plugins: {
+                            legend: { position: 'bottom' }
+                        }
+                    }
+                });
+            @endforeach
+        });
+    </script>
+    @endif
     {{-- BAGIAN 2: IKLAN GRATIS --}}
     <section class="section-promo animate__animated animate__fadeInUp position-relative">
         <div class="container py-5">
