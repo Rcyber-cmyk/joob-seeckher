@@ -64,10 +64,6 @@ class DashboardController extends Controller
 
         return $pdf->stream('Laporan_Rekomendasi_SPK_' . str_replace(' ', '_', $pelamar->nama_lengkap) . '.pdf');
     }
-
-    /**
-     * Helper Utama Logika Perhitungan SPK Profile Matching
-     */
     private function getKalkulasiSPK($pelamar)
     {
         $rekomendasiPekerjaan = collect();
@@ -89,11 +85,9 @@ class DashboardController extends Controller
                 $totalCore = 0; $countCore = 0;
                 $totalSecondary = 0; $countSecondary = 0;
 
-                // Array untuk menampung data Radar Chart instan
                 $scoresKandidat = [];
                 $scoresTarget = [];
 
-                // Looping 7 Kriteria berurutan ID 1 - 7
                 foreach ([1, 2, 3, 4, 5, 6, 7] as $kriteria_id) {
                     $target = $targetPerusahaan[$kriteria_id] ?? null;
                     if (!$target) continue;

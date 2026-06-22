@@ -14,10 +14,7 @@ class PmBobotGapSeeder extends Seeder
      */
     public function run()
     {
-        // Kosongkan tabel dulu agar tidak duplikat jika dijalankan berulang
         PmBobotGap::truncate();
-
-        // Aturan baku pembobotan nilai GAP pada Profile Matching
         $data = [
             ['selisih_gap' => 0,  'bobot_nilai' => 5.0, 'keterangan' => 'Tidak ada selisih (Kompetensi sesuai dengan kebutuhan)'],
             ['selisih_gap' => 1,  'bobot_nilai' => 4.5, 'keterangan' => 'Kompetensi individu kelebihan 1 tingkat'],
